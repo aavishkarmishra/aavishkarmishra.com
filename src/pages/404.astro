@@ -2,15 +2,25 @@
 import Base from '../layouts/Base.astro';
 ---
 <Base title="Not found" description="That page does not exist." noindex>
+  <div class="lost">
   <h1>404</h1>
   <p class="lede">Not all who wander are lost. You, however, are.</p>
   <p class="dim">
     This page does not exist and probably never did. If a link sent you here,
     tell me and I will go and fix it.
   </p>
+  </div>
 </Base>
 
 <style>
-  h1 { font-family: var(--mono); font-size: 3rem; letter-spacing: -0.03em; margin-bottom: 1rem; }
-  p { margin: 0 0 0.9rem; }
+  .lost {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 46vh;
+  }
+  h1 { font-family: var(--mono); font-size: 3rem; letter-spacing: -0.03em; margin: 0 0 1rem; }
+  p { margin: 0 0 0.9rem; max-width: 26rem; }
 </style>
