@@ -1,8 +1,15 @@
-export type Book = { title: string; author: string; note: string };
+export type Book = { title: string; author: string; note: string; href?: string };
 
 /* Newest first. One honest line each — if there is nothing specific to say
    about a book, leave it off rather than padding the list. */
 export const books: Book[] = [
+  {
+    title: 'End-to-End Object Detection with Transformers',
+    author: 'Carion et al., 2020',
+    href: 'https://arxiv.org/abs/2005.12872',
+    note:
+      'The paper behind the DETR reimplementation on my work page. Worth reading even if you never build it: it replaces the whole hand-tuned pipeline of anchors and non-maximum suppression with set prediction and a bipartite matching loss, and the elegance of that is easier to appreciate from the paper than from any summary of it.',
+  },
   {
     title: 'Designing Data-Intensive Applications',
     author: 'Martin Kleppmann',

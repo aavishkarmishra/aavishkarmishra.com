@@ -12,7 +12,9 @@ import { books } from '../data/reading';
   <ul class="entries">
     {books.map((b) => (
       <li>
-        <span class="entry-title">{b.title}</span>
+        {b.href
+          ? <a class="entry-title" href={b.href}>{b.title}</a>
+          : <span class="entry-title">{b.title}</span>}
         <span class="entry-meta by">{b.author}</span>
         <p class="entry-desc">{b.note}</p>
       </li>
