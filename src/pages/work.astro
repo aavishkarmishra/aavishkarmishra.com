@@ -7,14 +7,15 @@ const roles = [
     role: 'Software Engineer',
     org: 'Helply',
     detail:
-      'Rebuilding a B2B support platform to be AI-native, in NestJS and SQL. The work spans most of the product rather than one corner of it; the pieces I own outright are the email-rendering pipeline and the notes architecture. The volume is manageable: organisations arrive with millions of tickets, each carrying thousands of emails, attachments and notes. The history is the hard part. Every migration has to keep the old schema and the new one agreeing while both are serving live traffic. I also built the video sync, editing and rendering, down to manipulating individual segments on the timeline.',
+      'Rebuilding a B2B support platform to be AI-native, in NestJS and SQL. The work spans most of the product rather than one corner of it; the pieces I own outright are the email-rendering pipeline and the notes architecture. The volume is manageable: organisations arrive with millions of tickets, each carrying thousands of emails, attachments and notes. The history is the hard part. Every migration has to keep the old schema and the new one agreeing while both are serving live traffic. For a screen-recording product in the same suite, I built the video sync, editing and rendering, down to manipulating individual segments on the timeline.',
   },
   {
     when: '2023 — 2025',
     role: 'Founding Engineer',
     org: 'Scream Creator Technologies',
     detail:
-      'Three engineers, two designers, and three products taken from zero to paying customers. I built the video pipeline end to end: capture, re-encode of camera and screen, quality enhancement, proxy renditions, an editor with TTS voiceover synced through FFmpeg, then export. Export ran on Remotion Lambda for a year and eight months. We fanned it out in eight-to-ten-minute sections to keep clear of Lambda’s fifteen-minute ceiling, and tracked what every render cost us the whole time. The obvious next step was to build our own renderer; the cost that decided against it was three engineers’ attention, not the AWS bill. Then customers told us they were waiting on sharing rather than on renders, which made render speed the wrong thing to buy at any price. We shipped a desktop app instead and moved rendering onto the user’s machine with FFmpeg and Remotion running locally. I also wired Stripe and Razorpay across the whole payment lifecycle: subscriptions, GST invoicing, webhooks, refunds, retries, disputes.',
+      'Three engineers, two designers, and three products taken from zero to paying customers. I built the video pipeline end to end: capture, re-encode of camera and screen, quality enhancement, proxy renditions, an editor with TTS voiceover synced through FFmpeg, then export on Remotion Lambda. When long-form 4K pushed against Lambda’s fifteen-minute ceiling we priced building our own renderer, decided our attention was the scarcer budget, and moved rendering onto the user’s machine instead. I also wired Stripe and Razorpay across the whole payment lifecycle: subscriptions, GST invoicing, webhooks, refunds, retries, disputes.',
+    more: { text: 'The render story, in full', href: '/writing/rendering-was-never-the-problem/' },
   },
   {
     when: '2023',
@@ -70,6 +71,7 @@ const stack = [
         <div class="what">
           <div class="role">{r.role}<span class="org">, {r.org}</span></div>
           <p class="detail">{r.detail}</p>
+          {r.more && <p class="detail-more"><a href={r.more.href}>{r.more.text}</a></p>}
         </div>
       </li>
     ))}
@@ -131,6 +133,9 @@ const stack = [
     color: var(--faint);
   }
   .entries .entry-meta { display: block; margin-top: 0.4rem; }
+  .detail-more { margin: 0.5rem 0 0; font: 400 0.875rem/1 var(--sans); }
+  .detail-more a { text-decoration: none; }
+  .detail-more a::after { content: " \2192"; }
   .stack { font: 400 0.875rem/1.9 var(--sans); color: var(--muted); }
   .outside { font-size: 0.9375rem; line-height: 1.6; color: var(--muted); margin: 0; }
 </style>

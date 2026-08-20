@@ -44,6 +44,6 @@ export const books: Book[] = [
     author: 'Narasimha Karumanchi',
     href: 'https://openlibrary.org/works/OL24463217W',
     note:
-      'Solid on the fundamentals, and it did the job it exists to do.',
+      'It did the job it exists to do, and I have not opened it since.',
   },
 ];
