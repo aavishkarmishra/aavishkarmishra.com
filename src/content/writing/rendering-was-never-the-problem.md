@@ -17,9 +17,25 @@ invocations, and we cut ours into sections of eight to ten minutes so no single
 invocation came near the
 ceiling.<span class="sn"></span><span class="sidenote">Fifteen minutes is a
 property of the execution model, not a quota. There is no support ticket that
-raises it.</span> The headroom mattered more than the throughput: a render that
-dies at minute fourteen has spent fourteen minutes and produced nothing, with
-the user watching a progress bar the whole time.
+raises it.</span> The headroom mattered more than the throughput. A render that dies at minute
+fourteen has spent fourteen minutes and produced nothing, and the user has
+watched the whole thing happen.
+
+<figure class="diagram">
+<svg viewBox="0 0 400 64" role="img" aria-label="A progress bar filling towards a dashed line marked 15:00, stopping just short of it and resetting to zero, over and over.">
+  <text class="d-label-sm" x="0" y="10">rendering</text>
+  <text class="d-label-fail" x="292" y="10">15:00</text>
+
+  <rect class="d-track" x="0" y="18" width="286" height="11" rx="2"/>
+  <rect class="d-fill" x="0" y="18" height="11" rx="2"/>
+  <path class="d-ceiling" d="M290 14 V33"/>
+
+  <text class="d-boom" x="298" y="27" style="font: 400 11px var(--sans)">nothing</text>
+  <text class="d-label-sm" x="0" y="52">and again, and again, and again</text>
+</svg>
+<figcaption>Fourteen minutes of compute, one file of size zero, and a customer
+who watched every second of it.</figcaption>
+</figure>
 
 That worked. We ran it for a year and eight months and tracked what every
 single render cost us, which turned out to be the most useful thing we did,
@@ -88,17 +104,19 @@ rendering moved onto the user's own machine: FFmpeg and Remotion running
 locally, on hardware that had already rendered the preview and was sitting idle
 while our Lambdas did the same arithmetic a second time.
 
-It is slower on some machines, and that is fine. Most computers will get through
-a fifteen or twenty minute video, and taking longer to do it costs a customer
-nothing they told us they cared about. What it bought us was the entire cloud
-render bill, and more importantly the attention of three engineers, which went
-into editing and sharing instead.
+It is slower on some machines, and that turned out not to matter. Most
+computers will get through a fifteen or twenty minute video, and taking a while
+longer costs the customer nothing they had ever mentioned wanting. What it
+bought us was the whole cloud render bill, and the attention of three
+engineers, which went into editing and sharing instead. The renderer stopped
+being a system we operated and became a thing that happens on someone else's
+laptop while they make tea.
 
 We had suspected about a year in that a web app was the wrong shape for this
-product. Knowing that did not let us move: the customers we had were on the
-web, and building a desktop app they could move to takes the time it takes. So
-we ran the Lambda version for another eight months while the replacement got
-built.
+product. Knowing it did not help much. The customers we had were on the web,
+and a desktop app they could move to takes as long as it takes to build. We
+knew exactly where the couch had to go and still spent eight months getting it
+up the stairs, running the Lambda version the whole way.
 
 ## What I would take from it
 

@@ -337,3 +337,31 @@ figure.diagram figcaption {
 }
 
 .site-footer .sep { color: var(--rule); margin: 0 0.5rem; }
+
+/* ---- animated illustrations --------------------------------------------- */
+.d-track { fill: var(--surface); stroke: currentColor; stroke-width: 0.75; }
+.d-fill { fill: var(--accent); width: 0; }
+.d-ceiling { stroke: var(--accent); stroke-width: 1; stroke-dasharray: 2 2; }
+.d-boom { fill: var(--accent); opacity: 0; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .d-fill { animation: d-render 6s linear infinite; }
+  .d-boom { animation: d-boom 6s linear infinite; }
+}
+@keyframes d-render {
+  0%   { width: 0px; }
+  78%  { width: 286px; }
+  80%  { width: 286px; }
+  81%  { width: 0px; }
+  100% { width: 0px; }
+}
+@keyframes d-boom {
+  0%, 77%   { opacity: 0; }
+  79%, 80%  { opacity: 1; }
+  81%, 100% { opacity: 0; }
+}
+/* reduced motion: show the moment it dies, statically */
+@media (prefers-reduced-motion: reduce) {
+  .d-fill { width: 286px; }
+  .d-boom { opacity: 1; }
+}
