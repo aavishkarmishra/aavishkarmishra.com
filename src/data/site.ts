@@ -5,12 +5,12 @@ export const site = {
   linkedin: 'https://linkedin.com/in/aavishkarmishra',
   location: 'Bengaluru, India',
   tagline:
-    'A full-stack engineer. Three products taken from zero to paying customers. I wrote the video encoder, the editor in front of it, and the payment flow that bills for it.',
+    'Full-stack engineer. I take products from idea to production and stay responsible for them once they are there.',
 };
 
 /* One line, present tense, no date. Change it whenever it stops being true. */
 export const now =
-  'Teaching a decade of accumulated email to render correctly, one edge case at a time. Losing, mostly.';
+  'Rebuilding an email-rendering pipeline on a platform with ten years of history, and learning exactly how many ways an email can be malformed.';
 
 /* flip to true once public/portrait.jpg exists */
 export const hasPortrait = true;
