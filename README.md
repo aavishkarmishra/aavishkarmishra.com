@@ -55,8 +55,12 @@ never hardcode a hex value, and never use a raster image for a diagram.
 
 ## Adding a book
 
-Append to the top of `books` in `src/data/reading.ts`. Title, author, and one
-honest line. If there is nothing specific to say about it, leave it out.
+Append to the top of `books` in `src/data/reading.ts`. Title, author, one honest
+line, and optionally an `href`. If there is nothing specific to say about it,
+leave it out.
+
+Links go to Open Library or the publisher — never an affiliate link, and never
+someone else's affiliate link.
 
 ## Editorial rules
 

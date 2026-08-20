@@ -1,43 +1,49 @@
 export type Book = { title: string; author: string; note: string; href?: string };
 
 /* Newest first. One honest line each — if there is nothing specific to say
-   about a book, leave it off rather than padding the list. */
+   about a book, leave it off rather than padding the list. Links point at
+   Open Library, deliberately not at any affiliate. */
 export const books: Book[] = [
   {
     title: 'End-to-End Object Detection with Transformers',
     author: 'Carion et al., 2020',
     href: 'https://arxiv.org/abs/2005.12872',
     note:
-      'The paper behind the DETR reimplementation on my work page. Worth reading even if you never build it: it replaces the whole hand-tuned pipeline of anchors and non-maximum suppression with set prediction and a bipartite matching loss, and the elegance of that is easier to appreciate from the paper than from any summary of it.',
+      'The paper behind the DETR reimplementation on my work page. Worth reading even if you never build it: it throws out the hand-tuned pipeline of anchors and non-maximum suppression and replaces it with set prediction and a bipartite matching loss.',
   },
   {
     title: 'Designing Data-Intensive Applications',
     author: 'Martin Kleppmann',
+    href: 'https://openlibrary.org/works/OL19293745W',
     note:
-      'The chapters on replication and on maintaining derived data are the reason I now write the migration plan before the feature. Running a legacy and a new system side by side and needing both to agree is exactly the problem this book takes seriously.',
+      'Where I actually learned system design, in depth rather than as a list of terms to drop in an interview.',
   },
   {
     title: 'The Mom Test',
     author: 'Rob Fitzpatrick',
+    href: 'https://openlibrary.org/works/OL23982116W',
     note:
-      'Short, and the most useful non-technical book I have read. As a founding engineer I spent real time building things people had said they wanted. This is about the gap between what users say and what they do.',
-  },
-  {
-    title: 'Clean Code',
-    author: 'Robert C. Martin',
-    note:
-      'Helped me two years in and started working against me after that. Naming and small functions are real advice, but taken literally it produces a sprawl of tiny functions you have to reassemble in your head to understand anything. I would hand someone the first few chapters and stop there.',
+      'As the founding engineer at Scream I was in those conversations myself. This is the book that stopped me building things people had merely said yes to.',
   },
   {
     title: 'System Design Interview, volumes 1 and 2',
     author: 'Alex Xu',
+    href: 'https://openlibrary.org/works/OL21947791W',
     note:
-      'A good vocabulary for discussing architecture in an hour, and honest about being interview preparation. Nothing in it prepares you for the part where the elegant design meets a fifteen-minute execution ceiling.',
+      'Good on the fundamentals, and the worked examples of designing systems at scale are the genuinely useful part. Interview preparation, and honest about being that.',
+  },
+  {
+    title: 'Clean Code',
+    author: 'Robert C. Martin',
+    href: 'https://openlibrary.org/works/OL17618370W',
+    note:
+      'Read it early on. Its ideas turn up in other people’s code whether or not you agree with them, which is reason enough to have read it.',
   },
   {
     title: 'Data Structures and Algorithms Made Easy',
     author: 'Narasimha Karumanchi',
+    href: 'https://openlibrary.org/works/OL24463217W',
     note:
-      'Did its job for interviews. I have not opened it since, and none of the problems I have actually hit at work were shaped like the ones in it.',
+      'Solid on the fundamentals, and it did the job it exists to do.',
   },
 ];
