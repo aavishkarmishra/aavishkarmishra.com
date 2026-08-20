@@ -10,7 +10,7 @@ export const site = {
 
 /* One line, present tense, no date. Change it whenever it stops being true. */
 export const now =
-  'Somewhere in the third act of a side project that was supposed to take a weekend. Frodo made better time.';
+  'Learning to swim, still waiting on the training arc. Reading and travelling in between.';
 
 /* flip to true once public/portrait.jpg exists */
 export const hasPortrait = true;
