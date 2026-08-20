@@ -6,20 +6,23 @@ featured: true
 draft: true
 ---
 
-For most of two years, export was the part of the product I thought about most.
-Everything before it was ours: capture, re-encode of camera and screen, quality
+Export was the one part of the product we did not own.
+
+Everything before it we built: capture, re-encode of camera and screen, quality
 enhancement, proxy renditions, an editor with TTS voiceover synced through
-FFmpeg. Then the user pressed export, and the real work happened on Remotion
-Lambda.
+FFmpeg. Then the user pressed export, and the work happened on Remotion Lambda.
+
+## Sectioning, and why we wanted the margin
 
 Lambda stops at fifteen minutes. Remotion Lambda spreads a composition across
-invocations, and we cut ours into sections of eight to ten minutes so no single
-invocation came near the
-ceiling.<span class="sn"></span><span class="sidenote">Fifteen minutes is a
-property of the execution model, not a quota. There is no support ticket that
-raises it.</span> The headroom mattered more than the throughput. A render that dies at minute
-fourteen has spent fourteen minutes and produced nothing, and the user has
-watched the whole thing happen.
+invocations, so we cut ours into sections of eight to ten minutes. Nothing came
+near the ceiling.<span class="sn"></span><span class="sidenote">Fifteen minutes
+is a property of the execution model, not a quota. There is no support ticket
+that raises it.</span>
+
+We wanted the margin more than the speed. A render that dies at minute fourteen
+has burned fourteen minutes and produced nothing, and the user watched it
+happen.
 
 <figure class="diagram">
 <svg viewBox="0 0 400 64" role="img" aria-label="A progress bar filling towards a dashed line marked 15:00, stopping just short of it and resetting to zero, over and over.">
@@ -37,42 +40,37 @@ watched the whole thing happen.
 who watched every second of it.</figcaption>
 </figure>
 
-That worked. We ran it for a year and eight months and tracked what every
-single render cost us, which turned out to be the most useful thing we did,
-though not for the reason we expected.
+That setup ran for a year and eight months. We tracked what every render cost us
+for the whole of it.
 
-## The renderer we decided not to build
+## The renderer we did not build
 
-Once you have outgrown someone else's renderer, the appealing move is to build
-your own. We could see the shape of it: own the encode, run it on instances we
-picked, split the work however we wanted, stop paying a per-render premium.
+Once you outgrow someone else's renderer, the obvious move is to build your own.
+We could see the shape of it. Own the encode, run it on instances we picked,
+split the work how we wanted, stop paying per render.
 
-So we priced it, and the number that mattered was not the AWS bill. It was us. A
-renderer is not a project you finish. It is queueing, retries, storage
-lifecycle, cost monitoring, capacity to keep warm, and somebody awake when an
-export fails at two in the morning. We were three engineers and two designers.
-Building it meant one of the three permanently maintaining infrastructure whose
-entire job was to produce a file.
+So we priced it. The number that decided it was not the AWS bill. It was us.
 
-Measured that way it did not lose narrowly. It lost badly, and that part of the
-decision was easy.
+A renderer is queueing, retries, storage lifecycle, cost monitoring, capacity to
+keep warm, and someone awake when an export fails at two in the morning. We were
+three engineers and two designers. Building it meant one of the three
+maintaining infrastructure whose only job was to produce a file.
 
 > All we have to decide is what to do with the time that is given us.
 >
 > — Gandalf, *The Fellowship of the Ring*
 
-Which is a grander way of saying that a five-person company has one real budget,
-and it is not the one denominated in dollars.
+A five-person company has one real budget and it is not the one in dollars.
 
 ## The question we should have asked first
 
-The harder part is that we had been asking the wrong question for a year. Every
-version of it — sectioning, cost per render, build or buy — assumed that render
-speed was what stood between a customer and the thing they wanted.
+We had been asking the wrong question for a year. Sectioning, cost per render,
+build or buy: all of it assumed render speed was what stood between a customer
+and the thing they wanted.
 
-Then we talked to customers, and they were not waiting on renders. They were
-waiting to *share*. Getting an article or a video in front of someone else was
-the slow step in their day, and rendering was somewhere behind it.
+Then we talked to customers. They were not waiting on renders. They were waiting
+to share. Getting an article or a video in front of someone else was the slow
+step in their day. Rendering was somewhere behind it.
 
 <figure class="diagram">
 <svg viewBox="0 0 400 120" role="img" aria-label="A four-step flow: edit, render, share, viewer. A bracket above the render step is labelled 'a year of our attention'. A bracket below the share step is labelled 'what customers were waiting on'.">
@@ -100,40 +98,32 @@ the slow step in their day, and rendering was somewhere behind it.
 <figcaption>We had spent a year on the second box.</figcaption>
 </figure>
 
-That reframes the render problem entirely. If nobody is waiting on the render,
-you do not need it to be fast. You need it to stop costing you money and
-attention.
+If nobody is waiting on the render, it does not need to be fast. It needs to
+stop costing us money and attention.
 
-## Moving it onto the machine that was already there
+## Moving it to the machine that was already there
 
-So we stopped rendering in the cloud. The product became a desktop app, and
-rendering moved onto the user's own machine: FFmpeg and Remotion running
-locally, on hardware that had already rendered the preview and was sitting idle
-while our Lambdas did the same arithmetic a second time.
+We stopped rendering in the cloud. The product became a desktop app, and
+rendering moved onto the user's machine: FFmpeg and Remotion running locally, on
+hardware that had already rendered the preview.
 
-It is slower on some machines, and that turned out not to matter. Most
-computers will get through a fifteen or twenty minute video, and taking a while
-longer costs the customer nothing they had ever mentioned wanting. What it
-bought us was the whole cloud render bill, and the attention of three
-engineers, which went into editing and sharing instead. The renderer stopped
-being a system we operated and became a thing that happens on someone else's
-laptop while they make tea.
+It is slower on some machines. That turned out not to matter. Most computers get
+through a fifteen or twenty minute video, and taking longer costs the customer
+nothing they had ever asked us for. We got back the cloud render bill and the
+attention of three engineers, which went into editing and sharing instead.
 
-We had suspected about a year in that a web app was the wrong shape for this
-product. Knowing it did not help much. The customers we had were on the web,
-and a desktop app they could move to takes as long as it takes to build. We
-knew exactly where the couch had to go and still spent eight months getting it
-up the stairs, running the Lambda version the whole way.
+We had suspected a year in that a web app was the wrong shape for this product.
+Knowing it did not help much. Our customers were on the web, and a desktop app
+takes as long as it takes to build. We knew where the couch had to go. It still
+took eight months to get it up the stairs, and we ran the Lambda version the
+whole way.
 
-## What I would take from it
+## What I would do differently
 
-Two things, and the second one cost more than the first.
+Price my own time before the infrastructure. The flattering version of a
+decision is the one where the interesting system is also the right one. On a
+team of three it usually is not.
 
-Price your own time before the infrastructure. The flattering version of a
-decision is the one where the interesting system is also the correct one. On a
-team of three it almost never is.
-
-Then: measure the thing customers are waiting on, not the thing you happen to
-be working on. We had a year of per-render cost data and no idea where the wait
-actually was. Both of those took roughly a day to find out. We did one of them
-immediately and the other far too late.
+And measure what customers are waiting on, not what I happen to be working on.
+We had a year of per-render cost data and no idea where the wait was. Both took
+about a day to find out. We did one immediately and the other far too late.

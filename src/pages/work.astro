@@ -7,7 +7,7 @@ const roles = [
     role: 'Software Engineer',
     org: 'Helply',
     detail:
-      'Rebuilding a customer-support platform that has been running for over a decade, in NestJS and SQL. I own the email-rendering pipeline and the notes architecture. Volume is the easy half: organisations arrive with millions of tickets, each carrying thousands of emails, attachments and notes. History is the hard half, because every migration has to keep the old schema and the new one agreeing while both are serving live traffic. I also built the video sync, editing and rendering, down to manipulating individual segments on the timeline.',
+      'Rebuilding a customer-support platform that has been running for over a decade, in NestJS and SQL. I own the email-rendering pipeline and the notes architecture. The volume is manageable: organisations arrive with millions of tickets, each carrying thousands of emails, attachments and notes. The history is the hard part. Every migration has to keep the old schema and the new one agreeing while both are serving live traffic. I also built the video sync, editing and rendering, down to manipulating individual segments on the timeline.',
   },
   {
     when: '2023 — 2025',
@@ -78,15 +78,15 @@ const stack = [
   <p class="eyebrow spaced">How I work</p>
   <ul class="how">
     <li>I price a design before I commit to it, and the price includes our own
-      time. Building our own render pipeline was the interesting option and the
-      wrong one: three engineers cannot afford to maintain infrastructure that
-      moving the work to the client makes unnecessary.</li>
+      time. Building our own renderer was the interesting option and the wrong
+      one. Three engineers cannot afford to maintain infrastructure that moving
+      the work to the client makes unnecessary.</li>
     <li>On a system with history, the migration is the feature. Two schemas
-      serving live traffic and agreeing with each other is most of the work,
-      and none of it shows up in the demo.</li>
+      serving live traffic and agreeing with each other is most of the work.
+      None of it shows up in the demo.</li>
     <li>I read the platform limits before designing around them. Lambda caps
-      execution at fifteen minutes, and that one number decided the shape of
-      our export pipeline long before it decided anything else.</li>
+      execution at fifteen minutes. That one number decided the shape of our
+      whole export pipeline.</li>
   </ul>
 
   <p class="eyebrow spaced">Projects</p>
