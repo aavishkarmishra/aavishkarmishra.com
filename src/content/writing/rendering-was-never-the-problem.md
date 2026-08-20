@@ -57,6 +57,13 @@ entire job was to produce a file.
 Measured that way it did not lose narrowly. It lost badly, and that part of the
 decision was easy.
 
+> All we have to decide is what to do with the time that is given us.
+>
+> — Gandalf, *The Fellowship of the Ring*
+
+Which is a grander way of saying that a five-person company has one real budget,
+and it is not the one denominated in dollars.
+
 ## The question we should have asked first
 
 The harder part is that we had been asking the wrong question for a year. Every
