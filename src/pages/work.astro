@@ -14,7 +14,7 @@ const roles = [
     role: 'Founding Engineer',
     org: 'Scream Creator Technologies',
     detail:
-      'Three engineers, two designers, and three products taken from zero to paying customers. I built the video pipeline end to end: capture, re-encode of camera and screen, quality enhancement, proxy renditions, an editor with TTS voiceover synced through FFmpeg, then export. Export ran on Remotion Lambda for a year and eight months, fanned out in eight-to-ten-minute sections to keep clear of Lambda’s fifteen-minute ceiling, with per-render cost tracked for the whole of it. The obvious next step was to build our own renderer; the cost that decided against it was three engineers’ attention, not the AWS bill. Then customers told us they were waiting on sharing rather than on renders, which made render speed the wrong thing to buy at any price. We shipped a desktop app instead and moved rendering onto the user’s machine with FFmpeg and Remotion running locally. I also wired Stripe and Razorpay across the whole payment lifecycle: subscriptions, GST invoicing, webhooks, refunds, retries, disputes.',
+      'Three engineers, two designers, and three products taken from zero to paying customers. I built the video pipeline end to end: capture, re-encode of camera and screen, quality enhancement, proxy renditions, an editor with TTS voiceover synced through FFmpeg, then export. Export ran on Remotion Lambda for a year and eight months. We fanned it out in eight-to-ten-minute sections to keep clear of Lambda’s fifteen-minute ceiling, and tracked what every render cost us the whole time. The obvious next step was to build our own renderer; the cost that decided against it was three engineers’ attention, not the AWS bill. Then customers told us they were waiting on sharing rather than on renders, which made render speed the wrong thing to buy at any price. We shipped a desktop app instead and moved rendering onto the user’s machine with FFmpeg and Remotion running locally. I also wired Stripe and Razorpay across the whole payment lifecycle: subscriptions, GST invoicing, webhooks, refunds, retries, disputes.',
   },
   {
     when: '2023',
@@ -44,7 +44,7 @@ const projects = [
     href: 'https://github.com/aavishkarmishra/detr-tensorflow',
     stack: 'TensorFlow · Keras',
     detail:
-      'End-to-End Object Detection with Transformers, rebuilt from the paper in TensorFlow, with web inference through OpenCV. I never trained it to convergence — the paper takes 300 epochs on eight GPUs, which I did not have — so this is a study of how set prediction and the bipartite matching loss work, not a reproduction of its numbers.',
+      'End-to-End Object Detection with Transformers, rebuilt from the paper in TensorFlow, with web inference through OpenCV. I never trained it to convergence. The paper takes 300 epochs on eight GPUs, which I did not have. So it is a study of how set prediction and the bipartite matching loss work, not a reproduction of its numbers.',
   },
 ];
 
