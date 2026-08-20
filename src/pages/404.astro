@@ -1,0 +1,17 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Not found" description="That page does not exist.">
+  <h1>404</h1>
+  <p class="lede">That page does not exist, and it probably never did.</p>
+  <p class="dim">
+    Try the <a href="/writing">writing</a>, the <a href="/work">work</a>, or
+    the <a href="/">front page</a>. If you followed a link from somewhere and
+    it broke, I would like to know.
+  </p>
+</Base>
+
+<style>
+  h1 { font-family: var(--mono); font-size: 3rem; letter-spacing: -0.03em; margin-bottom: 1rem; }
+  p { margin: 0 0 0.9rem; }
+</style>

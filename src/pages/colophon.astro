@@ -1,0 +1,49 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Colophon" description="How this site is built.">
+  <h1>Colophon</h1>
+  <p class="dim lede-sub">What this site is made of, for anyone who cares about
+    that sort of thing.</p>
+
+  <div class="prose">
+    <p>
+      Built with <a href="https://astro.build">Astro</a>. Posts are markdown
+      files in the repository; publishing is a <code>git push</code>. Hosted on
+      Cloudflare Pages.
+    </p>
+    <p>
+      No client-side framework. The only JavaScript on the site is Astro’s
+      link prefetcher, 2.5&thinsp;kB of it, which fetches a page when you hover
+      the link. Page transitions use the browser’s native
+      <code>@view-transition</code> rather than a router. Pages are single-digit
+      kilobytes of HTML over 7&thinsp;kB of CSS.
+    </p>
+    <p>
+      No web fonts. Body text is whatever serif your system already has
+      — Charter or Iowan Old Style on Apple platforms, Georgia elsewhere —
+      with the system sans for navigation and the system monospace for dates
+      and metadata. Nothing is fetched from a third party, so there is nothing
+      to block and nobody to trust.
+    </p>
+    <p>
+      Diagrams are inline SVG, written by hand, coloured with
+      <code>currentColor</code> so they follow the theme instead of shipping
+      two images. Light and dark come from
+      <code>prefers-color-scheme</code>; there is no toggle, because your
+      operating system already knows.
+    </p>
+    <p>
+      Sidenotes sit in the margin above 1120 pixels wide and fold inline below
+      it. Dates and figures are set in tabular numerals so columns line up.
+    </p>
+    <p>
+      Analytics are Cloudflare’s, which set no cookies, so there is no consent
+      banner. There is an <a href="/rss.xml">RSS feed</a>.
+    </p>
+  </div>
+</Base>
+
+<style>
+  .lede-sub { font-size: 0.9375rem; line-height: 1.6; margin: 0.5rem 0 2rem; }
+</style>
