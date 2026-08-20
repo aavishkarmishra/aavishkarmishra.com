@@ -3,8 +3,8 @@ import '../styles/global.css';
 import Mark from '../components/Mark.astro';
 import { site } from '../data/site';
 
-interface Props { title?: string; description?: string; ogType?: string }
-const { title, description = site.tagline, ogType = 'website' } = Astro.props;
+interface Props { title?: string; description?: string; ogType?: string; notes?: boolean }
+const { title, description = site.tagline, ogType = 'website', notes = false } = Astro.props;
 
 const pageTitle = title ? `${title} — ${site.name}` : `${site.name}`;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
@@ -35,7 +35,7 @@ const nav = [
     <link rel="alternate" type="application/rss+xml" title={site.name} href="/rss.xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
   </head>
-  <body>
+  <body class={notes ? 'has-notes' : undefined}>
     <header class="site-header">
       <div class="wrap row">
         <a class="wordmark" href="/" aria-label="Aavishkar Mishra">

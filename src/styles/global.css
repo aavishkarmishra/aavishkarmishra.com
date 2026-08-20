@@ -44,6 +44,9 @@ html {
 
 body {
   margin: 0;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
   background: var(--bg);
   color: var(--fg);
   font: 400 1.0625rem/1.65 var(--serif);
@@ -71,7 +74,17 @@ code, kbd, pre, samp { font-family: var(--mono); }
   margin-inline: auto;
 }
 
+/* Once sidenotes move into the margin, the text column alone is no longer the
+   optical centre. Centre the column plus its gutter instead. */
+@media (min-width: 70rem) {
+  body.has-notes .wrap {
+    margin-left: calc((100% - (var(--measure) + var(--margin-col) + 2.25rem)) / 2);
+    margin-right: 0;
+  }
+}
+
 .site-header {
+  flex: none;
   padding: 2.75rem 0 0;
 }
 
@@ -103,10 +116,10 @@ nav.site-nav a:hover,
 nav.site-nav a[aria-current="page"] { color: var(--fg); }
 nav.site-nav a[aria-current="page"] { text-decoration: underline; text-underline-offset: 4px; }
 
-main { padding: 3.5rem 0 0; }
+main { flex: 1 0 auto; padding: 3.5rem 0 6rem; }
 
 .site-footer {
-  margin-top: 6rem;
+  flex: none;
   padding: 1.25rem 0 3rem;
   border-top: 1px solid var(--rule);
   font: 400 0.8125rem/1.6 var(--sans);
@@ -287,6 +300,19 @@ figure.diagram figcaption {
 
 @media (max-width: 34rem) {
   .timeline > li { grid-template-columns: 1fr; gap: 0.35rem; }
+}
+
+.entries.dated li {
+  display: grid;
+  grid-template-columns: 5.75rem 1fr;
+  gap: 0 1.25rem;
+  align-items: baseline;
+}
+.entries.dated .entry-meta { padding-top: 0.2rem; }
+
+@media (max-width: 32rem) {
+  .entries.dated li { grid-template-columns: 1fr; gap: 0.3rem; }
+  .entries.dated .entry-meta { grid-row: 1; padding-top: 0; }
 }
 
 .more {

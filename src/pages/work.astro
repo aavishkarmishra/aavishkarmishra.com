@@ -5,9 +5,9 @@ const roles = [
   {
     when: '2025 —',
     role: 'Software Engineer',
-    org: 'Groove',
+    org: 'Helply',
     detail:
-      'Re-architecture of a long-lived customer-support platform, in NestJS and SQL. I own the email-rendering pipeline and the notes architecture end to end. The hard part is scale plus history: organisations with millions of tickets, each carrying thousands of emails, attachments and notes, and migration paths that have to keep the legacy and the new system agreeing with each other while both are live. Also built video sync, editing and rendering, including segment-level timeline manipulation inside strict video-length constraints.',
+      'Re-architecture of a long-lived customer-support platform (the company was Groove until it became Helply), in NestJS and SQL. I own the email-rendering pipeline and the notes architecture end to end. The hard part is scale plus history: organisations with millions of tickets, each carrying thousands of emails, attachments and notes, and migration paths that have to keep the legacy and the new system agreeing with each other while both are live. Also built video sync, editing and rendering, including segment-level timeline manipulation inside strict video-length constraints.',
   },
   {
     when: '2023 — 2025',
@@ -34,30 +34,32 @@ const roles = [
 const projects = [
   {
     name: 'Manthan',
-    href: 'https://github.com/aavishkarmishra',
+    href: 'https://github.com/Manthan933/Manthan',
     stack: 'React · Node · Express · MongoDB',
     detail:
-      'A proctored online exam platform with webcam monitoring and plagiarism detection, used by three institutes and around 350 students. Open-sourced; 1.2k stars and 78 contributors, with CI on GitHub Actions.',
+      'A proctored online exam platform with webcam monitoring and plagiarism detection, used by three institutes and around 350 students. Open source since 2020, and picked up by other people since: 145 forks and 41 contributors.',
   },
   {
     name: 'DETR, reimplemented',
-    href: 'https://github.com/aavishkarmishra',
+    href: 'https://github.com/aavishkarmishra/detr-tensorflow',
     stack: 'TensorFlow · Keras',
     detail:
-      'End-to-End Object Detection with Transformers, rebuilt from the paper. 41.3 mAP on COCO-17, with web inference through OpenCV.',
+      'End-to-End Object Detection with Transformers, rebuilt from the paper in TensorFlow to understand how set prediction and the matching loss actually work, with web inference through OpenCV.',
   },
 ];
 
 const stack = [
-  'TypeScript', 'NestJS', 'Node', 'Python', 'SQL / Postgres', 'Redis',
-  'MongoDB', 'AWS — Lambda, SES, S3, EC2, CloudFront', 'FFmpeg', 'React',
+  'TypeScript', 'NestJS', 'Node', 'Python', 'FastAPI', 'React',
+  'SQL / Postgres', 'Redis', 'MongoDB',
+  'AWS — Lambda, SES, S3, EC2, CloudFront', 'Linux', 'GitHub Actions',
+  'FFmpeg', 'TensorFlow',
 ];
 ---
 <Base title="Work" description="Experience, projects, and the systems I have owned end to end.">
   <h1>Work</h1>
   <p class="dim lede-sub">
-    Roughly three years of building backend systems, most of it as the person
-    who also carried the pager for them.
+    Roughly three years of building products, most of it as the person who
+    also carried the pager for them.
   </p>
 
   <p class="eyebrow">Experience</p>

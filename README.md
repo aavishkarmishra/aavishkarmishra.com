@@ -53,6 +53,11 @@ never hardcode a hex value, and never use a raster image for a diagram.
 
 `d-edge-fail` / `d-arrow-fail` / `d-label-fail` mark rejected or failing paths.
 
+## Adding a book
+
+Append to the top of `books` in `src/data/reading.ts`. Title, author, and one
+honest line. If there is nothing specific to say about it, leave it out.
+
 ## Editorial rules
 
 - Never claim "senior". Specifics earn it; adjectives do not.

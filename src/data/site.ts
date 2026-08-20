@@ -5,8 +5,8 @@ export const site = {
   linkedin: 'https://linkedin.com/in/aavishkarmishra',
   location: 'Bengaluru, India',
   tagline:
-    'I build backend systems end to end: video pipelines, email infrastructure, payments.',
+    'Full-stack in the literal sense. I have shipped the video encoder, the editor UI in front of it, the payment flow that charges for it, and the infrastructure all three run on.',
 };
 
 /* flip to true once public/portrait.jpg exists */
-export const hasPortrait = false;
+export const hasPortrait = true;

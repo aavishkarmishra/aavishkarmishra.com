@@ -1,43 +1,26 @@
 ---
 import Base from '../layouts/Base.astro';
-import { books, shelves } from '../data/reading';
+import { books } from '../data/reading';
 ---
-<Base title="Reading" description="Books that changed how I work, and books I have reservations about.">
+<Base title="Reading" description="Books I have something specific to say about.">
   <h1>Reading</h1>
   <p class="dim lede-sub">
-    Only books I have something specific to say about, sorted by how much they
-    actually changed what I do.
+    Only books I have something specific to say about. No covers, no ratings,
+    and no list of things I intend to read one day.
   </p>
 
-  {shelves.map((shelf) => {
-    const items = books.filter((b) => b.shelf === shelf.id);
-    if (items.length === 0) return null;
-    return (
-      <section>
-        <p class="eyebrow">{shelf.label}</p>
-        {shelf.blurb && <p class="shelf-blurb">{shelf.blurb}</p>}
-        <ul class="entries">
-          {items.map((b) => (
-            <li>
-              <span class="entry-title">{b.title}</span>
-              <span class="entry-meta by">{b.author}</span>
-              <p class="entry-desc">{b.note}</p>
-            </li>
-          ))}
-        </ul>
-      </section>
-    );
-  })}
+  <ul class="entries">
+    {books.map((b) => (
+      <li>
+        <span class="entry-title">{b.title}</span>
+        <span class="entry-meta by">{b.author}</span>
+        <p class="entry-desc">{b.note}</p>
+      </li>
+    ))}
+  </ul>
 </Base>
 
 <style>
   .lede-sub { font-size: 0.9375rem; line-height: 1.6; margin: 0.5rem 0 2.25rem; }
-  section + section { margin-top: 3.25rem; }
-  .shelf-blurb {
-    margin: -0.5rem 0 1rem;
-    font-size: 0.9375rem;
-    line-height: 1.6;
-    color: var(--muted);
-  }
   .by { margin-left: 0.55rem; }
 </style>
