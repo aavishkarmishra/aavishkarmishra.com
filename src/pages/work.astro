@@ -5,23 +5,23 @@ const roles = [
   {
     when: '2025 —',
     role: 'Software Engineer',
-    org: 'Helply',
+    org: 'Helply (formerly Groove)',
     detail:
-      'Re-architecture of a long-lived customer-support platform (the company was Groove until it became Helply), in NestJS and SQL. I own the email-rendering pipeline and the notes architecture end to end. The hard part is scale plus history: organisations with millions of tickets, each carrying thousands of emails, attachments and notes, and migration paths that have to keep the legacy and the new system agreeing with each other while both are live. Also built video sync, editing and rendering, including segment-level timeline manipulation inside strict video-length constraints.',
+      'Rebuilding a customer-support platform that has been running for over a decade, in NestJS and SQL. I own the email-rendering pipeline and the notes architecture. Volume is the easy half: organisations arrive with millions of tickets, each carrying thousands of emails, attachments and notes. History is the hard half, because every migration has to keep the old schema and the new one agreeing while both are serving live traffic. I also built the video sync, editing and rendering, down to manipulating individual segments on the timeline.',
   },
   {
     when: '2023 — 2025',
     role: 'Founding Engineer',
     org: 'Scream Creator Technologies',
     detail:
-      'Three products from zero to paying customers, owning core backend architecture and on-call for all of it. Built the video pipeline: capture, re-encode of camera/screen/audio, quality enhancement, compressed renditions, an editor with TTS voiceover synced through FFmpeg, then render and export on AWS. Owned export rendering: prototyped it on distributed Lambda, hit the fifteen-minute execution ceiling on 4K/60fps long-form video, priced the self-hosted alternative, and moved rendering to the client instead. Integrated Stripe and Razorpay across the full payment lifecycle — subscriptions, invoicing with automated GST, webhooks, refunds, retries, disputes.',
+      'Three products from zero to paying customers, and the pager for all of them. I built the video pipeline end to end: capture, re-encode of camera and screen, quality enhancement, proxy renditions, an editor with TTS voiceover synced through FFmpeg, then export. Export is where it got interesting. I prototyped it on distributed Lambda, hit the fifteen-minute execution ceiling on 4K/60fps long-form video, priced the self-hosted alternative, and moved rendering to the client instead. I also wired Stripe and Razorpay across the whole payment lifecycle: subscriptions, GST invoicing, webhooks, refunds, retries, disputes.',
   },
   {
     when: '2023',
     role: 'Engineering Intern',
     org: 'Scream Creator Technologies',
     detail:
-      'Replaced a third-party email vendor with an event-driven AWS SES and Lambda pipeline, which meant owning bounces, suppression and retries ourselves. Built an event pipeline for product analytics. Took public-page Lighthouse scores from 68 to 95 with code-splitting and lazy-loaded images.',
+      'Replaced a third-party email vendor with an event-driven pipeline on SES and Lambda, which meant taking on bounces, suppression and retries ourselves. Built the event pipeline behind product analytics. Took public-page Lighthouse scores from 68 to 95 with code-splitting and lazy-loaded images.',
   },
   {
     when: '2019 — 2023',
@@ -58,8 +58,8 @@ const stack = [
 <Base title="Work" description="Experience, projects, and the systems I have owned end to end.">
   <h1>Work</h1>
   <p class="dim lede-sub">
-    Roughly three years of building products, most of it as the person who
-    also carried the pager for them.
+    Three years of building products, most of it as the person who also
+    carried the pager for them.
   </p>
 
   <p class="eyebrow">Experience</p>
@@ -77,12 +77,15 @@ const stack = [
 
   <p class="eyebrow spaced">How I work</p>
   <ul class="how">
-    <li>Cost is a design constraint, not a finance problem. If I cannot say what
-      a system costs per unit of work, I do not understand it yet.</li>
-    <li>I write the migration path before the feature. On systems with real
-      history, correctness during the transition is the whole job.</li>
-    <li>I would rather delete a component than scale it, and I would rather
-      hit a platform limit in a prototype than in production.</li>
+    <li>I price a design before I commit to it. The render pipeline was never
+      wrong, it was expensive, and that only became visible once someone
+      worked out what a single export cost us.</li>
+    <li>On a system with history, the migration is the feature. Two schemas
+      serving live traffic and agreeing with each other is most of the work,
+      and none of it shows up in the demo.</li>
+    <li>I would rather meet a platform limit in a prototype than in
+      production. Fifteen minutes is documented. We found it with real users
+      and real footage, which is the expensive way to read a docs page.</li>
   </ul>
 
   <p class="eyebrow spaced">Projects</p>

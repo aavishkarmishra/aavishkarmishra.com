@@ -30,7 +30,7 @@ export const books: Book[] = [
     author: 'Alex Xu',
     href: 'https://openlibrary.org/works/OL21947791W',
     note:
-      'Good on the fundamentals, and the worked examples of designing systems at scale are the genuinely useful part. Interview preparation, and honest about being that.',
+      'Good on the fundamentals, and the worked examples of designing systems at scale are the part worth the price. Interview preparation, and honest about being that.',
   },
   {
     title: 'Clean Code',

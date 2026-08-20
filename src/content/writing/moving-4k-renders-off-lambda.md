@@ -55,17 +55,17 @@ concatenation artefacts looked like.
 ## Pricing the obvious alternative
 
 The next answer is to stop being clever and run the encode on a machine we
-control. That works — encoding is exactly what a big instance is for — but
-export is a *user-triggered* operation, so the cost scales with how often
-people click the button rather than with anything we control.
+control. That works. Encoding is what a big instance is for. But export is a
+*user-triggered* operation, so the bill scales with how often people press the
+button, which is not a number we get to decide.
 
 TODO(interview): what you actually measured here — instance type, wall-clock
 per render, and the per-render figure you derived. Public list prices only,
 no internal numbers.
 
-At that point the question stops being technical. A feature that costs
-meaningful money every time a user touches it either raises the price of the
-product or gets rationed, and rationing an export button is a bad product.
+At that point it stops being a technical question. A feature that costs real
+money every time someone touches it either raises the price of the product or
+gets rationed, and an export button you have to ration is a broken product.
 
 ## Where the compute was already sitting
 
@@ -81,9 +81,8 @@ limits, what you had to keep server-side as a fallback.
 
 ## What I would tell myself earlier
 
-Find the hard limits in a prototype, not in production. The fifteen-minute
-ceiling is documented; we could have read it against a realistic worst-case
-input on day one instead of discovering it with real users on real footage.
-The cost model deserves the same treatment. Both of those are half a day of
-work, and either one would have pointed straight at the answer we eventually
-shipped.
+Read the limits against your worst case before you build on them. The
+fifteen-minute ceiling is in the documentation. We found it with real users and
+real footage, which is a slow and public way to learn something that was
+written down. The cost model deserved the same half day of arithmetic. Either
+one would have pointed at the answer we shipped eight months later.
