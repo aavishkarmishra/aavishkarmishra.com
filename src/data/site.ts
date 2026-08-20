@@ -5,7 +5,7 @@ export const site = {
   linkedin: 'https://linkedin.com/in/aavishkarmishra',
   location: 'Bengaluru, India',
   tagline:
-    'Full-stack engineer. I take products from idea to production and stay responsible for them once they are there.',
+    'Full-stack engineer. I take products from idea to production and answer for what happens after.',
 };
 
 /* One line, present tense, no date. Change it whenever it stops being true. */
