@@ -4,6 +4,7 @@ export const site = {
   github: 'https://github.com/aavishkarmishra',
   linkedin: 'https://linkedin.com/in/aavishkarmishra',
   location: 'Bengaluru, India',
+  role: 'Full-stack Engineer',
   tagline:
     'Full-stack engineer. I take products from idea to production and answer for what happens after.',
 };

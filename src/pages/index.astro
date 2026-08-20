@@ -10,7 +10,7 @@ const posts = (await getCollection('writing', ({ data }) =>
 const featured = posts.filter((p) => p.data.featured);
 const recent = posts.filter((p) => !p.data.featured).slice(0, 5);
 ---
-<Base>
+<Base description="Aavishkar Mishra is a full-stack engineer in Bengaluru, India. Founding engineer on three SaaS products; now building an AI-native B2B support platform at Helply. NestJS, Node, Go, Python, React, AWS.">
   <div class="intro">
     {hasPortrait && (
       <img class="portrait" src="/portrait.jpg" width="96" height="96"

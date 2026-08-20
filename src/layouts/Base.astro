@@ -3,10 +3,49 @@ import '../styles/global.css';
 import Mark from '../components/Mark.astro';
 import { site } from '../data/site';
 
-interface Props { title?: string; description?: string; ogType?: string; notes?: boolean }
-const { title, description = site.tagline, ogType = 'website', notes = false } = Astro.props;
+interface Props {
+  title?: string;
+  description?: string;
+  ogType?: string;
+  notes?: boolean;
+  published?: Date;
+  noindex?: boolean;
+}
+const {
+  title, description = site.tagline, ogType = 'website',
+  notes = false, published, noindex = false,
+} = Astro.props;
 
-const pageTitle = title ? `${title} — ${site.name}` : `${site.name}`;
+const pageTitle = title ? `${title} — ${site.name}` : `${site.name} — ${site.role}`;
+const ogImage = new URL('/og.png', Astro.site).href;
+
+const schema = published
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      headline: title,
+      description,
+      datePublished: published.toISOString().slice(0, 10),
+      author: { '@type': 'Person', name: site.name, url: Astro.site!.href },
+      publisher: { '@type': 'Person', name: site.name },
+      mainEntityOfPage: new URL(Astro.url.pathname, Astro.site).href,
+    }
+  : {
+      '@context': 'https://schema.org',
+      '@type': 'Person',
+      name: site.name,
+      jobTitle: site.role,
+      description: site.tagline,
+      url: Astro.site!.href,
+      image: ogImage,
+      email: `mailto:${site.email}`,
+      address: { '@type': 'PostalAddress', addressLocality: 'Bengaluru', addressCountry: 'IN' },
+      sameAs: [site.github, site.linkedin],
+      knowsAbout: [
+        'TypeScript', 'NestJS', 'Node.js', 'Go', 'Python', 'React',
+        'PostgreSQL', 'AWS Lambda', 'Amazon SES', 'FFmpeg',
+      ],
+    };
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 
@@ -24,6 +63,7 @@ const nav = [
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <meta name="color-scheme" content="light dark" />
     <meta property="og:type" content={ogType} />
@@ -31,9 +71,18 @@ const nav = [
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content={site.name} />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${site.name} — ${site.role}`} />
+    <meta property="og:locale" content="en_GB" />
+    {published && <meta property="article:published_time" content={published.toISOString()} />}
+    {published && <meta property="article:author" content={site.name} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="author" content={site.name} />
     <link rel="alternate" type="application/rss+xml" title={site.name} href="/rss.xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
   </head>
   <body class={notes ? 'has-notes' : undefined}>
     <header class="site-header">
