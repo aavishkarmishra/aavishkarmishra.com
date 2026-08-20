@@ -12,3 +12,4 @@ dist/
 *.heic
 *.pdf
 !public/portrait.jpg
+!public/og.png
