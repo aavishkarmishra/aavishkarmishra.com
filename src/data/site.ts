@@ -8,5 +8,9 @@ export const site = {
     'Full-stack in the literal sense: I have written the video encoder, the editor people drive it from, the payment flow that bills for it, and the infrastructure all three run on.',
 };
 
+/* One line, present tense, no date. Change it whenever it stops being true. */
+export const now =
+  'Teaching a decade of accumulated email to render correctly, one edge case at a time. Losing, mostly.';
+
 /* flip to true once public/portrait.jpg exists */
 export const hasPortrait = true;

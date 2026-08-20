@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { site, hasPortrait } from '../data/site';
+import { site, hasPortrait, now } from '../data/site';
 import { getCollection } from 'astro:content';
 
 const posts = (await getCollection('writing', ({ data }) =>
@@ -27,6 +27,7 @@ const recent = posts.filter((p) => !p.data.featured).slice(0, 5);
         email-rendering pipeline and notes architecture of a support platform
         that has been running for over a decade.
       </p>
+      <p class="now"><span class="now-label">Now</span>{now}</p>
       <p class="inline-links">
         {site.location}<span class="sep">·</span><a href={`mailto:${site.email}`}>Email</a
         ><span class="sep">·</span><a href={site.github}>GitHub</a
@@ -73,6 +74,19 @@ const recent = posts.filter((p) => !p.data.featured).slice(0, 5);
   }
   .intro h1 { margin-bottom: 0.4rem; }
   .intro-second { font-size: 0.9375rem; line-height: 1.6; margin: 0.75rem 0 0.9rem; }
+  .now {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--muted);
+    margin: 0 0 0.9rem;
+  }
+  .now-label {
+    font: 500 0.6875rem/1 var(--sans);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin-right: 0.6rem;
+  }
   section { margin-top: 3.25rem; }
   @media (max-width: 30rem) {
     .intro { flex-direction: column; gap: 1rem; }
