@@ -3,7 +3,7 @@ title: Rendering was never the problem
 description: We spent a year and eight months making video renders faster and cheaper. Then we asked customers what they were waiting on, and it was not the render.
 date: 2026-08-24
 featured: true
-draft: true
+draft: false
 ---
 
 Export was the one part of the product we did not own.
