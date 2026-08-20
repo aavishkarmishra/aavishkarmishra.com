@@ -5,7 +5,7 @@ export const site = {
   linkedin: 'https://linkedin.com/in/aavishkarmishra',
   location: 'Bengaluru, India',
   tagline:
-    'Full-stack in the literal sense: I have written the video encoder, the editor people drive it from, the payment flow that bills for it, and the infrastructure all three run on.',
+    'Full-stack in the literal sense: I have written the video encoder, the editor people drive it from, and the payment flow that bills for it.',
 };
 
 /* One line, present tense, no date. Change it whenever it stops being true. */
