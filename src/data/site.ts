@@ -5,7 +5,7 @@ export const site = {
   linkedin: 'https://linkedin.com/in/aavishkarmishra',
   location: 'Bengaluru, India',
   tagline:
-    'A full-stack engineer, which at Scream meant writing the video encoder, the editor people drive it from, and the payment flow that bills for it.',
+    'A full-stack engineer. Three products taken from zero to paying customers. I wrote the video encoder, the editor in front of it, and the payment flow that bills for it.',
 };
 
 /* One line, present tense, no date. Change it whenever it stops being true. */
