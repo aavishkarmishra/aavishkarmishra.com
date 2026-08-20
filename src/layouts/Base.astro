@@ -1,0 +1,68 @@
+---
+import '../styles/global.css';
+import Mark from '../components/Mark.astro';
+import { site } from '../data/site';
+
+interface Props { title?: string; description?: string; ogType?: string }
+const { title, description = site.tagline, ogType = 'website' } = Astro.props;
+
+const pageTitle = title ? `${title} — ${site.name}` : `${site.name}`;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+const nav = [
+  { href: '/writing', label: 'Writing' },
+  { href: '/work', label: 'Work' },
+  { href: '/reading', label: 'Reading' },
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="color-scheme" content="light dark" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={site.name} />
+    <meta name="twitter:card" content="summary" />
+    <link rel="alternate" type="application/rss+xml" title={site.name} href="/rss.xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap row">
+        <a class="wordmark" href="/" aria-label="Aavishkar Mishra">
+          <Mark />{path !== '/' && <span>Aavishkar Mishra</span>}
+        </a>
+        <nav class="site-nav">
+          {nav.map((n) => (
+            <a href={n.href} aria-current={path.startsWith(n.href) ? 'page' : undefined}>
+              {n.label}
+            </a>
+          ))}
+        </nav>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <slot />
+    </main>
+
+    <footer class="site-footer wrap">
+      <span>{site.location}</span>
+      <span>
+        <a href={`mailto:${site.email}`}>Email</a><span class="sep">·</span
+        ><a href={site.github} rel="me">GitHub</a><span class="sep">·</span
+        ><a href={site.linkedin} rel="me">LinkedIn</a><span class="sep">·</span
+        ><a href="/rss.xml">RSS</a>
+      </span>
+    </footer>
+  </body>
+</html>

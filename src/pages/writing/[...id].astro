@@ -1,0 +1,41 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('writing', ({ data }) =>
+    import.meta.env.PROD ? !data.draft : true
+  );
+  return posts.map((post) => ({ params: { id: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+
+const iso = post.data.date.toISOString().slice(0, 10);
+const human = post.data.date.toLocaleDateString('en-GB', {
+  day: '2-digit', month: 'long', year: 'numeric',
+});
+---
+<Base title={post.data.title} description={post.data.description} ogType="article">
+  <article>
+    <header class="post-head">
+      <h1>{post.data.title}</h1>
+      <p class="entry-meta"><time datetime={iso}>{human}</time></p>
+    </header>
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+
+  <p class="back"><a href="/writing">All writing</a></p>
+</Base>
+
+<style>
+  .post-head { margin-bottom: 2.25rem; }
+  .post-head h1 { font-size: 1.625rem; line-height: 1.22; }
+  .post-head .entry-meta { margin: 0.6rem 0 0; }
+  .back { margin-top: 4rem; font: 400 0.875rem/1 var(--sans); }
+  .back a { text-decoration: none; }
+  .back a::before { content: "\2190  "; }
+</style>

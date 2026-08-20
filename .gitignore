@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.astro/
+.DS_Store
+.env
+.env.*
+
+# no stray media in the repo; only files added deliberately
+*.jpg
+*.jpeg
+*.png
+*.heic
+*.pdf
+!public/portrait.jpg

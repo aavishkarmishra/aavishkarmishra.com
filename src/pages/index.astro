@@ -1,0 +1,78 @@
+---
+import Base from '../layouts/Base.astro';
+import { site, hasPortrait } from '../data/site';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('writing', ({ data }) =>
+  import.meta.env.PROD ? !data.draft : true
+)).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const featured = posts.filter((p) => p.data.featured);
+const recent = posts.filter((p) => !p.data.featured).slice(0, 5);
+---
+<Base>
+  <div class="intro">
+    {hasPortrait && (
+      <img class="portrait" src="/portrait.jpg" width="96" height="96"
+           alt="Aavishkar Mishra" fetchpriority="high" />
+    )}
+    <div>
+      <h1>Aavishkar Mishra</h1>
+      <p class="lede">{site.tagline}</p>
+      <p class="dim intro-second">
+        Founding engineer on three products taken from zero to paying customers.
+        Now at <a href="https://groovehq.com">Groove</a>, working on the
+        email-rendering pipeline and notes architecture of a support platform
+        with a decade of history behind it.
+      </p>
+      <p class="inline-links">
+        {site.location}<span class="sep">·</span><a href={`mailto:${site.email}`}>Email</a
+        ><span class="sep">·</span><a href={site.github}>GitHub</a
+        ><span class="sep">·</span><a href={site.linkedin}>LinkedIn</a>
+      </p>
+    </div>
+  </div>
+
+  {featured.length > 0 && (
+    <section>
+      <p class="eyebrow">Selected work</p>
+      <ul class="entries">
+        {featured.map((p) => (
+          <li>
+            <a class="entry-title" href={`/writing/${p.id}/`}>{p.data.title}</a>
+            <p class="entry-desc">{p.data.description}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  {recent.length > 0 && (
+    <section>
+      <p class="eyebrow">Writing</p>
+      <ul class="entries">
+        {recent.map((p) => (
+          <li><a class="entry-title" href={`/writing/${p.id}/`}>{p.data.title}</a></li>
+        ))}
+      </ul>
+      <a class="more" href="/writing">All writing</a>
+    </section>
+  )}
+</Base>
+
+<style>
+  .intro { display: flex; gap: 1.25rem; align-items: flex-start; }
+  .portrait {
+    flex: none;
+    width: 96px; height: 96px;
+    object-fit: cover;
+    border-radius: 3px;
+    filter: saturate(0.92);
+  }
+  .intro h1 { margin-bottom: 0.4rem; }
+  .intro-second { font-size: 0.9375rem; line-height: 1.6; margin: 0.75rem 0 0.9rem; }
+  section { margin-top: 3.25rem; }
+  @media (max-width: 30rem) {
+    .intro { flex-direction: column; gap: 1rem; }
+  }
+</style>

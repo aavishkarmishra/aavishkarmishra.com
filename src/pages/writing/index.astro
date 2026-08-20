@@ -1,0 +1,37 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('writing', ({ data }) =>
+  import.meta.env.PROD ? !data.draft : true
+)).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+---
+<Base title="Writing" description="Notes on backend systems, pipelines, and the tradeoffs behind them.">
+  <h1>Writing</h1>
+  <p class="dim lede-sub">
+    Mostly post-mortems of my own decisions: what the constraint actually was,
+    what I rejected, and what it cost.
+  </p>
+
+  {posts.length === 0 ? (
+    <p class="dim">Nothing published yet.</p>
+  ) : (
+    <ul class="entries">
+      {posts.map((p) => (
+        <li>
+          <a class="entry-title" href={`/writing/${p.id}/`}>{p.data.title}</a>
+          <p class="entry-desc">{p.data.description}</p>
+          <span class="entry-meta">{fmt(p.data.date)}</span>
+        </li>
+      ))}
+    </ul>
+  )}
+</Base>
+
+<style>
+  .lede-sub { font-size: 0.9375rem; line-height: 1.6; margin: 0.5rem 0 2rem; }
+  .entries .entry-meta { display: block; margin-top: 0.45rem; }
+</style>

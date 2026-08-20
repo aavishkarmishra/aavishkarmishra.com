@@ -1,0 +1,121 @@
+---
+import Base from '../layouts/Base.astro';
+
+const roles = [
+  {
+    when: '2025 —',
+    role: 'Software Engineer',
+    org: 'Groove',
+    detail:
+      'Re-architecture of a long-lived customer-support platform, in NestJS and SQL. I own the email-rendering pipeline and the notes architecture end to end. The hard part is scale plus history: organisations with millions of tickets, each carrying thousands of emails, attachments and notes, and migration paths that have to keep the legacy and the new system agreeing with each other while both are live. Also built video sync, editing and rendering, including segment-level timeline manipulation inside strict video-length constraints.',
+  },
+  {
+    when: '2023 — 2025',
+    role: 'Founding Engineer',
+    org: 'Scream Creator Technologies',
+    detail:
+      'Three products from zero to paying customers, owning core backend architecture and on-call for all of it. Built the video pipeline: capture, re-encode of camera/screen/audio, quality enhancement, compressed renditions, an editor with TTS voiceover synced through FFmpeg, then render and export on AWS. Owned export rendering: prototyped it on distributed Lambda, hit the fifteen-minute execution ceiling on 4K/60fps long-form video, priced the self-hosted alternative, and moved rendering to the client instead. Integrated Stripe and Razorpay across the full payment lifecycle — subscriptions, invoicing with automated GST, webhooks, refunds, retries, disputes.',
+  },
+  {
+    when: '2023',
+    role: 'Engineering Intern',
+    org: 'Scream Creator Technologies',
+    detail:
+      'Replaced a third-party email vendor with an event-driven AWS SES and Lambda pipeline, which meant owning bounces, suppression and retries ourselves. Built an event pipeline for product analytics. Took public-page Lighthouse scores from 68 to 95 with code-splitting and lazy-loaded images.',
+  },
+  {
+    when: '2019 — 2023',
+    role: 'B.Tech, Computer Science & Engineering',
+    org: 'Tezpur University',
+    detail: 'CGPA 8.09 / 10.',
+  },
+];
+
+const projects = [
+  {
+    name: 'Manthan',
+    href: 'https://github.com/aavishkarmishra',
+    stack: 'React · Node · Express · MongoDB',
+    detail:
+      'A proctored online exam platform with webcam monitoring and plagiarism detection, used by three institutes and around 350 students. Open-sourced; 1.2k stars and 78 contributors, with CI on GitHub Actions.',
+  },
+  {
+    name: 'DETR, reimplemented',
+    href: 'https://github.com/aavishkarmishra',
+    stack: 'TensorFlow · Keras',
+    detail:
+      'End-to-End Object Detection with Transformers, rebuilt from the paper. 41.3 mAP on COCO-17, with web inference through OpenCV.',
+  },
+];
+
+const stack = [
+  'TypeScript', 'NestJS', 'Node', 'Python', 'SQL / Postgres', 'Redis',
+  'MongoDB', 'AWS — Lambda, SES, S3, EC2, CloudFront', 'FFmpeg', 'React',
+];
+---
+<Base title="Work" description="Experience, projects, and the systems I have owned end to end.">
+  <h1>Work</h1>
+  <p class="dim lede-sub">
+    Roughly three years of building backend systems, most of it as the person
+    who also carried the pager for them.
+  </p>
+
+  <p class="eyebrow">Experience</p>
+  <ul class="timeline">
+    {roles.map((r) => (
+      <li>
+        <span class="when nums">{r.when}</span>
+        <div class="what">
+          <div class="role">{r.role}<span class="org">, {r.org}</span></div>
+          <p class="detail">{r.detail}</p>
+        </div>
+      </li>
+    ))}
+  </ul>
+
+  <p class="eyebrow spaced">How I work</p>
+  <ul class="how">
+    <li>Cost is a design constraint, not a finance problem. If I cannot say what
+      a system costs per unit of work, I do not understand it yet.</li>
+    <li>I write the migration path before the feature. On systems with real
+      history, correctness during the transition is the whole job.</li>
+    <li>I would rather delete a component than scale it, and I would rather
+      hit a platform limit in a prototype than in production.</li>
+  </ul>
+
+  <p class="eyebrow spaced">Projects</p>
+  <ul class="entries">
+    {projects.map((p) => (
+      <li>
+        <a class="entry-title" href={p.href}>{p.name}</a>
+        <p class="entry-desc">{p.detail}</p>
+        <span class="entry-meta">{p.stack}</span>
+      </li>
+    ))}
+  </ul>
+
+  <p class="eyebrow spaced">Tools I reach for</p>
+  <p class="stack">{stack.join('  ·  ')}</p>
+</Base>
+
+<style>
+  .lede-sub { font-size: 0.9375rem; line-height: 1.6; margin: 0.5rem 0 2.25rem; }
+  .eyebrow.spaced { margin-top: 3.25rem; }
+  .how { list-style: none; margin: 0; padding: 0; }
+  .how li {
+    padding-left: 1.1rem;
+    position: relative;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+  .how li + li { margin-top: 0.7rem; }
+  .how li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: var(--faint);
+  }
+  .entries .entry-meta { display: block; margin-top: 0.4rem; }
+  .stack { font: 400 0.875rem/1.9 var(--sans); color: var(--muted); }
+</style>
