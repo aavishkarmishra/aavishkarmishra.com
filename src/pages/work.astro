@@ -42,7 +42,6 @@ const projects = [
   },
   {
     name: 'Algorithmic trading bots',
-    href: 'https://github.com/aavishkarmishra',
     stack: 'Go · Kite Connect',
     detail:
       'Trading systems in Go against Zerodha’s Kite Connect API: market data, order placement, strategy execution. Built to learn Go properly and to find out whether my ideas about markets survived contact with one.',
@@ -98,7 +97,9 @@ const stack = [
   <ul class="entries">
     {projects.map((p) => (
       <li>
-        <a class="entry-title" href={p.href}>{p.name}</a>
+        {p.href
+          ? <a class="entry-title" href={p.href}>{p.name}</a>
+          : <span class="entry-title">{p.name}</span>}
         <p class="entry-desc">{p.detail}</p>
         <span class="entry-meta">{p.stack}</span>
       </li>
