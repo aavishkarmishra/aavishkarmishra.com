@@ -7,8 +7,7 @@ const posts = (await getCollection('writing', ({ data }) =>
   import.meta.env.PROD ? !data.draft : true
 )).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
-const featured = posts.filter((p) => p.data.featured);
-const recent = posts.filter((p) => !p.data.featured).slice(0, 5);
+const recent = posts.slice(0, 5);
 ---
 <Base description="Aavishkar Mishra, full-stack engineer in Bengaluru. Founding engineer on three SaaS products, now building an AI-native support platform at Helply.">
   <div class="intro">
@@ -34,26 +33,15 @@ const recent = posts.filter((p) => !p.data.featured).slice(0, 5);
     </div>
   </div>
 
-  {featured.length > 0 && (
-    <section>
-      <p class="eyebrow">Selected work</p>
-      <ul class="entries">
-        {featured.map((p) => (
-          <li>
-            <a class="entry-title" href={`/writing/${p.id}/`}>{p.data.title}</a>
-            <p class="entry-desc">{p.data.description}</p>
-          </li>
-        ))}
-      </ul>
-    </section>
-  )}
-
   {recent.length > 0 && (
     <section>
       <p class="eyebrow">Writing</p>
       <ul class="entries">
         {recent.map((p) => (
-          <li><a class="entry-title" href={`/writing/${p.id}/`}>{p.data.title}</a></li>
+          <li>
+            <a class="entry-title" href={`/writing/${p.id}/`}>{p.data.title}</a>
+            <p class="entry-desc">{p.data.description}</p>
+          </li>
         ))}
       </ul>
       <a class="more" href="/writing">All writing</a>
