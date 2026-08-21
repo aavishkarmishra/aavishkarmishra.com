@@ -291,10 +291,3 @@ Which means the question is never "which one is best". It is:
   allowed to come back to this post later.
 
 There can, it turns out, be more than one.
-
----
-
-*Prompted by [Danilo Castro's REST vs GraphQL vs
-gRPC](https://www.welcomedeveloper.com/posts/rest-vs-graphql-vs-grpc/), which
-covers the same three trade-offs and is worth reading. The examples, diagrams,
-and opinions above are mine.*
