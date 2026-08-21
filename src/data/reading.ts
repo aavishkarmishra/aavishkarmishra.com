@@ -16,7 +16,7 @@ export const books: Book[] = [
     author: 'Martin Kleppmann',
     href: 'https://openlibrary.org/works/OL19293745W',
     note:
-      'Where I actually learned system design, in depth rather than as a list of terms to drop in an interview.',
+      'Where I learned system design properly, in depth rather than as a list of terms to drop in an interview.',
   },
   {
     title: 'The Mom Test',

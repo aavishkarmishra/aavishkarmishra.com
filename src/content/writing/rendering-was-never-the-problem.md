@@ -6,27 +6,24 @@ featured: true
 draft: false
 ---
 
-We built the entire game and then handed somebody else the controller for the
-final boss.
+Export was the one part of the product we didn't own.
 
-Everything before export was ours: capture, re-encode of camera and screen,
+Everything before it was ours: capture, re-encode of camera and screen,
 quality enhancement, proxy renditions, an editor with TTS voiceover synced
 through FFmpeg. Then the user pressed export, and the work happened on Remotion
 Lambda.
 
-## Lambda turns back into a pumpkin at fifteen minutes
+## Fifteen minutes, and why we wanted the margin
 
-Cinderella had until midnight. Lambda gives you fifteen minutes, and it is just
-as non-negotiable. Remotion Lambda spreads a composition across invocations, so
-we cut ours into sections of eight to ten minutes. Nothing came near the
-ceiling.<span class="sn"></span><span class="sidenote">Fifteen minutes is a
+Lambda stops at fifteen minutes. Remotion Lambda spreads a composition across
+invocations, so we cut ours into sections of eight to ten minutes. Nothing came
+near the ceiling.<span class="sn"></span><span class="sidenote">Fifteen minutes is a
 property of the execution model, not a quota. There is no support ticket that
 raises it.</span>
 
 We wanted the margin more than the speed. A render that dies at minute fourteen
 has burned fourteen minutes and produced nothing, and the user watched it
-happen. Then they hit export again. It's Groundhog Day without the character
-development.
+happen. Then they hit export again.
 
 <figure class="diagram">
 <svg viewBox="0 0 400 64" role="img" aria-label="A progress bar filling towards a dashed line marked 15:00, stopping just short of it and resetting to zero, over and over.">
@@ -51,10 +48,10 @@ Once you outgrow someone else's renderer, the obvious move is to build your own.
 We could see the shape of it. Own the encode, run it on instances we picked,
 split the work how we wanted, stop paying per render.
 
-The entire plot of Jurassic Park is a team so busy proving they could that
-nobody stopped to ask whether they should. Build-versus-buy has exactly that
-failure mode. We could, comfortably. Whether we should was a different question,
-and it turned out to be a question about us rather than about rendering.
+Jurassic Park is two hours of people so busy proving they could that nobody
+stops to ask whether they should. Build-versus-buy has the same failure mode. We
+could have built it, comfortably. Whether we should was a question about us
+rather than about rendering.
 
 So we priced it. The number that decided it wasn't the AWS bill. It was us.
 
@@ -92,10 +89,8 @@ A five-person company has one real budget and it isn't the one in dollars.
 
 ## We were counting the wrong stat
 
-Moneyball is a story about a roomful of scouts who measured the wrong things
-brilliantly for decades. We had a year of per-render cost data, tracked
-carefully and reviewed often, and not one number in it told us where our
-customers were waiting.
+We had a year of per-render cost data, tracked carefully and reviewed often, and
+not one number in it told us where our customers were waiting.
 
 Sectioning, cost per render, build or buy: all of it assumed render speed was
 what stood between a customer and the thing they wanted.
@@ -128,16 +123,11 @@ step in their day. Rendering was somewhere behind it.
 If nobody is waiting on the render, it doesn't need to be fast. It needs to stop
 costing us money and attention.
 
-## The render machine was in the room the whole time
-
-Every horror film has the moment where the call turns out to be coming from
-inside the house. Ours was less dramatic: the machine that could render the
-video was already sitting in front of the user, and it had just finished
-rendering the preview.
+## The machine was already in the room
 
 So we stopped rendering in the cloud. The product became a desktop app, and
 rendering moved onto the user's machine: FFmpeg and Remotion running locally, on
-hardware that had already done the hard part once.
+hardware that had already rendered the preview once.
 
 It's slower on some machines. That turned out not to matter. Most computers get
 through a fifteen or twenty minute video, and taking longer costs the customer
@@ -153,10 +143,9 @@ while we built it, and we ran the Lambda version the whole way up.
 ## What I would do differently
 
 Price my own time before the infrastructure. The flattering version of a
-decision is the one where the interesting system is also the right one, and it
-sings the whole time you're deciding. On a team of three it usually isn't the
-right one. Tie yourself to the mast and run the numbers on your own headcount
-first.
+decision is the one where the interesting system is also the right one. On a
+team of three it usually isn't. Run the numbers on your own headcount before you
+run them on the AWS bill.
 
 And measure what customers are waiting on, not what I happen to be working on.
 We had a year of per-render cost data and no idea where the wait was. Both took
