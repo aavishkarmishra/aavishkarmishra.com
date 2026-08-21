@@ -7,12 +7,12 @@ draft: false
 ---
 
 Almost everything that surprises people about language models comes from one
-mechanism, and it is smaller than the surprise.
+mechanism, and it's smaller than the surprise.
 
 The model is a function. It takes the tokens you have so far and returns a score
-for every token in its vocabulary. Not a sentence, not an answer, not a plan for
-the paragraph it is about to write. One score per candidate token, for the very
-next position, and then it is done and you call it again.
+for every token in its vocabulary — one score per candidate, for the very next
+position, and then the call is over. It isn't holding a sentence, an answer, or
+a plan for the paragraph it's about to write. You just call it again.
 
 <figure class="diagram">
 <svg viewBox="0 0 400 104" role="img" aria-label="Five token boxes feed into a box labelled model, which outputs one score for every token in the vocabulary, shown as a row of bars of different heights trailing off into an ellipsis.">
@@ -56,9 +56,8 @@ def softmax(logits, temperature=1.0):
     return e / e.sum()
 ```
 
-Take a real-looking case. The prompt ends with `The deploy failed because the`,
-and five candidate tokens come back with logits of 5.2, 4.6, 3.9, 3.1 and
-2.4.<span class="sn"></span><span class="sidenote">Subtracting the maximum
+Say the prompt ends with `The deploy failed because the`, and five candidate
+tokens come back with logits of 5.2, 4.6, 3.9, 3.1 and 2.4.<span class="sn"></span><span class="sidenote">Subtracting the maximum
 before `exp` changes nothing mathematically, because the constant cancels in the
 ratio. Leave it out and a logit of 800 gives you `inf/inf`, which is `nan`, and
 your generation loop starts emitting whatever token sits at index zero.</span>
@@ -73,15 +72,16 @@ disk       3.0%
 ```
 
 The model didn't pick `database`. It said `database` is about as likely as
-everything else combined. Something downstream still has to draw from that.
+everything else combined, and something downstream still has to draw one token
+from that.
 
 ## Temperature reshapes the distribution
 
-Temperature isn't a creativity slider bolted on afterwards. It's the division in
-the first line of that function, applied to the logits before they're
-normalised. Dividing by a number below 1 spreads the logits further apart, so
-softmax concentrates the mass. Dividing by a number above 1 pulls them together
-and flattens it.
+Temperature is the division in the first line of that function, applied to the
+logits before they're normalised. Calling it a creativity slider hides where it
+acts. Dividing by a number below 1 spreads the logits further apart, so softmax
+concentrates the mass. Dividing by a number above 1 pulls them together and
+flattens it.
 
 Same five logits, three temperatures:
 
@@ -169,8 +169,8 @@ a token it already emitted, and nothing in the loop can do that.
 
 This is also why asking for the reasoning first does something real. The
 intermediate tokens go into `tokens`, so every later call is conditioned on
-them. You aren't encouraging the model to concentrate. You're giving it a
-different input, and a different input produces a different distribution.
+them. The mechanism is conditioning rather than encouragement, and a different
+input produces a different distribution.
 
 ## It has no index of what it knows
 
@@ -186,8 +186,8 @@ of the same distribution, at the same temperature, with the same confident tone.
 
 Which is why grounding works and asking for honesty doesn't. Retrieval changes
 the input, so it changes the distribution. "Only answer if you're sure" is a
-string of tokens that shifts the distribution slightly toward hedging language.
-It doesn't connect the model to a truth oracle it never had.
+string of tokens that tilts the distribution slightly toward hedging language,
+without connecting the model to a truth oracle it never had.
 
 ## Tokens are not words
 
@@ -197,9 +197,8 @@ model saw as two or three opaque chunks. Reversing a string, spotting a
 palindrome, doing arithmetic on long numbers: all of it asks about the inside of
 tokens.
 
-If you need those, do them in code and let the model call the code. This isn't
-a capability that improves with a better prompt, because the information was
-gone before the first layer.
+If you need those, do them in code and let the model call the code. No prompt
+recovers it, because the information was gone before the first layer.
 
 ## Temperature zero is not determinism
 
@@ -217,8 +216,8 @@ you need exact reproducibility, cache the output. Don't rely on regenerating it.
 
 ## Constrain the output space, don't ask nicely
 
-The useful consequence of all this: the distribution is a thing you can edit,
-not just a thing you receive.
+The useful consequence of all this is that the distribution is something you can
+edit before you sample from it.
 
 Constrained decoding works directly on the logits. At each step you compute
 which tokens could legally come next under your grammar or JSON schema, and set
@@ -229,12 +228,11 @@ mask = grammar.allowed_tokens(state)   # bool array over the vocabulary
 logits[~mask] = -np.inf                # softmax sends these to exactly zero
 ```
 
-`exp(-inf)` is 0, so those tokens can't be sampled at any temperature. The model
-isn't being asked to remember the format. The format has become impossible to
-violate.
+`exp(-inf)` is 0, so those tokens can't be sampled at any temperature. Nothing
+is asking the model to remember the format, because a token that would break it
+can no longer be chosen.
 
-That's the shape of most good decisions here. Put the output in a schema instead
-of a plea. Use retrieval for facts instead of trusting recall. Keep temperature
-low for anything you parse. Hand arithmetic to a tool. All of it follows from
-the same fact: one function, one distribution, called in a loop that can only
-move forward.
+Most good decisions here have that shape. Put the output in a schema rather than
+a plea, use retrieval when you need facts, keep temperature low for anything you
+parse, and hand arithmetic to a tool. All of it follows from the same fact: one
+function returning one distribution, called in a loop that only moves forward.
