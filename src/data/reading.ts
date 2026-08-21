@@ -1,9 +1,16 @@
 export type Book = { title: string; author: string; note: string; href?: string };
 
 /* Newest first. One honest line each — if there is nothing specific to say
-   about a book, leave it off rather than padding the list. Links point at
-   Open Library, deliberately not at any affiliate. */
+   about something, leave it off rather than padding the list. Book links point
+   at Open Library, deliberately not at any affiliate; papers link to arXiv. */
 export const books: Book[] = [
+  {
+    title: 'Real-time Data Infrastructure at Uber',
+    author: 'Fu and Soman, SIGMOD 2021',
+    href: 'https://arxiv.org/abs/2104.00087',
+    note:
+      'Uber’s real-time stack end to end: Kafka for streaming storage, Flink for stream processing, Pinot for OLAP, and what each one had to be bent into to survive the company. The framing is the useful part — three scaling problems that pull against each other, and one recurring tradeoff: pay for a transformation at write time in Flink, or at query time in Pinot.',
+  },
   {
     title: 'End-to-End Object Detection with Transformers',
     author: 'Carion et al., 2020',
