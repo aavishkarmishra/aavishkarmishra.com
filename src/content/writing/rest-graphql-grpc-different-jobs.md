@@ -154,6 +154,14 @@ Depth limits and cost analysis are the floor. Above that: persisted queries. The
 client sends a hash, the server keeps the allowlist, and anything not on the
 list doesn't get in.
 
+That one has a real price, and it isn't the extraction step. Your clients and
+your server now share a build artifact, which means deploy ordering matters:
+manifest first, or the app ships hashes the server will reject. And a mobile
+app three versions behind still sends hashes you would love to garbage-collect.
+Whatever you decide about those old hashes, decide it before you turn this on,
+because the alternative is deciding it during an incident with a store review
+queue between you and the fix.
+
 ### 3. You just traded away your CDN
 
 One `POST /graphql`, opaque body, different answer every time. Every cache

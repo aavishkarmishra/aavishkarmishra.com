@@ -232,7 +232,27 @@ logits[~mask] = -np.inf                # softmax sends these to exactly zero
 is asking the model to remember the format, because a token that would break it
 can no longer be chosen.
 
+The cost is that a mask can paint you into a corner. Force valid JSON on a model
+that had nothing to say and you get a well-formed object with invented fields,
+because something had to be sampled and every honest continuation was masked
+out. The grammar guarantees shape, never sense. So leave a legal way to say
+nothing — a nullable field, an `unknown` variant, an error branch in the schema
+— or you have built a machine that is structurally incapable of declining.
+
 Most good decisions here have that shape. Put the output in a schema rather than
 a plea, use retrieval when you need facts, keep temperature low for anything you
-parse, and hand arithmetic to a tool. All of it follows from the same fact: one
-function returning one distribution, called in a loop that only moves forward.
+parse, and hand arithmetic to a tool.
+
+None of those are free, and it's worth knowing what each one charges. A schema
+costs you a grammar to maintain and the failure above. Retrieval costs you an
+index, and it swaps a loud failure for a quiet one: an invented answer looks
+wrong, a confidently-cited stale document doesn't. Low temperature costs you
+variety, and at the bottom of the range you get repetition loops, because the
+most probable continuation of a sentence is sometimes that sentence again. Tools
+cost you a call boundary, a timeout, and a second schema for the arguments.
+
+Pay them on anything that matters. But price them first, and don't buy the whole
+set for a feature that would survive a bad answer.
+
+All of it follows from the same fact: one function returning one distribution,
+called in a loop that only moves forward.
