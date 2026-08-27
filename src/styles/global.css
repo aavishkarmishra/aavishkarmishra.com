@@ -74,15 +74,6 @@ code, kbd, pre, samp { font-family: var(--mono); }
   margin-inline: auto;
 }
 
-/* Once sidenotes move into the margin, the text column alone is no longer the
-   optical centre. Centre the column plus its gutter instead. */
-@media (min-width: 70rem) {
-  body.has-notes .wrap {
-    margin-left: calc((100% - (var(--measure) + var(--margin-col) + 2.25rem)) / 2);
-    margin-right: 0;
-  }
-}
-
 .site-header {
   flex: none;
   padding: 2.75rem 0 0;

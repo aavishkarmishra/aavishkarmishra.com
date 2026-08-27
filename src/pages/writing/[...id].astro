@@ -17,7 +17,7 @@ const human = post.data.date.toLocaleDateString('en-GB', {
   day: '2-digit', month: 'long', year: 'numeric',
 });
 ---
-<Base title={post.data.title} description={post.data.description} ogType="article" notes published={post.data.date}>
+<Base title={post.data.title} description={post.data.description} ogType="article" published={post.data.date}>
   <article>
     <header class="post-head">
       <h1>{post.data.title}</h1>
