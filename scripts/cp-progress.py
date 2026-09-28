@@ -27,7 +27,12 @@ except Exception as e:
     print('codeforces failed:', e, file=sys.stderr); ok = False; out['cf'] = prev.get('cf', []); out['cfRating'] = prev.get('cfRating')
 
 try:
-    subs = get(f'https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user={AC}&from_second=0')
+    subs, since = [], 0
+    while True:  # the API returns at most 500 per call
+        page = get(f'https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user={AC}&from_second={since}')
+        subs += page
+        if len(page) < 500: break
+        since = page[-1]['epoch_second'] + 1
     out['ac'] = sorted({'ac' + s['problem_id'] for s in subs if s['result'] == 'AC'})
 except Exception as e:
     print('atcoder failed:', e, file=sys.stderr); ok = False; out['ac'] = prev.get('ac', [])

@@ -367,7 +367,7 @@ async function liveRating() {
   const out = document.getElementById('live');
   const CK = 'cp-cf-rating';
   let c = load(CK);
-  if (!c || Date.now() - c.at > 6 * 3600e3) {
+  {
     try {
       const ctrl = new AbortController(); setTimeout(() => ctrl.abort(), 8000);
       const r = await fetch('https://codeforces.com/api/user.rating?handle=aavishkar', { signal: ctrl.signal }).then(r => r.json());
@@ -492,13 +492,29 @@ document.querySelectorAll('nav.tabs button').forEach(b => b.addEventListener('cl
 }));
 
 refresh();
+const withTimeout = (url, ms = 8000) => { const c = new AbortController(); setTimeout(() => c.abort(), ms); return fetch(url, { signal: c.signal }).then(r => r.json()); };
 (async () => {
-  try {
-    const p = await fetch('progress.json?t=' + Math.floor(Date.now() / 6e5)).then(r => r.json());
-    [...p.cf, ...p.ac, ...p.lcDays.map(d => 'lc' + d)].forEach(k => auto[k] = true);
-    refresh();
-    document.getElementById('sync').textContent = `Synced from the judges ${p.updated}: ${p.cf.length} Codeforces, ${p.ac.length} AtCoder, ${p.lcTotal} LeetCode solved. CSES is ticked by hand.`;
-  } catch (e) { document.getElementById('sync').textContent = 'Judge sync unavailable right now. Checks you make by hand still save.'; }
+  const sync = document.getElementById('sync');
+  const since = Math.floor(Date.now() / 1000) - 7 * 86400;
+  const [file, cf, ac] = await Promise.allSettled([
+    withTimeout('progress.json?t=' + Date.now()),
+    withTimeout('https://codeforces.com/api/user.status?handle=aavishkar&count=300'),
+    withTimeout(`https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user=aavishkarmishra&from_second=${since}`),
+  ]);
+  const p = file.status === 'fulfilled' ? file.value : null;
+  if (p) [...p.cf, ...p.ac, ...p.lcDays.map(d => 'lc' + d)].forEach(k => auto[k] = true);
+  const liveCf = cf.status === 'fulfilled' && cf.value.status === 'OK';
+  if (liveCf) cf.value.result.forEach(s => { if (s.verdict === 'OK' && s.problem.contestId) auto[`cf${s.problem.contestId}${s.problem.index}`] = true; });
+  const liveAc = ac.status === 'fulfilled' && Array.isArray(ac.value);
+  if (liveAc) ac.value.forEach(s => { if (s.result === 'AC') auto['ac' + s.problem_id] = true; });
+  refresh();
+  const n = pre => Object.keys(auto).filter(k => k.startsWith(pre)).length;
+  const parts = [
+    liveCf ? `Codeforces live (${n('cf')} solved)` : 'Codeforces from the last sync',
+    liveAc ? `AtCoder live (${n('ac')} solved)` : 'AtCoder from the last sync',
+    p ? `LeetCode from the ${p.updated} sync (${p.lcTotal} solved; LeetCode blocks direct requests)` : 'LeetCode unavailable',
+  ];
+  sync.textContent = (p || liveCf || liveAc) ? parts.join(' · ') + '. CSES is ticked by hand.' : 'Judge sync unavailable right now. Checks you make by hand still save.';
 })();
 const td = document.querySelector('details.day.today');
 if (td) td.scrollIntoView({ block: 'start' }); else document.querySelector('details.day').open = true;
