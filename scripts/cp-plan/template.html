@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Road to Master</title>
+<style>
+:root {
+  --bg: #fdfdfb; --fg: #1b1b19; --muted: #6c6b64; --faint: #93928a;
+  --rule: #e3e2dc; --accent: #9c3d1e; --surface: #f5f4ef; --good: #3f7a3a;
+  --serif: ui-serif, Charter, "Bitstream Charter", "Iowan Old Style", Georgia, serif;
+  --sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #141413; --fg: #e6e4de; --muted: #969389; --faint: #6f6d65;
+    --rule: #2b2a27; --accent: #e0875f; --surface: #1c1b19; --good: #8cc084;
+    color-scheme: dark;
+  }
+}
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 400 1rem/1.55 var(--serif); -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.wrap { width: min(100% - 2rem, 44rem); margin-inline: auto; padding-block: 2.5rem 4rem; }
+h1 { font-size: 2rem; line-height: 1.15; margin: 0 0 .35rem; text-wrap: balance; letter-spacing: -.01em; }
+h2 { font: 600 .75rem/1 var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 2.25rem 0 .75rem; }
+.lede { color: var(--muted); margin: 0; }
+.mono, .num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 1.5rem; }
+.stat b { display: block; font: 500 1.4rem/1.2 var(--mono); }
+.stat span { font: .75rem var(--sans); color: var(--muted); }
+.bar { height: 4px; background: var(--rule); border-radius: 2px; margin-top: .4rem; overflow: hidden; }
+.bar i { display: block; height: 100%; background: var(--accent); width: 0; transition: width .2s; }
+
+nav.tabs { display: flex; gap: .25rem; margin-top: 2rem; border-bottom: 1px solid var(--rule); position: sticky; top: env(safe-area-inset-top, 0px); background: var(--bg); z-index: 2; }
+nav.tabs button { font: 500 .875rem var(--sans); background: none; border: 0; color: var(--muted); padding: .7rem .75rem; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+nav.tabs button[aria-selected="true"] { color: var(--fg); border-color: var(--accent); }
+
+.month { border-top: 2px solid var(--fg); margin-top: 2.5rem; }
+.month > summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: baseline; padding: .9rem 0 .4rem; }
+.month > summary::-webkit-details-marker { display: none; }
+.mname { font-size: 1.35rem; font-weight: 600; letter-spacing: -.01em; }
+.month > summary .count { font: .75rem var(--mono); color: var(--faint); }
+.stage-chip { font: 500 .625rem var(--mono); letter-spacing: 0; text-transform: none; color: var(--faint); border: 1px solid var(--rule); border-radius: 3px; padding: 0 .3rem; margin-left: .5rem; vertical-align: 1px; }
+.week-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin: 2.25rem 0 .5rem; }
+.week-head h2 { margin: 0; }
+.week-head .num { font-size: .75rem; color: var(--faint); }
+.filters-line { font: .8125rem var(--sans); color: var(--muted); margin: 0 0 .75rem; }
+
+details.day { border-top: 1px solid var(--rule); }
+details.day:last-of-type { border-bottom: 1px solid var(--rule); }
+details.day > summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 3.2rem 1fr auto; gap: .75rem; align-items: baseline; padding: .7rem 0; }
+details.day > summary::-webkit-details-marker { display: none; }
+.dow { font: 600 .75rem var(--sans); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.date { font-weight: 600; }
+.date small { font: .8125rem var(--sans); color: var(--muted); font-weight: 400; margin-left: .5rem; }
+.count { font: .75rem var(--mono); color: var(--faint); }
+.day.today > summary .dow { color: var(--accent); }
+.day.today > summary .date::after { content: "today"; font: 600 .6875rem var(--sans); letter-spacing: .06em; text-transform: uppercase; color: var(--bg); background: var(--accent); padding: .1rem .4rem; border-radius: 3px; margin-left: .5rem; vertical-align: 2px; }
+.day.done .count { color: var(--good); }
+.day.off > summary { opacity: .55; }
+.day.off > summary .count::before { content: "off · "; color: var(--muted); }
+.day.off .items, .day.off textarea { opacity: .5; }
+.wsum { font-size: .75rem; color: var(--faint); text-align: right; }
+.helpbtn { flex: none; font: .6875rem var(--sans); color: var(--faint); background: none; border: 1px solid transparent; border-radius: 3px; padding: .05rem .35rem; cursor: pointer; }
+ul.items li:hover .helpbtn, .helpbtn:focus-visible { border-color: var(--rule); color: var(--muted); }
+.helpbtn[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+@media (hover: none) { .helpbtn { border-color: var(--rule); } }
+.offbtn { justify-self: start; font: .75rem var(--sans); color: var(--muted); background: none; border: 1px solid var(--rule); border-radius: 4px; padding: .3rem .6rem; cursor: pointer; }
+.offbtn:hover { color: var(--fg); border-color: var(--muted); }
+.day.off .offbtn { color: var(--accent); border-color: var(--accent); }
+.day.past:not(.done) .count { color: var(--accent); }
+
+.blocks { display: grid; gap: 1rem; padding: 0 0 1.25rem 3.95rem; }
+.block h3 { margin: 0 0 .3rem; font: 500 .8125rem var(--sans); color: var(--muted); display: flex; gap: .6rem; flex-wrap: wrap; }
+.block h3 .num { color: var(--fg); }
+ul.items { list-style: none; margin: 0; padding: 0; display: grid; gap: .3rem; }
+ul.items li { display: flex; align-items: baseline; gap: .5rem; }
+ul.items li label { flex: 1; display: grid; grid-template-columns: 1.1rem 1fr; gap: .6rem; align-items: start; cursor: pointer; }
+ul.items input { margin: .3rem 0 0; accent-color: var(--accent); width: 1rem; height: 1rem; }
+ul.items .note { display: block; font: .75rem var(--sans); color: var(--faint); }
+.rating { font: .6875rem var(--mono); color: var(--muted); border: 1px solid var(--rule); border-radius: 3px; padding: 0 .3rem; margin-left: .35rem; white-space: nowrap; }
+li.checked .t { color: var(--faint); text-decoration: line-through; text-decoration-color: var(--rule); }
+textarea { width: 100%; min-height: 3.5rem; margin-top: .5rem; font: .875rem/1.45 var(--sans); color: var(--fg); background: var(--surface); border: 1px solid var(--rule); border-radius: 4px; padding: .5rem .6rem; resize: vertical; }
+
+.sched { display: grid; grid-template-columns: max-content 1fr; gap: .35rem 1rem; font-size: .9375rem; margin: 0; }
+.sched dt { font: .8125rem var(--mono); color: var(--muted); padding-top: .15rem; }
+.sched dd { margin: 0; }
+.rules { margin: 0; padding-left: 1.1rem; display: grid; gap: .4rem; }
+
+.sec { border-top: 1px solid var(--rule); }
+.sec > summary { cursor: pointer; display: flex; justify-content: space-between; gap: 1rem; padding: .7rem 0; font-weight: 600; list-style: none; }
+.sec > summary::-webkit-details-marker { display: none; }
+.sec .level { font: .75rem var(--sans); color: var(--muted); font-weight: 400; margin-left: .5rem; }
+.sec ul.items { padding-bottom: 1rem; columns: 2 15rem; column-gap: 2rem; display: block; }
+.sec ul.items li { break-inside: avoid; padding-block: .15rem; }
+.when { font: .6875rem var(--mono); color: var(--accent); margin-left: .35rem; white-space: nowrap; }
+
+table.flt { width: 100%; border-collapse: collapse; font-size: .9375rem; }
+table.flt th { font: 600 .6875rem var(--sans); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); text-align: left; padding: .5rem .5rem .5rem 0; border-bottom: 1px solid var(--rule); }
+table.flt td { padding: .55rem .5rem .55rem 0; border-bottom: 1px solid var(--rule); vertical-align: baseline; }
+table.flt td.num { white-space: nowrap; }
+.scroll { overflow-x: auto; }
+.small { font: .8125rem var(--sans); color: var(--muted); }
+.live { font: .875rem var(--sans); color: var(--muted); margin: .75rem 0 0; }
+.live b { color: var(--fg); font-family: var(--mono); font-weight: 500; }
+#sync { margin-top: .25rem; }
+li.synced label { cursor: default; }
+li.synced input { accent-color: var(--good); }
+.stage { border-top: 1px solid var(--rule); }
+.stage:last-of-type { border-bottom: 1px solid var(--rule); }
+.stage > summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 1.5rem 1fr auto; gap: .75rem; align-items: baseline; padding: .8rem 0; }
+.stage > summary::-webkit-details-marker { display: none; }
+.stage .idx { font: 500 .8125rem var(--mono); color: var(--faint); }
+.stage .nm { font-weight: 600; }
+.stage .nm small { display: block; font: .8125rem var(--sans); color: var(--muted); font-weight: 400; }
+.stage .months { font: .75rem var(--mono); color: var(--faint); white-space: nowrap; }
+.stage.current > summary .idx { color: var(--accent); }
+.stage.current > summary .nm::after { content: "you are here"; font: 600 .6875rem var(--sans); letter-spacing: .06em; text-transform: uppercase; color: var(--bg); background: var(--accent); padding: .1rem .4rem; border-radius: 3px; margin-left: .5rem; vertical-align: 2px; }
+.stage-body { display: grid; gap: 1.1rem; padding: 0 0 1.5rem 2.25rem; }
+.stage-body h4 { margin: 0 0 .3rem; font: 600 .6875rem var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.stage-body p { margin: 0; }
+ul.plain { margin: 0; padding: 0; list-style: none; display: grid; gap: .25rem; }
+ul.plain.cols { columns: 2 14rem; column-gap: 2rem; display: block; }
+ul.plain.cols li { break-inside: avoid; padding-block: .12rem; }
+ul.plain .count { margin-left: .4rem; }
+@media (max-width: 30rem) { .stage-body { padding-left: 0; } }
+
+@media (max-width: 30rem) {
+  .blocks { padding-left: 0; }
+  .stats { grid-template-columns: 1fr 1fr; }
+}
+@media (prefers-reduced-motion: reduce) { .bar i { transition: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Road to Master</h1>
+    <p class="lede">From Pupil to International Master, one stage at a time. Day-by-day through stage 2 (Candidate Master). Stages are gated by rating, so when your rating and the calendar disagree, the plan gets regenerated.</p>
+    <p class="live" id="live">Loading rating from Codeforces…</p>
+    <p class="live" id="sync">Loading judge sync…</p>
+    <div class="stats">
+      <div class="stat"><b id="s-all" class="num">0%</b><span>Plan done</span><div class="bar"><i id="b-all"></i></div></div>
+      <div class="stat"><b id="s-cses" class="num">0 / 400</b><span>CSES solved</span><div class="bar"><i id="b-cses"></i></div></div>
+      <div class="stat"><b id="s-streak" class="num">0</b><span>Day streak</span></div>
+      <div class="stat"><b id="s-lc" class="num">0</b><span>LeetCode dailies</span></div>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button role="tab" id="tab-plan" aria-selected="true" data-view="plan">Daily plan</button>
+    <button role="tab" id="tab-road" aria-selected="false" data-view="road">Roadmap</button>
+    <button role="tab" id="tab-cses" aria-selected="false" data-view="cses">CSES</button>
+    <button role="tab" id="tab-filters" aria-selected="false" data-view="filters">CF filters</button>
+    <button role="tab" id="tab-rules" aria-selected="false" data-view="rules">Routine</button>
+  </nav>
+
+  <section id="view-plan"></section>
+  <section id="view-road" hidden>
+    <h2>Stages</h2>
+    <p class="small">Each stage lists what to learn, which CSES sections to finish, which filters to practise from, what to aim for in contests, and an exit checklist. Move on only when the checklist is done. CSES counts come from the CSES tab.</p>
+    <div id="stages"></div>
+    <h2>How practice changes by stage</h2>
+    <dl class="sched" id="stage-rules"></dl>
+  </section>
+  <section id="view-cses" hidden>
+    <h2>All CSES problems</h2>
+    <p class="small">Checks here and in the daily plan are the same. A date next to a problem means it is scheduled that day. Up to 1600, stick to the first four sections.</p>
+    <div id="cses-list"></div>
+  </section>
+  <section id="view-filters" hidden>
+    <h2>Codeforces practice filters</h2>
+    <p class="small">Each link opens the problemset with the tag and rating range set, sorted by most solved. Green rows on Codeforces are ones you already solved. The counter fills from your evening checkboxes.</p>
+    <h2>Other practice</h2>
+    <p class="small"><a href="https://usaco.guide/dashboard" target="_blank" rel="noopener">USACO Guide dashboard</a>: sign in there and mark modules as you read them. Silver is stage 1, Gold is stage 2, Platinum is stage 3. Most readings in this plan point at its modules or at CP-Algorithms.</p>
+    <p class="small">The daily AtCoder problem is picked from ABC C–F by difficulty and is already in the plan. For more: <a href="https://kenkoooo.com/atcoder/#/table/" target="_blank" rel="noopener">AtCoder Problems table</a> (colour by difficulty, set your handle to hide solved ones) and the <a href="https://kenkoooo.com/atcoder/#/list/" target="_blank" rel="noopener">difficulty list</a>. Live ABC: Saturdays 17:30 IST as a rule, some weeks Sunday. <a href="https://atcoder.jp/contests/" target="_blank" rel="noopener">Schedule</a>.</p>
+    <h2>Codeforces filters by week</h2>
+    <div class="scroll"><table class="flt"><thead><tr><th>Week</th><th>Filter</th><th>Rating</th><th>Done</th></tr></thead><tbody id="flt-body"></tbody></table></div>
+  </section>
+  <section id="view-rules" hidden>
+    <h2>Weekday</h2>
+    <dl class="sched">
+      <dt>08:30</dt><dd>Up and ready</dd>
+      <dt>09:00–10:30</dt><dd>Learn + CSES. Read the topic, then solve.</dd>
+      <dt>10:30–10:45</dt><dd>Break, away from the screen</dd>
+      <dt>10:45–12:00</dt><dd>Codeforces problem, then upsolve</dd>
+      <dt>12:00–13:30</dt><dd>Lunch, errands, rest</dd>
+      <dt>13:30–14:00</dt><dd>LeetCode daily question, then straight into work</dd>
+      <dt>14:00–19:30</dt><dd>Work. Get the day's work done before the 19:30 meeting, using Claude Code to keep it short.</dd>
+      <dt>19:30–20:00</dt><dd>Meeting</dd>
+      <dt>20:00–22:00</dt><dd>Evening block: two problems from the week's filter, 45 minutes each with a short break. On round days, the live round instead.</dd>
+      <dt>22:00</dt><dd>Write the log line, then wind down. A round that runs to 22:15 is fine.</dd>
+    </dl>
+    <h2>Weekend</h2>
+    <dl class="sched">
+      <dt>Sat 09:00</dt><dd>Virtual Div 2 (2h), then upsolve</dd>
+      <dt>Sat 17:30</dt><dd>AtCoder ABC, live</dd>
+      <dt>Sat 20:05</dt><dd>Codeforces round, when there is one</dd>
+      <dt>Sun 09:30</dt><dd>Upsolve and weekly review, then the afternoon off</dd>
+      <dt>Both days</dt><dd>LeetCode daily after lunch</dd>
+      <dt>From stage 2</dt><dd>Sunday 17:30 ARC when scheduled. Codeforces Div 1 instead of Div 2 once you are 1900+.</dd>
+    </dl>
+    <h2>Rules</h2>
+    <ol class="rules">
+      <li>Before coding, rewrite the statement in one plain line, then work sample 1 by hand. If you can't do both after 15 minutes, read the Note section and the samples again. Understanding the statement is half the problem right now.</li>
+      <li>Time-box each problem to 45 minutes. Then read the editorial, close it, and code it yourself.</li>
+      <li>Ask for help in steps, not for the answer. From Claude or the editorial, take one hint at a time: first "which topic is this?", then "what is the key observation?", and only then the solution. Stop reading as soon as you can continue alone.</li>
+      <li>Tap "needed help" on any problem where you used a hint, the editorial or Claude. It comes back the next day as a re-solve from a blank file. That re-solve is where the learning happens.</li>
+      <li>Before you submit, test n = 1, all values equal, the maximum values, and overflow (use long long).</li>
+      <li>Second WA on the same problem? Stop guessing. Write the brute force and run <code>stress/stress.sh</code> from your CP folder. Fix the failing case it prints, then resubmit.</li>
+      <li>Rounds start at 20:05, right after your meeting. Do every one live. If the meeting runs over, register anyway and start late. Skip the round only if work is on fire, then do it virtual in the next 10:45 block.</li>
+      <li>CSES stuck past 45 minutes: skip it. You're missing a technique. Come back after the next topic.</li>
+      <li>Write one line per missed idea in the day's log box.</li>
+      <li>LeetCode daily is a 30-minute cap. It keeps interview patterns warm; it does not move your rating. If a Hard runs past 30 minutes, read the editorial and move on.</li>
+      <li>Missed a day? Don't catch up. Do today's plan and move on. If the day was a holiday or you were ill, open it and press "Mark as off day": that day's study plan moves to the next day of the same kind (weekday or weekend) and everything after it shifts by one, the day drops out of the totals, and the streak skips it. Undo pulls the plan back. Be honest with it; it's for days you couldn't, not days you didn't.</li>
+      <li>LeetCode contests come in at stage 1: Weekly on Sunday 08:00 IST, Biweekly on Saturday 20:00 IST. Do Weekly when there is no Codeforces round the night before; skip Biweekly if it clashes with a round.</li>
+    </ol>
+    <h2>Links</h2>
+    <ul class="plain">
+      <li><a href="https://usaco.guide/dashboard" target="_blank" rel="noopener">USACO Guide dashboard</a></li>
+      <li><a href="https://codeforces.com/contests" target="_blank" rel="noopener">Codeforces contests</a></li>
+      <li><a href="https://atcoder.jp/contests/" target="_blank" rel="noopener">AtCoder contests</a></li>
+      <li><a href="https://leetcode.com/contest/" target="_blank" rel="noopener">LeetCode contests</a></li>
+      <li><a href="https://cses.fi/problemset/" target="_blank" rel="noopener">CSES problem set</a></li>
+      <li><a href="https://cp-algorithms.com/" target="_blank" rel="noopener">CP-Algorithms</a></li>
+    </ul>
+    <p class="small" style="margin-top:2rem">Upcoming rounds are the ones Codeforces had announced on Sep 28. Check <a href="https://codeforces.com/contests">codeforces.com/contests</a> for rounds added later.</p>
+  </section>
+</div>
+
+<script>
+const DATA = /*DATA*/null;
+const KEY = 'cp-oct-2026', LOGKEY = 'cp-oct-2026-log';
+const load = k => { try { return JSON.parse(localStorage.getItem(k)) || null; } catch { return null; } };
+const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+let done = load(KEY);
+if (!done) { done = {}; DATA.preDone.forEach(k => done[k] = true); save(KEY, done); }
+const logs = load(LOGKEY) || {};
+const OFFKEY = 'cp-oct-2026-off', HELPKEY = 'cp-oct-2026-help';
+const help = load(HELPKEY) || {};
+let off = load(OFFKEY) || {};
+let auto = {};
+const isDone = k => !!done[k] || !!auto[k];
+const today = new Date().toLocaleDateString('en-CA');
+const el = (tag, attrs = {}, ...kids) => {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) k === 'class' ? e.className = v : k === 'text' ? e.textContent = v : e.setAttribute(k, v);
+  kids.flat().forEach(c => c && e.append(c));
+  return e;
+};
+
+const scheduled = {};
+// filled by renderPlan(); CSES tab shows where each problem currently sits
+
+function item(i, showWhen) {
+  const id = 'c-' + i.k.replace(/[^a-z0-9]/gi, '_');
+  const box = el('input', { type: 'checkbox', id, 'data-k': i.k });
+  box.checked = isDone(i.k);
+  const text = i.u ? el('a', { href: i.u, target: '_blank', rel: 'noopener', text: i.t }) : document.createTextNode(i.t);
+  const t = el('span', { class: 't' }, text, i.r ? el('span', { class: 'rating', text: i.r }) : null,
+    showWhen && scheduled[i.k] ? el('span', { class: 'when', text: scheduled[i.k] }) : null,
+    i.n ? el('span', { class: 'note', text: i.n }) : null);
+  const li = el('li', { class: box.checked ? 'checked' : '' }, el('label', { for: id }, box, t));
+  if (!showWhen && /^(cf\d|ac|cses)/.test(i.k)) li.append(el('button', { type: 'button', class: 'helpbtn', 'data-k': i.k, 'aria-pressed': String(!!help[i.k]), text: 'needed help' }));
+  if (auto[i.k]) { box.disabled = true; li.classList.add('synced'); li.title = 'Synced from the judge'; }
+  li.dataset.k = i.k;
+  return li;
+}
+
+const plan = document.getElementById('view-plan');
+const PROBLEM = /^(cf\d|ac|cses|lc|flt)/;
+const monthName = m => new Date(m + '-15').toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+
+// Content shifts forward over off days within its class (weekday / weekend); fixed blocks stay on their date.
+function schedule() {
+  const queue = { wd: [], we: [] };
+  DATA.days.forEach(d => { if (d.content) queue[d.cls].push(d.content); });
+  const idx = { wd: 0, we: 0 };
+  return DATA.days.map(d => {
+    const content = off[d.date] ? null : queue[d.cls][idx[d.cls]++] || null;
+    let blocks = [...d.fixed];
+    if (content) {
+      const live = d.fixed.some(b => b.label.startsWith('Live round'));
+      blocks = blocks.concat(content.blocks.filter(b => !(live && b.label === 'Evening block')));
+    }
+    blocks.sort((a, b) => a.o - b.o);
+    return { ...d, blocks, week: content ? content.week : null };
+  });
+}
+
+function renderPlan() {
+  const first = !plan.children.length;
+  const open = new Set([...plan.querySelectorAll('details.day[open]')].map(x => x.dataset.date));
+  const openMonths = new Set([...plan.querySelectorAll('details.month[open]')].map(x => x.id));
+  plan.replaceChildren();
+  const sched = schedule();
+  const byKey = {};
+  sched.forEach(d => d.blocks.forEach(b => b.items.forEach(i => { byKey[i.k] = i; })));
+  const resolve = {};
+  Object.entries(help).forEach(([k, on]) => {
+    const target = sched.find(d => d.date > on && !off[d.date]);
+    const src = byKey[k];
+    if (target && src) (resolve[target.date] = resolve[target.date] || []).push({ k: 're:' + k, t: 'Re-solve from a blank file · ' + src.t, u: src.u, n: 'No editorial, no Claude. Under 15 minutes means it is learned.' });
+  });
+  sched.forEach(d => { if (resolve[d.date]) d.blocks.unshift({ o: 0, time: '09:00, first', label: 'Re-solve what needed help yesterday', items: resolve[d.date] }); });
+  Object.keys(scheduled).forEach(k => delete scheduled[k]);
+  sched.forEach(d => d.blocks.forEach(b => b.items.forEach(i => { if (i.k.startsWith('cses')) scheduled[i.k] = d.label; })));
+  const MONTHS = {};
+  sched.forEach(d => { const m = d.date.slice(0, 7); (MONTHS[m] = MONTHS[m] || []).push(d); });
+  let lastWeek = -1;
+  Object.entries(MONTHS).forEach(([m, mdays]) => {
+    if (!mdays.some(d => d.week !== null)) return;
+    const id = 'm' + m.replace('-', '');
+    const mdet = el('details', { class: 'month', id });
+    if (first ? m === today.slice(0, 7) : openMonths.has(id)) mdet.open = true;
+    mdet.append(el('summary', {}, el('span', { class: 'mname', text: monthName(m) }), el('span', { class: 'count num' })));
+    mdays.forEach(d => {
+      if (d.week !== null && d.week !== lastWeek) {
+        lastWeek = d.week;
+        const w = DATA.weeks[d.week], f = DATA.filters[d.week];
+        mdet.append(el('div', { class: 'week-head' }, el('h2', {}, `Week ${d.week + 1} · ${w.name}`, el('span', { class: 'stage-chip', text: `stage ${w.stage}` })),
+          el('span', { class: 'num wsum', 'data-week': d.week })));
+        mdet.append(el('p', { class: 'filters-line' }, w.note ? [el('span', { text: w.note + ' ' })] : [], 'Evening filter: ',
+          el('a', { href: f.url, target: '_blank', rel: 'noopener', text: `${f.title} ${f.lo}–${f.hi}` }), ` (${f.target} this week). AtCoder difficulty ${w.ac[0]}–${w.ac[1]}.`));
+      }
+      const det = el('details', { class: 'day', id: 'd' + d.date.replaceAll('-', '') });
+      det.dataset.date = d.date; if (d.week !== null) det.dataset.week = d.week;
+      if (d.date === today) det.classList.add('today');
+      if (d.date < today) det.classList.add('past');
+      if (first ? d.date === today : open.has(d.date)) det.open = true;
+      const title = off[d.date] ? 'Off day' : d.cls === 'we' ? 'Weekend' : d.blocks[0].label;
+      det.append(el('summary', {}, el('span', { class: 'dow', text: d.dow }),
+        el('span', { class: 'date' }, d.label, el('small', { text: title })), el('span', { class: 'count' })));
+      const blocks = el('div', { class: 'blocks' });
+      d.blocks.forEach(b => {
+        const blk = el('div', { class: 'block' }, el('h3', {}, el('span', { class: 'num', text: b.time }), b.label), el('ul', { class: 'items' }, b.items.map(i => item(i, false))));
+        if (b.label === 'Wind down') {
+          const ta = el('textarea', { id: 'log-' + d.date, placeholder: 'Idea I missed today…', 'aria-label': `Log for ${d.label}` });
+          ta.value = logs[d.date] || '';
+          ta.addEventListener('input', () => { logs[d.date] = ta.value; save(LOGKEY, logs); });
+          blk.append(ta);
+        }
+        blocks.append(blk);
+      });
+      blocks.append(el('button', { type: 'button', class: 'offbtn', 'data-date': d.date }));
+      det.append(blocks);
+      mdet.append(det);
+    });
+    plan.append(mdet);
+  });
+}
+renderPlan();
+
+const stagesEl = document.getElementById('stages');
+DATA.stages.forEach((s, si) => {
+  const det = el('details', { class: 'stage', id: 'stage' + si });
+  det.append(el('summary', {}, el('span', { class: 'idx', text: si }),
+    el('span', { class: 'nm' }, s.name, el('small', { text: `${s.band} · ${s.rank}` })), el('span', { class: 'months', text: s.months })));
+  const link = x => x.u ? el('a', { href: x.u, target: '_blank', rel: 'noopener', text: x.t }) : document.createTextNode(x.t);
+  const body = el('div', { class: 'stage-body' },
+    el('p', { text: s.goal }),
+    el('div', {}, el('h4', { text: 'Learn' }), el('ul', { class: 'plain cols' }, s.topics.map(x => el('li', {}, link(x))))),
+    el('div', {}, el('h4', { text: 'CSES sections' }), el('ul', { class: 'plain' }, s.cses.map(ci => {
+      const sec = DATA.cses[ci];
+      const li = el('li', {}, el('a', { href: '#', text: sec.name }), el('span', { class: 'count num', 'data-sec': ci }));
+      li.querySelector('a').addEventListener('click', e => { e.preventDefault(); document.getElementById('tab-cses').click(); const d = cl.children[ci]; d.open = true; d.scrollIntoView({ block: 'start' }); });
+      return li;
+    }))),
+    el('div', {}, el('h4', { text: 'Practice filters' }), el('ul', { class: 'plain cols' }, s.practice.map(x => el('li', {}, link(x))))),
+    el('div', {}, el('h4', { text: 'Contests' }), el('ul', { class: 'plain' }, s.contests.map(x => el('li', { text: x })))),
+    el('div', {}, el('h4', { text: 'Exit checklist' }), el('ul', { class: 'items' }, s.exit.map((x, xi) => item({ k: `exit${si}_${xi}`, t: x }, false)))));
+  det.append(body);
+  stagesEl.append(det);
+});
+const sr = document.getElementById('stage-rules');
+DATA.rules.forEach(([k, v]) => sr.append(el('dt', { text: k }), el('dd', { text: v })));
+
+async function liveRating() {
+  const out = document.getElementById('live');
+  const CK = 'cp-cf-rating';
+  let c = load(CK);
+  {
+    try {
+      const ctrl = new AbortController(); setTimeout(() => ctrl.abort(), 8000);
+      const r = await fetch('https://codeforces.com/api/user.rating?handle=aavishkar', { signal: ctrl.signal }).then(r => r.json());
+      if (r.status !== 'OK') throw new Error(r.comment);
+      const h = r.result;
+      c = { at: Date.now(), rating: h.length ? h.at(-1).newRating : 0, peak: Math.max(0, ...h.map(x => x.newRating)), contests: h.length,
+            last: h.length ? h.at(-1).contestName : '', lastAt: h.length ? h.at(-1).ratingUpdateTimeSeconds * 1000 : 0 };
+      save(CK, c);
+    } catch (e) { if (!c) { out.textContent = 'Could not reach the Codeforces API. Rating hidden until it loads.'; return; } }
+  }
+  const si = DATA.stages.findIndex(s => c.rating < s.hi);
+  const cur = si < 0 ? DATA.stages.length - 1 : si;
+  document.getElementById('stage' + cur).classList.add('current');
+  document.getElementById('stage' + cur).open = true;
+  const next = DATA.stages[cur].hi;
+  out.replaceChildren('Codeforces: ', el('b', { text: c.rating }), ` now, peak ${c.peak}, ${c.contests} rated rounds. `,
+    `Stage ${cur}: ${DATA.stages[cur].name}. `, next > c.rating ? `${next - c.rating} to the next stage.` : 'Final stage.',
+    c.lastAt ? ` Last rated: ${new Date(c.lastAt).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })}.` : '');
+}
+liveRating();
+
+const cl = document.getElementById('cses-list');
+const LEVEL = ['now → 1600', 'now → 1600', 'now → 1600', 'now → 1600', '1600–1900', '1600–1900', '1600–1900', '1600–1900'];
+DATA.cses.forEach((s, si) => {
+  const det = el('details', { class: 'sec' });
+  det.append(el('summary', {}, el('span', {}, s.name, LEVEL[si] ? el('span', { class: 'level', text: LEVEL[si] }) : el('span', { class: 'level', text: '1900+' })), el('span', { class: 'count num' })));
+  det.append(el('ul', { class: 'items' }, s.tasks.map(([id, t]) => item({ k: 'cses' + id, t, u: `https://cses.fi/problemset/task/${id}` }, true))));
+  cl.append(det);
+});
+
+const fb = document.getElementById('flt-body');
+DATA.filters.forEach(f => {
+  const tr = el('tr', {}, el('td', { class: 'num', text: f.week + 1 }), el('td', {}, el('a', { href: f.url, target: '_blank', rel: 'noopener', text: f.title }), el('span', { class: 'small', text: ' · ' + DATA.weeks[f.week].name })),
+    el('td', { class: 'num', text: `${f.lo}–${f.hi}` }), el('td', { class: 'num', 'data-f': f.key }));
+  fb.append(tr);
+});
+
+function refresh() {
+  document.querySelectorAll('li[data-k]').forEach(li => {
+    const k = li.dataset.k, on = isDone(k), box = li.querySelector('input');
+    li.classList.toggle('checked', on);
+    li.classList.toggle('synced', !!auto[k]);
+    box.checked = on; box.disabled = !!auto[k];
+    li.title = auto[k] ? 'Synced from the judge' : '';
+  });
+  let all = 0, got = 0;
+  document.querySelectorAll('details.day').forEach(det => {
+    const ks = [...det.querySelectorAll('li[data-k]')].map(li => li.dataset.k);
+    const n = ks.filter(isDone).length, isOff = !!off[det.dataset.date];
+    det.classList.toggle('off', isOff);
+    det.querySelector('.offbtn').textContent = isOff ? 'Off day. Undo (pulls the plan back a day)' : 'Mark as off day (pushes the plan back a day)';
+    if (!isOff) { all += ks.length; got += n; }
+    det.querySelector('.count').textContent = `${n}/${ks.length}`;
+    det.classList.toggle('done', n === ks.length);
+  });
+  document.querySelectorAll('#cses-list li[data-k]').forEach(li => {
+    let w = li.querySelector('.when');
+    if (!w) { w = el('span', { class: 'when' }); li.querySelector('.t').append(w); }
+    w.textContent = scheduled[li.dataset.k] || '';
+  });
+  document.querySelectorAll('.wsum').forEach(s => {
+    const ds = [...document.querySelectorAll(`details.day[data-week="${s.dataset.week}"]`)];
+    const solved = ds.reduce((a, d) => a + [...d.querySelectorAll('li[data-k]')].filter(li => PROBLEM.test(li.dataset.k) && isDone(li.dataset.k)).length, 0);
+    const doneDays = ds.filter(d => d.classList.contains('done')).length;
+    s.textContent = `${ds[0].querySelector('.date').firstChild.textContent} – ${ds.at(-1).querySelector('.date').firstChild.textContent} · ${solved} solved · ${doneDays}/${ds.length} days`;
+  });
+  document.querySelectorAll('details.month').forEach(m => {
+    const ds = [...m.querySelectorAll('details.day')];
+    const offN = ds.filter(d => d.classList.contains('off')).length;
+    m.querySelector(':scope > summary .count').textContent = `${ds.filter(d => d.classList.contains('done')).length}/${ds.length - offN} days` + (offN ? `, ${offN} off` : '');
+  });
+  DATA.cses.forEach((s, ci) => {
+    const txt = `${s.tasks.filter(([id]) => isDone('cses' + id)).length}/${s.tasks.length}`;
+    cl.children[ci].querySelector('.count').textContent = txt;
+    document.querySelectorAll(`[data-sec="${ci}"]`).forEach(x => x.textContent = txt);
+  });
+  const pct = all ? Math.round(got * 100 / all) : 0;
+  document.getElementById('s-all').textContent = pct + '%';
+  document.getElementById('b-all').style.width = pct + '%';
+  const cs = DATA.cses.reduce((a, s) => a + s.tasks.filter(([id]) => isDone('cses' + id)).length, 0);
+  const total = DATA.cses.reduce((a, s) => a + s.tasks.length, 0);
+  document.getElementById('s-cses').textContent = `${cs} / ${total}`;
+  document.getElementById('b-cses').style.width = (cs * 100 / total) + '%';
+  DATA.filters.forEach(f => {
+    const n = Object.keys(done).filter(k => k.startsWith('flt' + f.key + '_')).length;
+    document.querySelector(`[data-f="${f.key}"]`).textContent = `${n} / ${f.target}`;
+  });
+  let streak = 0;
+  const byDate = Object.fromEntries([...document.querySelectorAll('details.day')].map(d => [d.dataset.date, d]));
+  const dates = Object.keys(byDate).filter(d => d <= today).sort().reverse();
+  for (const d of dates) {
+    if (off[d]) continue;
+    const any = [...byDate[d].querySelectorAll('li[data-k]')].some(li => isDone(li.dataset.k));
+    if (any) streak++; else if (d !== today) break;
+  }
+  document.getElementById('s-streak').textContent = streak;
+  document.getElementById('s-lc').textContent = new Set([...Object.keys(done), ...Object.keys(auto)].filter(k => k.startsWith('lc') && isDone(k))).size;
+}
+
+document.addEventListener('change', e => {
+  const k = e.target.dataset && e.target.dataset.k;
+  if (!k) return;
+  if (e.target.checked) done[k] = true; else delete done[k];
+  save(KEY, done);
+  refresh();
+});
+
+document.addEventListener('click', e => {
+  const h = e.target.closest('.helpbtn');
+  if (!h) return;
+  const k = h.dataset.k;
+  if (help[k]) delete help[k]; else help[k] = h.closest('details.day').dataset.date;
+  save(HELPKEY, help);
+  const at = h.closest('details.day').id;
+  renderPlan(); refresh();
+  document.getElementById(at).scrollIntoView({ block: 'nearest' });
+});
+document.addEventListener('click', e => {
+  const b = e.target.closest('.offbtn');
+  if (!b) return;
+  const d = b.dataset.date;
+  if (off[d]) delete off[d]; else off[d] = true;
+  save(OFFKEY, off);
+  renderPlan();
+  refresh();
+  document.getElementById('d' + d.replaceAll('-', '')).scrollIntoView({ block: 'start' });
+});
+
+document.querySelectorAll('nav.tabs button').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('nav.tabs button').forEach(x => x.setAttribute('aria-selected', x === b));
+  ['plan', 'road', 'cses', 'filters', 'rules'].forEach(v => document.getElementById('view-' + v).hidden = v !== b.dataset.view);
+}));
+
+refresh();
+const withTimeout = (url, ms = 8000) => { const c = new AbortController(); setTimeout(() => c.abort(), ms); return fetch(url, { signal: c.signal }).then(r => r.json()); };
+(async () => {
+  const sync = document.getElementById('sync');
+  const since = Math.floor(Date.now() / 1000) - 7 * 86400;
+  const [file, cf, ac] = await Promise.allSettled([
+    withTimeout('progress.json?t=' + Date.now()),
+    withTimeout('https://codeforces.com/api/user.status?handle=aavishkar&count=300'),
+    withTimeout(`https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user=aavishkarmishra&from_second=${since}`),
+  ]);
+  const p = file.status === 'fulfilled' ? file.value : null;
+  if (p) [...p.cf, ...p.ac, ...p.lcDays.map(d => 'lc' + d)].forEach(k => auto[k] = true);
+  const liveCf = cf.status === 'fulfilled' && cf.value.status === 'OK';
+  if (liveCf) cf.value.result.forEach(s => { if (s.verdict === 'OK' && s.problem.contestId) auto[`cf${s.problem.contestId}${s.problem.index}`] = true; });
+  const liveAc = ac.status === 'fulfilled' && Array.isArray(ac.value);
+  if (liveAc) ac.value.forEach(s => { if (s.result === 'AC') auto['ac' + s.problem_id] = true; });
+  refresh();
+  const n = pre => Object.keys(auto).filter(k => k.startsWith(pre)).length;
+  const parts = [
+    liveCf ? `Codeforces live (${n('cf')} solved)` : 'Codeforces from the last sync',
+    liveAc ? `AtCoder live (${n('ac')} solved)` : 'AtCoder from the last sync',
+    p ? `LeetCode from the ${p.updated} sync (${p.lcTotal} solved; LeetCode blocks direct requests)` : 'LeetCode unavailable',
+  ];
+  sync.textContent = (p || liveCf || liveAc) ? parts.join(' · ') + '. CSES is ticked by hand.' : 'Judge sync unavailable right now. Checks you make by hand still save.';
+})();
+const td = document.querySelector('details.day.today');
+if (td) td.scrollIntoView({ block: 'start' }); else document.querySelector('details.day').open = true;
+</script>
+</body>
+</html>
