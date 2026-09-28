@@ -31,7 +31,7 @@ h2 { font: 600 .75rem/1 var(--sans); letter-spacing: .08em; text-transform: uppe
 .lede { color: var(--muted); margin: 0; }
 .mono, .num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
 
-.stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; margin-top: 1.5rem; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 1.5rem; }
 .stat b { display: block; font: 500 1.4rem/1.2 var(--mono); }
 .stat span { font: .75rem var(--sans); color: var(--muted); }
 .bar { height: 4px; background: var(--rule); border-radius: 2px; margin-top: .4rem; overflow: hidden; }
@@ -66,8 +66,6 @@ details.day > summary::-webkit-details-marker { display: none; }
 .day.off > summary { opacity: .55; }
 .day.off > summary .count::before { content: "off · "; color: var(--muted); }
 .day.off .items, .day.off textarea { opacity: .5; }
-.hrow { display: flex; align-items: center; gap: .5rem; margin-top: .5rem; font: .8125rem var(--sans); color: var(--muted); }
-.hours { width: 4.5rem; font: .875rem var(--mono); color: var(--fg); background: var(--surface); border: 1px solid var(--rule); border-radius: 4px; padding: .3rem .4rem; }
 .wsum { font-size: .75rem; color: var(--faint); text-align: right; }
 .offbtn { justify-self: start; font: .75rem var(--sans); color: var(--muted); background: none; border: 1px solid var(--rule); border-radius: 4px; padding: .3rem .6rem; cursor: pointer; }
 .offbtn:hover { color: var(--fg); border-color: var(--muted); }
@@ -131,7 +129,6 @@ ul.plain .count { margin-left: .4rem; }
 @media (max-width: 30rem) {
   .blocks { padding-left: 0; }
   .stats { grid-template-columns: 1fr 1fr; }
-  .stats .stat:last-child { grid-column: span 2; }
 }
 @media (prefers-reduced-motion: reduce) { .bar i { transition: none; } }
 </style>
@@ -148,7 +145,6 @@ ul.plain .count { margin-left: .4rem; }
       <div class="stat"><b id="s-cses" class="num">0 / 400</b><span>CSES solved</span><div class="bar"><i id="b-cses"></i></div></div>
       <div class="stat"><b id="s-streak" class="num">0</b><span>Day streak</span></div>
       <div class="stat"><b id="s-lc" class="num">0</b><span>LeetCode dailies</span></div>
-      <div class="stat"><b id="s-hours" class="num">0</b><span>Hours logged</span></div>
     </div>
   </header>
 
@@ -269,8 +265,6 @@ function item(i, showWhen) {
 }
 
 const plan = document.getElementById('view-plan');
-const HKEY = 'cp-oct-2026-hours';
-const hours = load(HKEY) || {};
 const PROBLEM = /^(cf\d|ac|cses|lc|flt)/;
 const monthName = m => new Date(m + '-15').toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
 
@@ -329,10 +323,6 @@ function renderPlan() {
       d.blocks.forEach(b => {
         const blk = el('div', { class: 'block' }, el('h3', {}, el('span', { class: 'num', text: b.time }), b.label), el('ul', { class: 'items' }, b.items.map(i => item(i, false))));
         if (b.label === 'Wind down') {
-          const hrs = el('input', { type: 'number', min: '0', max: '16', step: '0.5', id: 'h-' + d.date, class: 'hours', placeholder: '0', 'aria-label': `Hours on ${d.label}` });
-          hrs.value = hours[d.date] ?? '';
-          hrs.addEventListener('input', () => { if (hrs.value === '') delete hours[d.date]; else hours[d.date] = +hrs.value; save(HKEY, hours); refresh(); });
-          blk.append(el('label', { class: 'hrow', for: 'h-' + d.date }, 'Hours spent today ', hrs));
           const ta = el('textarea', { id: 'log-' + d.date, placeholder: 'Idea I missed today…', 'aria-label': `Log for ${d.label}` });
           ta.value = logs[d.date] || '';
           ta.addEventListener('input', () => { logs[d.date] = ta.value; save(LOGKEY, logs); });
@@ -441,11 +431,9 @@ function refresh() {
   document.querySelectorAll('.wsum').forEach(s => {
     const ds = [...document.querySelectorAll(`details.day[data-week="${s.dataset.week}"]`)];
     const solved = ds.reduce((a, d) => a + [...d.querySelectorAll('li[data-k]')].filter(li => PROBLEM.test(li.dataset.k) && isDone(li.dataset.k)).length, 0);
-    const h = ds.reduce((a, d) => a + (hours[d.dataset.date] || 0), 0);
     const doneDays = ds.filter(d => d.classList.contains('done')).length;
-    s.textContent = `${ds[0].querySelector('.date').firstChild.textContent} – ${ds.at(-1).querySelector('.date').firstChild.textContent} · ${solved} solved · ${h} h · ${doneDays}/${ds.length} days`;
+    s.textContent = `${ds[0].querySelector('.date').firstChild.textContent} – ${ds.at(-1).querySelector('.date').firstChild.textContent} · ${solved} solved · ${doneDays}/${ds.length} days`;
   });
-  document.getElementById('s-hours').textContent = Object.values(hours).reduce((a, b) => a + b, 0);
   document.querySelectorAll('details.month').forEach(m => {
     const ds = [...m.querySelectorAll('details.day')];
     const offN = ds.filter(d => d.classList.contains('off')).length;
