@@ -1,0 +1,21 @@
+name: CP progress sync
+on:
+  schedule:
+    - cron: '30 0,6,12,18 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: cp-progress
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/cp-progress.py || echo "some source failed, keeping the previous values for it"
+      - run: |
+          git config user.name "cp-progress"
+          git config user.email "cp-progress@users.noreply.github.com"
+          git add public/cp/progress.json
+          git diff --cached --quiet && exit 0
+          git commit -m "chore: sync CP progress"
+          git push

@@ -97,6 +97,9 @@ table.flt td.num { white-space: nowrap; }
 .small { font: .8125rem var(--sans); color: var(--muted); }
 .live { font: .875rem var(--sans); color: var(--muted); margin: .75rem 0 0; }
 .live b { color: var(--fg); font-family: var(--mono); font-weight: 500; }
+#sync { margin-top: .25rem; }
+li.synced label { cursor: default; }
+li.synced input { accent-color: var(--good); }
 .stage { border-top: 1px solid var(--rule); }
 .stage:last-of-type { border-bottom: 1px solid var(--rule); }
 .stage > summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 1.5rem 1fr auto; gap: .75rem; align-items: baseline; padding: .8rem 0; }
@@ -129,6 +132,7 @@ ul.plain .count { margin-left: .4rem; }
     <h1>Road to Master</h1>
     <p class="lede">From Pupil to International Master, one stage at a time. Day-by-day through stage 2 (Candidate Master). Stages are gated by rating, so when your rating and the calendar disagree, the plan gets regenerated.</p>
     <p class="live" id="live">Loading rating from Codeforces…</p>
+    <p class="live" id="sync">Loading judge sync…</p>
     <div class="stats">
       <div class="stat"><b id="s-all" class="num">0%</b><span>Plan done</span><div class="bar"><i id="b-all"></i></div></div>
       <div class="stat"><b id="s-cses" class="num">0 / 400</b><span>CSES solved</span><div class="bar"><i id="b-cses"></i></div></div>
@@ -223,6 +227,8 @@ const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } cat
 let done = load(KEY);
 if (!done) { done = {}; DATA.preDone.forEach(k => done[k] = true); save(KEY, done); }
 const logs = load(LOGKEY) || {};
+let auto = {};
+const isDone = k => !!done[k] || !!auto[k];
 const today = new Date().toLocaleDateString('en-CA');
 const el = (tag, attrs = {}, ...kids) => {
   const e = document.createElement(tag);
@@ -237,12 +243,13 @@ DATA.days.forEach(d => d.blocks.forEach(b => b.items.forEach(i => { if (i.k.star
 function item(i, showWhen) {
   const id = 'c-' + i.k.replace(/[^a-z0-9]/gi, '_');
   const box = el('input', { type: 'checkbox', id, 'data-k': i.k });
-  box.checked = !!done[i.k];
+  box.checked = isDone(i.k);
   const text = i.u ? el('a', { href: i.u, target: '_blank', rel: 'noopener', text: i.t }) : document.createTextNode(i.t);
   const t = el('span', { class: 't' }, text, i.r ? el('span', { class: 'rating', text: i.r }) : null,
     showWhen && scheduled[i.k] ? el('span', { class: 'when', text: scheduled[i.k] }) : null,
     i.n ? el('span', { class: 'note', text: i.n }) : null);
   const li = el('li', { class: box.checked ? 'checked' : '' }, el('label', { for: id }, box, t));
+  if (auto[i.k]) { box.disabled = true; li.classList.add('synced'); li.title = 'Synced from the judge'; }
   li.dataset.k = i.k;
   return li;
 }
@@ -358,14 +365,16 @@ DATA.filters.forEach(f => {
 
 function refresh() {
   document.querySelectorAll('li[data-k]').forEach(li => {
-    const on = !!done[li.dataset.k];
+    const k = li.dataset.k, on = isDone(k), box = li.querySelector('input');
     li.classList.toggle('checked', on);
-    li.querySelector('input').checked = on;
+    li.classList.toggle('synced', !!auto[k]);
+    box.checked = on; box.disabled = !!auto[k];
+    li.title = auto[k] ? 'Synced from the judge' : '';
   });
   let all = 0, got = 0;
   document.querySelectorAll('details.day').forEach(det => {
     const ks = [...det.querySelectorAll('li[data-k]')].map(li => li.dataset.k);
-    const n = ks.filter(k => done[k]).length;
+    const n = ks.filter(isDone).length;
     all += ks.length; got += n;
     det.querySelector('.count').textContent = `${n}/${ks.length}`;
     det.classList.toggle('done', n === ks.length);
@@ -375,14 +384,14 @@ function refresh() {
     m.querySelector(':scope > summary .count').textContent = `${ds.filter(d => d.classList.contains('done')).length}/${ds.length} days`;
   });
   DATA.cses.forEach((s, ci) => {
-    const txt = `${s.tasks.filter(([id]) => done['cses' + id]).length}/${s.tasks.length}`;
+    const txt = `${s.tasks.filter(([id]) => isDone('cses' + id)).length}/${s.tasks.length}`;
     cl.children[ci].querySelector('.count').textContent = txt;
     document.querySelectorAll(`[data-sec="${ci}"]`).forEach(x => x.textContent = txt);
   });
   const pct = all ? Math.round(got * 100 / all) : 0;
   document.getElementById('s-all').textContent = pct + '%';
   document.getElementById('b-all').style.width = pct + '%';
-  const cs = DATA.cses.reduce((a, s) => a + s.tasks.filter(([id]) => done['cses' + id]).length, 0);
+  const cs = DATA.cses.reduce((a, s) => a + s.tasks.filter(([id]) => isDone('cses' + id)).length, 0);
   const total = DATA.cses.reduce((a, s) => a + s.tasks.length, 0);
   document.getElementById('s-cses').textContent = `${cs} / ${total}`;
   document.getElementById('b-cses').style.width = (cs * 100 / total) + '%';
@@ -394,11 +403,11 @@ function refresh() {
   const byDate = Object.fromEntries([...document.querySelectorAll('details.day')].map(d => [d.dataset.date, d]));
   const dates = Object.keys(byDate).filter(d => d <= today).sort().reverse();
   for (const d of dates) {
-    const any = [...byDate[d].querySelectorAll('li[data-k]')].some(li => done[li.dataset.k]);
+    const any = [...byDate[d].querySelectorAll('li[data-k]')].some(li => isDone(li.dataset.k));
     if (any) streak++; else if (d !== today) break;
   }
   document.getElementById('s-streak').textContent = streak;
-  document.getElementById('s-lc').textContent = Object.keys(done).filter(k => k.startsWith('lc')).length;
+  document.getElementById('s-lc').textContent = new Set([...Object.keys(done), ...Object.keys(auto)].filter(k => k.startsWith('lc') && isDone(k))).size;
 }
 
 document.addEventListener('change', e => {
@@ -415,6 +424,14 @@ document.querySelectorAll('nav.tabs button').forEach(b => b.addEventListener('cl
 }));
 
 refresh();
+(async () => {
+  try {
+    const p = await fetch('progress.json?t=' + Math.floor(Date.now() / 6e5)).then(r => r.json());
+    [...p.cf, ...p.ac, ...p.lcDays.map(d => 'lc' + d)].forEach(k => auto[k] = true);
+    refresh();
+    document.getElementById('sync').textContent = `Synced from the judges ${p.updated}: ${p.cf.length} Codeforces, ${p.ac.length} AtCoder, ${p.lcTotal} LeetCode solved. CSES is ticked by hand.`;
+  } catch (e) { document.getElementById('sync').textContent = 'Judge sync unavailable right now. Checks you make by hand still save.'; }
+})();
 const t = document.querySelector('details.day.today') || document.querySelector('details.day');
 t.open = true;
 if (document.querySelector('details.day.today')) t.scrollIntoView({ block: 'start' });
