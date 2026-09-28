@@ -63,6 +63,12 @@ details.day > summary::-webkit-details-marker { display: none; }
 .day.today > summary .dow { color: var(--accent); }
 .day.today > summary .date::after { content: "today"; font: 600 .6875rem var(--sans); letter-spacing: .06em; text-transform: uppercase; color: var(--bg); background: var(--accent); padding: .1rem .4rem; border-radius: 3px; margin-left: .5rem; vertical-align: 2px; }
 .day.done .count { color: var(--good); }
+.day.off > summary { opacity: .55; }
+.day.off > summary .count::before { content: "off · "; color: var(--muted); }
+.day.off .items, .day.off textarea { opacity: .5; }
+.offbtn { justify-self: start; font: .75rem var(--sans); color: var(--muted); background: none; border: 1px solid var(--rule); border-radius: 4px; padding: .3rem .6rem; cursor: pointer; }
+.offbtn:hover { color: var(--fg); border-color: var(--muted); }
+.day.off .offbtn { color: var(--accent); border-color: var(--accent); }
 .day.past:not(.done) .count { color: var(--accent); }
 
 .blocks { display: grid; gap: 1rem; padding: 0 0 1.25rem 3.95rem; }
@@ -204,7 +210,7 @@ ul.plain .count { margin-left: .4rem; }
       <li>CSES stuck past 45 minutes: skip it. You're missing a technique. Come back after the next topic.</li>
       <li>Write one line per missed idea in the day's log box.</li>
       <li>LeetCode daily is a 30-minute cap. It keeps interview patterns warm; it does not move your rating. If a Hard runs past 30 minutes, read the editorial and move on.</li>
-      <li>Missed a day? Don't catch up. Do today's plan and move on.</li>
+      <li>Missed a day? Don't catch up. Do today's plan and move on. If the day was a holiday or you were ill, open it and press "Mark as off day": it drops out of the totals and doesn't break the streak. Be honest with it; it's for days you couldn't, not days you didn't.</li>
       <li>LeetCode contests come in at stage 1: Weekly on Sunday 08:00 IST, Biweekly on Saturday 20:00 IST. Do Weekly when there is no Codeforces round the night before; skip Biweekly if it clashes with a round.</li>
     </ol>
     <h2>Links</h2>
@@ -228,6 +234,8 @@ const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } cat
 let done = load(KEY);
 if (!done) { done = {}; DATA.preDone.forEach(k => done[k] = true); save(KEY, done); }
 const logs = load(LOGKEY) || {};
+const OFFKEY = 'cp-oct-2026-off';
+let off = load(OFFKEY) || {};
 let auto = {};
 const isDone = k => !!done[k] || !!auto[k];
 const today = new Date().toLocaleDateString('en-CA');
@@ -292,6 +300,8 @@ Object.entries(MONTHS).forEach(([m, mdays]) => {
       }
       blocks.append(blk);
     });
+    const offBtn = el('button', { type: 'button', class: 'offbtn', 'data-date': d.date });
+    blocks.append(offBtn);
     det.append(blocks);
     mdet.append(det);
   });
@@ -375,14 +385,17 @@ function refresh() {
   let all = 0, got = 0;
   document.querySelectorAll('details.day').forEach(det => {
     const ks = [...det.querySelectorAll('li[data-k]')].map(li => li.dataset.k);
-    const n = ks.filter(isDone).length;
-    all += ks.length; got += n;
+    const n = ks.filter(isDone).length, isOff = !!off[det.dataset.date];
+    det.classList.toggle('off', isOff);
+    det.querySelector('.offbtn').textContent = isOff ? 'Off day. Undo' : 'Mark as off day';
+    if (!isOff) { all += ks.length; got += n; }
     det.querySelector('.count').textContent = `${n}/${ks.length}`;
     det.classList.toggle('done', n === ks.length);
   });
   document.querySelectorAll('details.month').forEach(m => {
     const ds = [...m.querySelectorAll('details.day')];
-    m.querySelector(':scope > summary .count').textContent = `${ds.filter(d => d.classList.contains('done')).length}/${ds.length} days`;
+    const offN = ds.filter(d => d.classList.contains('off')).length;
+    m.querySelector(':scope > summary .count').textContent = `${ds.filter(d => d.classList.contains('done')).length}/${ds.length - offN} days` + (offN ? `, ${offN} off` : '');
   });
   DATA.cses.forEach((s, ci) => {
     const txt = `${s.tasks.filter(([id]) => isDone('cses' + id)).length}/${s.tasks.length}`;
@@ -404,6 +417,7 @@ function refresh() {
   const byDate = Object.fromEntries([...document.querySelectorAll('details.day')].map(d => [d.dataset.date, d]));
   const dates = Object.keys(byDate).filter(d => d <= today).sort().reverse();
   for (const d of dates) {
+    if (off[d]) continue;
     const any = [...byDate[d].querySelectorAll('li[data-k]')].some(li => isDone(li.dataset.k));
     if (any) streak++; else if (d !== today) break;
   }
@@ -416,6 +430,15 @@ document.addEventListener('change', e => {
   if (!k) return;
   if (e.target.checked) done[k] = true; else delete done[k];
   save(KEY, done);
+  refresh();
+});
+
+document.addEventListener('click', e => {
+  const b = e.target.closest('.offbtn');
+  if (!b) return;
+  const d = b.dataset.date;
+  if (off[d]) delete off[d]; else off[d] = true;
+  save(OFFKEY, off);
   refresh();
 });
 
