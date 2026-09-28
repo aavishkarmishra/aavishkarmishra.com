@@ -212,7 +212,8 @@ ul.plain .count { margin-left: .4rem; }
       <li>Time-box each problem to 45 minutes. Then read the editorial, close it, and code it yourself.</li>
       <li>Ask for help in steps, not for the answer. From Claude or the editorial, take one hint at a time: first "which topic is this?", then "what is the key observation?", and only then the solution. Stop reading as soon as you can continue alone.</li>
       <li>Tap "needed help" on any problem where you used a hint, the editorial or Claude. It comes back the next day as a re-solve from a blank file. That re-solve is where the learning happens.</li>
-      <li>Before you submit, test n = 1, all values equal, the maximum values, and overflow (use long long).</li>
+      <li>Before you type: write the idea as 2–3 comment lines. Estimate the number of states or operations. If it's above about 10⁸, shrink the search first (for example, one queen per row, not one per square).</li>
+      <li>Before you submit, run four checks. Bounds: multiply n by the max value, and use long long above 2·10⁹. Impossible cases: when is the answer NO or −1? Code vs idea: walk sample 1 through the code by hand and compare it with your comment lines. Edges: try n = 1, all values equal, and the max values.</li>
       <li>Second WA on the same problem? Stop guessing. Write the brute force and run <code>stress/stress.sh</code> from your CP folder. Fix the failing case it prints, then resubmit.</li>
       <li>Rounds start at 20:05, right after your meeting. Do every one live. If the meeting runs over, register anyway and start late. Skip the round only if work is on fire, then do it virtual in the next 10:45 block.</li>
       <li>CSES stuck past 45 minutes: skip it. You're missing a technique. Come back after the next topic.</li>
@@ -341,7 +342,7 @@ function renderPlan() {
       d.blocks.forEach(b => {
         const blk = el('div', { class: 'block' }, el('h3', {}, el('span', { class: 'num', text: b.time }), b.label), el('ul', { class: 'items' }, b.items.map(i => item(i, false))));
         if (b.label === 'Wind down') {
-          const ta = el('textarea', { id: 'log-' + d.date, placeholder: 'Idea I missed today…', 'aria-label': `Log for ${d.label}` });
+          const ta = el('textarea', { id: 'log-' + d.date, placeholder: 'What slipped today? Tag it: bounds, states, impossible case, code vs idea, or idea…', 'aria-label': `Log for ${d.label}` });
           ta.value = logs[d.date] || '';
           ta.addEventListener('input', () => { logs[d.date] = ta.value; save(LOGKEY, logs); });
           blk.append(ta);
