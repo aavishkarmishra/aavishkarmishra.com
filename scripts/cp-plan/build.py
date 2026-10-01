@@ -49,19 +49,30 @@ LC = lambda d: task(f'lc{d}', 'LeetCode daily question', 'https://leetcode.com/p
 UP = lambda d: task(f'up{d}', 'Upsolve: if you got stuck, read the editorial, close it, then code it yourself')
 
 # Known contests (IST). Everything later: check the contest pages.
-CF_LIVE = {dt.date(2026, 10, 10): ('CF Round 2271 (Div 1 + 2), live 20:35–23:35', 'https://codeforces.com/contest/2271'),
+CF_LIVE = {dt.date(2026, 10, 7): ('CF Round 2275 (Div 3), live 20:05–22:35. Your first rated round back. Aim A–C', 'https://codeforces.com/contest/2275'),
+           dt.date(2026, 10, 10): ('CF Round 2271 (Div 1 + 2), live 20:35–23:35. Combined round, aim A–B', 'https://codeforces.com/contest/2271'),
            dt.date(2026, 10, 17): ('CF Round 2261 (Div 1 + 2), live 20:05–23:05', 'https://codeforces.com/contest/2261')}
 CF_LATE = {dt.date(2026, 10, 11): ('CF Round 2274 (Div 2), 00:05 tonight. Optional: only if you can sleep in', 'https://codeforces.com/contest/2274')}
-ABC_LIVE = {dt.date(2026, 10, 3): ('ABC 478, live 17:30–19:10', 'https://atcoder.jp/contests/abc478'),
-            dt.date(2026, 10, 11): ('ABC 479, live 17:30–19:10 (Sunday this week)', 'https://atcoder.jp/contests/abc479')}
+ABC_LIVE = {dt.date(2026, 10, 3): ('ABC 478, live 17:30–19:10. Your first live contest back. Aim A–C', 'https://atcoder.jp/contests/abc478'),
+            dt.date(2026, 10, 11): ('ABC 479, live 17:30–19:10 (Sunday this week)', 'https://atcoder.jp/contests/abc479'),
+            dt.date(2026, 10, 17): ('ABC 480, live 17:30–19:10. CF round at 20:05 too: do both if you feel fresh', 'https://atcoder.jp/contests/abc480')}
 def abc_item(d):
     if d in ABC_LIVE: return task(f'abc{d}', *ABC_LIVE[d])
     return task(f'abc{d}', 'AtCoder ABC, live 17:30 if scheduled (check the page; some weeks it is Sunday)', 'https://atcoder.jp/contests/')
 
 PRE = {'cses1617', 'cses1618', 'cses1754', 'cses1072', 'cses1092'}
 # Days already worked keep their exact content; their problems are never picked again.
-PINNED = {'2026-09-28': json.load(open('pin_2026-09-28.json'))}
-PINNED_KEYS = {i['k'] for p in PINNED.values() for blk in p['blocks'] for i in blk['items']}
+BASE_PIN = {'2026-09-28': json.load(open('pin_2026-09-28.json'))}
+PINNED = dict(BASE_PIN)
+# Freeze every day up to today from the last published page, so a rebuild never rewrites days already worked.
+_prev = pathlib.Path(__file__).resolve().parents[2] / 'public' / 'cp' / 'index.html'
+if _prev.exists():
+    _m = re.search(r'const DATA = (\{.*?\});\n', _prev.read_text(), re.S)
+    for _d in json.loads(_m.group(1))['days'] if _m else []:
+        if _d['date'] <= dt.date.today().isoformat() and _d.get('content'):
+            PINNED.setdefault(_d['date'], _d['content'])
+# Generation only knows the base pin; later freezes override at the end, so picks for future days never move.
+PINNED_KEYS = {i['k'] for p in BASE_PIN.values() for blk in p['blocks'] for i in blk['items']}
 for k in PINNED_KEYS:
     if k.startswith('cf'): used.add((int(re.match(r'cf(\d+)', k).group(1)), re.match(r'cf\d+(\w+)', k).group(1)))
     if k.startswith('ac'): aused.add(k[2:])
@@ -76,7 +87,7 @@ for wi, w in enumerate(WEEKS):
     speed = w['name'].startswith('Speed week')
     cs = [i for i in w['cses'] if f'cses{i}' not in PRE and f'cses{i}' not in PINNED_KEYS]; rd = w['rd']
     # Spread the week's CSES over its weekdays that aren't pinned, at most 3 a day.
-    free = [wd for wd in range(5) if (START + dt.timedelta(wi * 7 + wd)).isoformat() not in PINNED]
+    free = [wd for wd in range(5) if (START + dt.timedelta(wi * 7 + wd)).isoformat() not in BASE_PIN]
     per = -(-len(cs) // len(free)) if cs else 0
     chunk = {wd: cs[j * per:(j + 1) * per][:3] for j, wd in enumerate(free)}
     for wd in range(7):

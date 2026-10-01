@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Downloads the judge data build.py reads. Run before build.py; the files are gitignored.
+# Downloads the judge data build.py reads; the files are gitignored.
+# Re-fetching changes which problems future days get. Days up to today stay frozen.
 set -e
 cd "$(dirname "$0")"
 curl -s https://codeforces.com/api/problemset.problems -o probs.json
