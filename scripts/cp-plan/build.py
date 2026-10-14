@@ -166,7 +166,10 @@ def page_items(page_url, page_title, band_hi):
 # ---- interview queues ----
 design = interview.design_queue()
 saturdays = interview.saturday_queue()
-coding = interview.coding_queue()
+CODING = interview.coding_by_topic()
+IC_NOTE = 'Timed in a plain doc, no IDE, talking aloud. Medium 25 min, hard 40 min. Dry-run, state complexity, then submit.'
+carry, extras_pool = [], []   # unfinished sheet problems roll into the next topic; unused Top 150 extras fill later evenings
+def coding_left(): return carry or topic_extra or extras_pool
 
 # ---- generation ----
 filters, topics_meta = [], []
@@ -191,6 +194,9 @@ for ti in range(RESUME_TOPIC, len(WEEKS)):
     for p in sorted([p for p in parked if p[0] <= hi + 300], key=lambda x: x[0])[:8]:
         parked.remove(p)
         revisit.append({**p[3], 'n': f'Page revisit from "{p[1]}". Re-skim the page first.'})
+    topic_items = CODING.get(ti, [])
+    carry = carry + [x for x in topic_items if x['r'].startswith('Striver')]
+    topic_extra = [x for x in topic_items if not x['r'].startswith('Striver')]
     page_q = []
     def take(n):
         global page_q
@@ -232,12 +238,13 @@ for ti in range(RESUME_TOPIC, len(WEEKS)):
             if design:
                 s = design.pop(0)
                 content.append(B(3, '12:30–13:30', {'HLD': 'System design (HLD)', 'LLD': 'Low-level design (LLD)'}[s['kind']], [task(f'ds:{s["u"]}:{s["t"]}', s['t'], s['u'], s['n'] or None)]))
-            if wd in (1, 2, 3) and coding:
-                qs = [coding.pop(0) for _ in range(min(3, len(coding)))]
-                content.append(B(4, '20:00–22:00', 'Interview coding', [
-                    task('lcp:' + q['titleSlug'], f"{q['title']} ({q['g']})", f"https://leetcode.com/problems/{q['titleSlug']}/",
-                         'Timed in a plain doc, no IDE, talking aloud. Medium 25 min, hard 40 min. Dry-run, state complexity, then submit.', q['difficulty'])
-                    for q in qs]))
+            if wd <= 3 and coding_left():
+                qs = []  # may come back empty if everything left was already done elsewhere
+                for src in (carry, topic_extra, extras_pool):
+                    while src and len(qs) < 3:
+                        q = src.pop(0)
+                        if q['k'] not in seen_keys: seen_keys.add(q['k']); qs.append(q)
+                content.append(B(4, '20:00–22:00', 'Interview coding', [{**q, 'n': q.get('n') or IC_NOTE} for q in qs]))
             else:
                 ev = take(1) or [task(f'flt{fk}_{iso}', f'Filter · {ft} {flo}–{fhi}, one problem', furl(ftags, flo, fhi), 'Sorted by most solved. Skip green ones.')]
                 content.append(B(4, '20:00–22:00', 'Evening block', ev + [ac_pick(*w['ac'])]))
@@ -261,15 +268,22 @@ for ti in range(RESUME_TOPIC, len(WEEKS)):
         days.append({'date': iso, 'dow': d.strftime('%a'), 'label': d.strftime('%b %-d'), 'cls': 'wd' if wd < 5 else 'we',
                      'fixed': fixed_for(d), 'content': {'week': ti, 'blocks': content}})
         d += dt.timedelta(1)
+    extras_pool += topic_extra
     topics_meta.append(ti)
 
 # Remaining interview work after the CP topics run out keeps going on its own days.
-while design or coding or saturdays:
+topic_extra = []
+while design or coding_left() or saturdays:
     iso = d.isoformat(); wd = d.weekday(); content = []
     if wd < 5 and design:
         s = design.pop(0); content.append(B(3, '12:30–13:30', s['kind'], [task(f'ds:{s["u"]}:{s["t"]}', s['t'], s['u'], s['n'] or None)]))
-    if wd in (1, 2, 3) and coding:
-        q = coding.pop(0); content.append(B(4, '20:00–22:00', 'Interview coding', [task('lcp:' + q['titleSlug'], q['title'], f"https://leetcode.com/problems/{q['titleSlug']}/", None, q['difficulty'])]))
+    if wd <= 3 and coding_left():
+        qs = []
+        for src in (carry, extras_pool):
+            while src and len(qs) < 3:
+                q = src.pop(0)
+                if q['k'] not in seen_keys: seen_keys.add(q['k']); qs.append(q)
+        content.append(B(4, '20:00–22:00', 'Interview coding', [{**q, 'n': q.get('n') or IC_NOTE} for q in qs]))
     if wd == 5 and saturdays:
         s = saturdays.pop(0); content.append(B(3, '14:00–15:30', 'Interview', [task(f'sat:{iso}', s['t'], s['u'], s['n'] or None)]))
     days.append({'date': iso, 'dow': d.strftime('%a'), 'label': d.strftime('%b %-d'), 'cls': 'wd' if wd < 5 else 'we',
