@@ -228,6 +228,7 @@ ul.plain .count { margin-left: .4rem; }
       <li>Before you type: write the idea as 2–3 comment lines. Estimate the number of states or operations. If it's above about 10⁸, shrink the search first (for example, one queen per row, not one per square).</li>
       <li>Before you submit, run four checks. Bounds: multiply n by the max value, and use long long above 2·10⁹. Impossible cases: when is the answer NO or −1? Code vs idea: walk sample 1 through the code by hand and compare it with your comment lines. Edges: try n = 1, all values equal, and the max values.</li>
       <li>Second WA on the same problem? Stop guessing. Write the brute force and run <code>stress/stress.sh</code> from your CP folder. Fix the failing case it prints, then resubmit.</li>
+      <li>A round on a Tue–Thu evening moves that night's interview coding to Saturday 15:30–17:00, between behavioral prep and ABC. If Saturday afternoon has a round too, it goes to Sunday 14:00. The tracker does this for you.</li>
       <li>Rounds start at 20:05, right after your meeting. Do every one live. If the meeting runs over, register anyway and start late. Skip the round only if work is on fire, then do it virtual in the next 10:45 block.</li>
       <li>CSES stuck past 45 minutes: skip it. You're missing a technique. Come back after the next topic.</li>
       <li>Write one line per missed idea in the day's log box.</li>
@@ -298,14 +299,15 @@ function contestBlocks(d) {
     const late = c.time < '06:00' || c.time >= '23:00';
     const label = c.judge === 'ac' ? (c.name.includes('Beginner') ? 'AtCoder' : 'AtCoder ' + (c.name.includes('Regular') ? 'ARC' : 'contest'))
       : late ? 'Codeforces (optional, late)' : d.cls === 'wd' && c.time >= '19:30' && c.time <= '21:30' ? 'Live round tonight. This replaces the evening block' : 'Codeforces live';
-    return { o: c.judge === 'ac' ? 4.2 : late ? 6.5 : 4.4, time: `${c.time}–${c.end}`, label, items: [{ k: 'ct:' + c.id, t: `${c.name}, live`, u: c.url }] };
+    const [h, m] = c.time.split(':').map(Number);
+    return { o: late ? 6.5 : 3.5 + (h + m / 60 - 15) / 20, contest: true, start: c.time, time: `${c.time}–${c.end}`, label, items: [{ k: 'ct:' + c.id, t: `${c.name}, live`, u: c.url }] };
   });
 }
 function schedule() {
   const queue = { wd: [], we: [] };
   DATA.days.forEach(d => { if (d.content) queue[d.cls].push(d.content); });
   const idx = { wd: 0, we: 0 };
-  return DATA.days.map(d => {
+  const out = DATA.days.map(d => {
     const content = off[d.date] || d.skip ? null : queue[d.cls][idx[d.cls]++] || null;
     const synced = contestBlocks(d);
     let blocks = [...d.fixed.filter(b => !(b.label === 'AtCoder' && synced.some(s => s.label === 'AtCoder'))), ...synced];
@@ -316,6 +318,21 @@ function schedule() {
     blocks.sort((a, b) => a.o - b.o);
     return { ...d, blocks, week: content ? content.week : null };
   });
+  // A live round on an interview-coding evening pushes that coding to the next Saturday afternoon.
+  let carry = [];
+  out.forEach(d => {
+    const live = d.blocks.some(b => b.label.startsWith('Live round'));
+    const ic = d.blocks.find(b => b.label === 'Interview coding');
+    if (live && ic) { d.blocks = d.blocks.filter(b => b !== ic); carry.push({ from: `${d.dow} ${d.label}`, items: ic.items }); }
+    const busySat = d.dow === 'Sat' && d.blocks.some(b => b.contest && b.start >= '13:00' && b.start < '17:00');
+    if (carry.length && d.week !== null && ((d.dow === 'Sat' && !busySat) || d.dow === 'Sun')) {
+      const sun = d.dow === 'Sun';
+      d.blocks.push({ o: sun ? 3.45 : 3.52, time: sun ? '14:00–15:30' : '15:30–17:00', label: `Interview coding (moved from ${carry.map(c => c.from).join(', ')})`, items: carry.flatMap(c => c.items) });
+      d.blocks.sort((a, b) => a.o - b.o);
+      carry = [];
+    }
+  });
+  return out;
 }
 
 function renderPlan() {

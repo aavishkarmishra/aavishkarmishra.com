@@ -9,6 +9,9 @@ START = dt.date(2026, 9, 28)
 RESTART = dt.date(2026, 10, 14)   # days in [WORKED_UNTIL+1, RESTART) were missed; the plan resumes here
 WORKED_UNTIL = dt.date(2026, 10, 1)
 RESUME_TOPIC = 1
+# Page problems the user finished ahead of the plan, by the date they did them.
+DONE_EARLY = {'2026-10-14': ['lcp:' + s for s in ('find-first-and-last-position-of-element-in-sorted-array', 'search-insert-position', 'first-bad-version',
+                                                 'valid-perfect-square', 'find-peak-element', 'search-in-rotated-sorted-array', 'find-right-interval')]}
 NAME = {i: t for s in CS for i, t in s['tasks']}
 OUT = pathlib.Path(__file__).resolve().parents[2] / 'public' / 'cp' / 'index.html'
 
@@ -184,10 +187,13 @@ for ti in range(RESUME_TOPIC, len(WEEKS)):
                 content.append(B(1, '09:00–10:30', 'Virtual contest', [task(f'virt{iso}', 'Virtual Div 2 you have not seen (2h). Start at 09:00 sharp', 'https://codeforces.com/contests')]))
                 content.append(B(2, '10:45–12:00', 'Upsolve', [task(f'upv{iso}', 'Upsolve the first two problems you missed')]))
             else:
+                early_keys = set(DONE_EARLY.get(iso, []))
+                early = []
                 if reads and not page_q:
                     t, u, probs = reads.pop(0)
                     content.append(B(1, '09:00–10:30', 'Read', [read(t, u)]))
-                    page_q = probs or [cf_pick(lo, hi, tags) for _ in range(4)]
+                    early = [p for p in probs if p['k'] in early_keys]
+                    page_q = [p for p in probs if p['k'] not in early_keys] or [cf_pick(lo, hi, tags) for _ in range(4)]
                     concepts.append({'date': d, 'label': t, 'items': [], 'filter': furl(ftags or tags, lo, hi), 'topic': ti})
                 elif cs_q:
                     content.append(B(1, '09:00–10:30', 'CSES', [cses(i) for i in cs_q[:3]])); cs_q = cs_q[3:]
@@ -195,7 +201,8 @@ for ti in range(RESUME_TOPIC, len(WEEKS)):
                     content.append(B(1, '09:00–10:30', 'Problems', take(2)))
                 else:
                     content.append(B(1, '09:00–10:30', 'Problems', [cf_pick(lo, hi, tags)]))
-                content.append(B(2, '10:45–12:00', 'Problems', (take(2) or [cf_pick(lo, hi, tags)]) + [UP(iso)]))
+                if early: content.append(B(2, '10:45–12:00', 'Problems', [{**p, 'n': 'Done ahead of plan.'} for p in early]))
+                else: content.append(B(2, '10:45–12:00', 'Problems', (take(2) or [cf_pick(lo, hi, tags)]) + [UP(iso)]))
             if design:
                 s = design.pop(0)
                 content.append(B(3, '12:30–13:30', {'HLD': 'System design (HLD)', 'LLD': 'Low-level design (LLD)'}[s['kind']], [task(f'ds:{s["u"]}:{s["t"]}', s['t'], s['u'], s['n'] or None)]))
