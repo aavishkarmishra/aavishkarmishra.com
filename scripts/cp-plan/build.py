@@ -276,6 +276,15 @@ while design or coding or saturdays:
                  'fixed': fixed_for(d), 'content': {'week': len(WEEKS) - 1, 'blocks': content}})
     d += dt.timedelta(1)
 
+# Rated rounds the user took part in that the contest sync never saw (announced after the last sync).
+PAST_ROUNDS = {'2026-10-14': (2276, 'Educational Round 195, live 20:05–22:05', 'ABCDEF')}
+for x in days:
+    if x['date'] in PAST_ROUNDS:
+        cid, name, idx = PAST_ROUNDS[x['date']]
+        x['fixed'] = [f for f in x['fixed'] if f['label'] != 'Live round'] + [B(3.75, '20:05–22:05', 'Live round tonight. This replaces the evening block',
+            [task(f'ct:cf{cid}', name, f'https://codeforces.com/contest/{cid}')] + [cf_item(PROB[(cid, i)]) if (cid, i) in PROB else
+             task(f'cf{cid}{i}', f'CF {cid}{i}', f'https://codeforces.com/contest/{cid}/problem/{i}', 'Upsolve it yourself if you had help in the round.') for i in idx])]
+
 # Days already lived through keep their published content, so re-fetched data never rewrites worked days.
 for x in days:
     if RESTART.isoformat() <= x['date'] < dt.date.today().isoformat() and prev_days.get(x['date'], {}).get('content'):
