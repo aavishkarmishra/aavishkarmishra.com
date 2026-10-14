@@ -9,9 +9,14 @@ START = dt.date(2026, 9, 28)
 RESTART = dt.date(2026, 10, 14)   # days in [WORKED_UNTIL+1, RESTART) were missed; the plan resumes here
 WORKED_UNTIL = dt.date(2026, 10, 1)
 RESUME_TOPIC = 1
-# Page problems the user finished ahead of the plan, by the date they did them.
-DONE_EARLY = {'2026-10-14': ['lcp:' + s for s in ('find-first-and-last-position-of-element-in-sorted-array', 'search-insert-position', 'first-bad-version',
-                                                 'valid-perfect-square', 'find-peak-element', 'search-in-rotated-sorted-array', 'find-right-interval')]}
+BS_PAGE = 'https://cp-algorithms.com/num_methods/binary_search.html'
+# What the user actually did on the days between WORKED_UNTIL and RESTART; every other day there was missed.
+HISTORY = {
+    '2026-10-05': {'read': [BS_PAGE], 'done': ['cf1999A', 'cf1807A', 'acabc471_d', 'acabc471_c']},
+    '2026-10-06': {'done': ['lcp:' + s for s in ('find-first-and-last-position-of-element-in-sorted-array', 'search-insert-position',
+                                                 'first-bad-version', 'valid-perfect-square', 'find-peak-element')]},
+    '2026-10-13': {'done': ['cf1873E']},
+}
 NAME = {i: t for s in CS for i, t in s['tasks']}
 OUT = pathlib.Path(__file__).resolve().parents[2] / 'public' / 'cp' / 'index.html'
 
@@ -90,6 +95,16 @@ def page_problem(title, url, page_title):
 
 PRE = {'cses1617', 'cses1618', 'cses1754', 'cses1072', 'cses1092'}
 
+def item_for(k):
+    m = re.match(r'cf(\d+)(\w+)$', k)
+    if m: return cf_item(PROB[(int(m.group(1)), m.group(2))])
+    if k.startswith('ac'):
+        p = APROB[k[2:]]; return task(k, f"AtCoder {k[2:].upper().replace('_', ' ')} · {p['name']}", f"https://atcoder.jp/contests/{p['contest_id']}/tasks/{k[2:]}")
+    for v in CPALGO.values():
+        for t, u in v:
+            if page_problem(t, u, '')[0] == k: return page_problem(t, u, '')[2]
+    raise SystemExit(f'unknown history item {k}')
+
 # ---- history: worked days stay exactly as published; missed days carry no study content ----
 prev = json.loads(re.search(r'const DATA = (\{.*?\});\n', OUT.read_text(), re.S).group(1))
 prev_days = {d['date']: d for d in prev['days']}
@@ -118,9 +133,17 @@ while d < RESTART:
         for b in pd['content']['blocks']:
             for i in b['items']:
                 seen_keys.add(i['k'])
+    elif iso in HISTORY:
+        h = HISTORY[iso]
+        blocks = [B(1, '09:00–10:30', 'Read', [read(t, u) for t, u in WEEKS[RESUME_TOPIC]['rd'] if u in h.get('read', [])])] if h.get('read') else []
+        blocks.append(B(2, '10:45–12:00', 'Problems', [item_for(k) for k in h['done']]))
+        days.append({'date': iso, 'dow': d.strftime('%a'), 'label': d.strftime('%b %-d'), 'cls': 'wd' if d.weekday() < 5 else 'we',
+                     'fixed': fixed_for(d), 'content': {'week': RESUME_TOPIC, 'blocks': blocks}})
+        seen_keys.update(h['done']); seen_keys.update('read:' + u for u in h.get('read', []))
     else:
         days.append({**pd, 'content': None, 'skip': True})
     d += dt.timedelta(1)
+hist_reads = {u: x for x, h in HISTORY.items() for u in h.get('read', [])}
 for k in seen_keys | PRE:
     m = re.match(r'cf(\d+)(\w+)$', k)
     if m: used.add((int(m.group(1)), m.group(2)))
@@ -187,13 +210,17 @@ for ti in range(RESUME_TOPIC, len(WEEKS)):
                 content.append(B(1, '09:00–10:30', 'Virtual contest', [task(f'virt{iso}', 'Virtual Div 2 you have not seen (2h). Start at 09:00 sharp', 'https://codeforces.com/contests')]))
                 content.append(B(2, '10:45–12:00', 'Upsolve', [task(f'upv{iso}', 'Upsolve the first two problems you missed')]))
             else:
-                early_keys = set(DONE_EARLY.get(iso, []))
-                early = []
+                while reads and not page_q and reads[0][1] in hist_reads:
+                    t, u, probs = reads.pop(0)
+                    page_q = probs
+                    hd = hist_reads.pop(u)
+                    on_page = {page_problem(pt, pu, '')[0] for pt, pu in CPALGO.get(u.split('#')[0], [])}
+                    done = [item_for(k) for x, h in sorted(HISTORY.items()) for k in h['done'] if k in on_page and x >= hd][:3]
+                    concepts.append({'date': dt.date.fromisoformat(hd), 'label': t, 'items': done, 'filter': furl(ftags or tags, lo, hi), 'topic': ti})
                 if reads and not page_q:
                     t, u, probs = reads.pop(0)
                     content.append(B(1, '09:00–10:30', 'Read', [read(t, u)]))
-                    early = [p for p in probs if p['k'] in early_keys]
-                    page_q = [p for p in probs if p['k'] not in early_keys] or [cf_pick(lo, hi, tags) for _ in range(4)]
+                    page_q = probs or [cf_pick(lo, hi, tags) for _ in range(4)]
                     concepts.append({'date': d, 'label': t, 'items': [], 'filter': furl(ftags or tags, lo, hi), 'topic': ti})
                 elif cs_q:
                     content.append(B(1, '09:00–10:30', 'CSES', [cses(i) for i in cs_q[:3]])); cs_q = cs_q[3:]
@@ -201,8 +228,7 @@ for ti in range(RESUME_TOPIC, len(WEEKS)):
                     content.append(B(1, '09:00–10:30', 'Problems', take(2)))
                 else:
                     content.append(B(1, '09:00–10:30', 'Problems', [cf_pick(lo, hi, tags)]))
-                if early: content.append(B(2, '10:45–12:00', 'Problems', [{**p, 'n': 'Done ahead of plan.'} for p in early]))
-                else: content.append(B(2, '10:45–12:00', 'Problems', (take(2) or [cf_pick(lo, hi, tags)]) + [UP(iso)]))
+                content.append(B(2, '10:45–12:00', 'Problems', (take(2) or [cf_pick(lo, hi, tags)]) + [UP(iso)]))
             if design:
                 s = design.pop(0)
                 content.append(B(3, '12:30–13:30', {'HLD': 'System design (HLD)', 'LLD': 'Low-level design (LLD)'}[s['kind']], [task(f'ds:{s["u"]}:{s["t"]}', s['t'], s['u'], s['n'] or None)]))
@@ -260,7 +286,7 @@ by_date = {x['date']: x for x in days}
 load = {}
 for c in concepts:
     for step, gap in enumerate((1, 7, 30)):
-        target = c['date'] + dt.timedelta(gap)
+        target = max(c['date'] + dt.timedelta(gap), RESTART)
         base = c['items'][step % len(c['items'])] if c['items'] else None
         items = []
         if base: items.append({**base, 'k': f're{gap}:{base["k"]}', 't': f'Re-solve from a blank file · {base["t"]}', 'n': f'+{gap} day review of "{c["label"]}".'})
