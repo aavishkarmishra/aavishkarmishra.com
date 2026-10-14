@@ -15,16 +15,18 @@ def get(url, data=None, headers={}):
         return json.load(r)
 
 prev = json.loads(OUT.read_text()) if OUT.exists() else {}
+def latest(ts_by_key):
+    return {k: dt.datetime.fromtimestamp(t, IST).strftime('%Y-%m-%d') for k, t in sorted(ts_by_key.items())}
 out = {'updated': dt.datetime.now(IST).strftime('%Y-%m-%d %H:%M IST')}
 ok = True
 
 try:
     subs = get(f'https://codeforces.com/api/user.status?handle={CF}')['result']
-    out['cf'] = sorted({f"cf{s['problem']['contestId']}{s['problem']['index']}" for s in subs if s['verdict'] == 'OK' and 'contestId' in s['problem']})
+    out['cfAc'] = latest({f"cf{s['problem']['contestId']}{s['problem']['index']}": s['creationTimeSeconds'] for s in reversed(subs) if s['verdict'] == 'OK' and 'contestId' in s['problem']})
     hist = get(f'https://codeforces.com/api/user.rating?handle={CF}')['result']
     out['cfRating'] = {'rating': hist[-1]['newRating'] if hist else 0, 'peak': max([0] + [h['newRating'] for h in hist]), 'contests': len(hist)}
 except Exception as e:
-    print('codeforces failed:', e, file=sys.stderr); ok = False; out['cf'] = prev.get('cf', []); out['cfRating'] = prev.get('cfRating')
+    print('codeforces failed:', e, file=sys.stderr); ok = False; out['cfAc'] = prev.get('cfAc', {}); out['cfRating'] = prev.get('cfRating')
 
 try:
     subs, since = [], 0
@@ -33,9 +35,9 @@ try:
         subs += page
         if len(page) < 500: break
         since = page[-1]['epoch_second'] + 1
-    out['ac'] = sorted({'ac' + s['problem_id'] for s in subs if s['result'] == 'AC'})
+    out['acAc'] = latest({'ac' + s['problem_id']: s['epoch_second'] for s in sorted(subs, key=lambda s: s['epoch_second']) if s['result'] == 'AC'})
 except Exception as e:
-    print('atcoder failed:', e, file=sys.stderr); ok = False; out['ac'] = prev.get('ac', [])
+    print('atcoder failed:', e, file=sys.stderr); ok = False; out['acAc'] = prev.get('acAc', {})
 
 try:
     q = {'query': 'query($u:String!){matchedUser(username:$u){submitStatsGlobal{acSubmissionNum{difficulty count}}} recentAcSubmissionList(username:$u,limit:20){titleSlug timestamp}}', 'variables': {'u': LC}}
@@ -44,11 +46,16 @@ try:
     days = set(prev.get('lcDays', []))
     days |= {dt.datetime.fromtimestamp(int(s['timestamp']), IST).strftime('%Y-%m-%d') for s in d['recentAcSubmissionList']}
     out['lcDays'] = sorted(days)
-    out['lcSlugs'] = sorted(set(prev.get('lcSlugs', [])) | {s['titleSlug'] for s in d['recentAcSubmissionList']})
+    # Date of the latest accepted submission per problem. The API only shows the last 20, so dates build up across runs.
+    lc = dict(prev.get('lcAc', {}))
+    for s in d['recentAcSubmissionList']:
+        day = dt.datetime.fromtimestamp(int(s['timestamp']), IST).strftime('%Y-%m-%d')
+        lc[s['titleSlug']] = max(lc.get(s['titleSlug'], day), day)
+    out['lcAc'] = dict(sorted(lc.items()))
     out['lcTotal'] = next(x['count'] for x in d['matchedUser']['submitStatsGlobal']['acSubmissionNum'] if x['difficulty'] == 'All')
 except Exception as e:
     print('leetcode failed:', e, file=sys.stderr); ok = False
-    out['lcDays'] = prev.get('lcDays', []); out['lcTotal'] = prev.get('lcTotal'); out['lcSlugs'] = prev.get('lcSlugs', [])
+    out['lcDays'] = prev.get('lcDays', []); out['lcTotal'] = prev.get('lcTotal'); out['lcAc'] = prev.get('lcAc', {})
 
 # Upcoming contests, IST. Rounds already shown stay, so the page keeps its history.
 def ist(ts): return dt.datetime.fromtimestamp(ts, IST)
@@ -77,5 +84,5 @@ except Exception as e:
 out['contests'] = sorted(contests.values(), key=lambda c: (c['date'], c['time']))
 
 OUT.write_text(json.dumps(out, indent=0) + '\n')
-print(f"cf {len(out['cf'])}, atcoder {len(out['ac'])}, leetcode days {len(out['lcDays'])}, total {out.get('lcTotal')}, contests {len(out['contests'])}")
+print(f"cf {len(out['cfAc'])}, atcoder {len(out['acAc'])}, leetcode days {len(out['lcDays'])}, total {out.get('lcTotal')}, contests {len(out['contests'])}")
 sys.exit(0 if ok else 1)

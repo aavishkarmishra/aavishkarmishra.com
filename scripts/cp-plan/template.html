@@ -261,7 +261,10 @@ const OFFKEY = 'cp-oct-2026-off', HELPKEY = 'cp-oct-2026-help';
 const help = load(HELPKEY) || {};
 let off = load(OFFKEY) || {};
 let auto = {};
-const isDone = k => !!done[k] || !!auto[k];
+// A judge solve ticks an item only if it happened on or after the item's day, or on or after the plan restart, whichever is earlier.
+const syncedOn = (k, date) => auto[k] !== undefined && (!date || auto[k] >= (date < DATA.restart ? date : DATA.restart));
+const isDone = (k, date) => !!done[k] || syncedOn(k, date);
+const liDone = li => isDone(li.dataset.k, li.dataset.date);
 const today = new Date().toLocaleDateString('en-CA');
 const el = (tag, attrs = {}, ...kids) => {
   const e = document.createElement(tag);
@@ -273,17 +276,18 @@ const el = (tag, attrs = {}, ...kids) => {
 const scheduled = {};
 // filled by renderPlan(); CSES tab shows where each problem currently sits
 
-function item(i, showWhen) {
+function item(i, showWhen, date) {
   const id = 'c-' + i.k.replace(/[^a-z0-9]/gi, '_');
   const box = el('input', { type: 'checkbox', id, 'data-k': i.k });
-  box.checked = isDone(i.k);
+  box.checked = isDone(i.k, date);
   const text = i.u ? el('a', { href: i.u, target: '_blank', rel: 'noopener', text: i.t }) : document.createTextNode(i.t);
   const t = el('span', { class: 't' }, text, i.r ? el('span', { class: 'rating', text: i.r }) : null,
     showWhen && scheduled[i.k] ? el('span', { class: 'when', text: scheduled[i.k] }) : null,
     i.n ? el('span', { class: 'note', text: i.n }) : null);
   const li = el('li', { class: box.checked ? 'checked' : '' }, el('label', { for: id }, box, t));
   if (!showWhen && /^(cf\d|ac|cses)/.test(i.k)) li.append(el('button', { type: 'button', class: 'helpbtn', 'data-k': i.k, 'aria-pressed': String(!!help[i.k]), text: 'needed help' }));
-  if (auto[i.k]) { box.disabled = true; li.classList.add('synced'); li.title = 'Synced from the judge'; }
+  if (date) li.dataset.date = date;
+  if (syncedOn(i.k, date)) { box.disabled = true; li.classList.add('synced'); li.title = 'Synced from the judge'; }
   li.dataset.k = i.k;
   return li;
 }
@@ -381,7 +385,7 @@ function renderPlan() {
         el('span', { class: 'date' }, d.label, el('small', { text: title })), el('span', { class: 'count' })));
       const blocks = el('div', { class: 'blocks' });
       d.blocks.forEach(b => {
-        const blk = el('div', { class: 'block' }, el('h3', {}, el('span', { class: 'num', text: b.time }), b.label), el('ul', { class: 'items' }, b.items.map(i => item(i, false))));
+        const blk = el('div', { class: 'block' }, el('h3', {}, el('span', { class: 'num', text: b.time }), b.label), el('ul', { class: 'items' }, b.items.map(i => item(i, false, d.date))));
         if (b.label === 'Wind down') {
           const ta = el('textarea', { id: 'log-' + d.date, placeholder: 'What slipped today? Tag it: bounds, states, impossible case, code vs idea, or idea…', 'aria-label': `Log for ${d.label}` });
           ta.value = logs[d.date] || '';
@@ -470,11 +474,11 @@ DATA.filters.forEach(f => {
 
 function refresh() {
   document.querySelectorAll('li[data-k]').forEach(li => {
-    const k = li.dataset.k, on = isDone(k), box = li.querySelector('input');
+    const k = li.dataset.k, on = liDone(li), box = li.querySelector('input'), synced = syncedOn(k, li.dataset.date);
     li.classList.toggle('checked', on);
-    li.classList.toggle('synced', !!auto[k]);
-    box.checked = on; box.disabled = !!auto[k];
-    li.title = auto[k] ? 'Synced from the judge' : '';
+    li.classList.toggle('synced', synced);
+    box.checked = on; box.disabled = synced;
+    li.title = synced ? 'Synced from the judge' : '';
   });
   let all = 0, got = 0;
   document.querySelectorAll('details.day').forEach(det => {
@@ -493,7 +497,7 @@ function refresh() {
   });
   document.querySelectorAll('.wsum').forEach(s => {
     const ds = [...document.querySelectorAll(`details.day[data-week="${s.dataset.week}"]`)];
-    const solved = ds.reduce((a, d) => a + [...d.querySelectorAll('li[data-k]')].filter(li => PROBLEM.test(li.dataset.k) && isDone(li.dataset.k)).length, 0);
+    const solved = ds.reduce((a, d) => a + [...d.querySelectorAll('li[data-k]')].filter(li => PROBLEM.test(li.dataset.k) && liDone(li)).length, 0);
     const doneDays = ds.filter(d => d.classList.contains('done')).length;
     s.textContent = `${ds[0].querySelector('.date').firstChild.textContent} – ${ds.at(-1).querySelector('.date').firstChild.textContent} · ${solved} solved · ${doneDays}/${ds.length} days`;
   });
@@ -523,11 +527,11 @@ function refresh() {
   const dates = Object.keys(byDate).filter(d => d <= today).sort().reverse();
   for (const d of dates) {
     if (off[d] || byDate[d].classList.contains('skipday')) continue;
-    const any = [...byDate[d].querySelectorAll('li[data-k]')].some(li => isDone(li.dataset.k));
+    const any = [...byDate[d].querySelectorAll('li[data-k]')].some(liDone);
     if (any) streak++; else if (d !== today) break;
   }
   document.getElementById('s-streak').textContent = streak;
-  document.getElementById('s-lc').textContent = new Set([...Object.keys(done), ...Object.keys(auto)].filter(k => k.startsWith('lc') && isDone(k))).size;
+  document.getElementById('s-lc').textContent = new Set([...Object.keys(done), ...Object.keys(auto)].filter(k => /^lc\d/.test(k) && isDone(k))).size;
 }
 
 document.addEventListener('change', e => {
@@ -575,12 +579,19 @@ const withTimeout = (url, ms = 8000) => { const c = new AbortController(); setTi
     withTimeout(`https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user=aavishkarmishra&from_second=${since}`),
   ]);
   const p = file.status === 'fulfilled' ? file.value : null;
-  if (p) [...p.cf, ...p.ac, ...p.lcDays.map(d => 'lc' + d), ...(p.lcSlugs || []).map(s => 'lcp:' + s)].forEach(k => auto[k] = true);
+  const mark = (k, d) => { if (!auto[k] || d > auto[k]) auto[k] = d; };
+  const day = ts => new Date(ts * 1000).toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
+  if (p) {
+    Object.entries(p.cfAc || {}).forEach(([k, d]) => mark(k, d));
+    Object.entries(p.acAc || {}).forEach(([k, d]) => mark(k, d));
+    Object.entries(p.lcAc || {}).forEach(([s, d]) => mark('lcp:' + s, d));
+    (p.lcDays || []).forEach(d => mark('lc' + d, d));
+  }
   if (p && p.contests) { const y = window.scrollY; contests = p.contests; renderPlan(); window.scrollTo(0, y); }
   const liveCf = cf.status === 'fulfilled' && cf.value.status === 'OK';
-  if (liveCf) cf.value.result.forEach(s => { if (s.verdict === 'OK' && s.problem.contestId) auto[`cf${s.problem.contestId}${s.problem.index}`] = true; });
+  if (liveCf) cf.value.result.forEach(s => { if (s.verdict === 'OK' && s.problem.contestId) mark(`cf${s.problem.contestId}${s.problem.index}`, day(s.creationTimeSeconds)); });
   const liveAc = ac.status === 'fulfilled' && Array.isArray(ac.value);
-  if (liveAc) ac.value.forEach(s => { if (s.result === 'AC') auto['ac' + s.problem_id] = true; });
+  if (liveAc) ac.value.forEach(s => { if (s.result === 'AC') mark('ac' + s.problem_id, day(s.epoch_second)); });
   refresh();
   const n = pre => Object.keys(auto).filter(k => k.startsWith(pre)).length;
   const parts = [

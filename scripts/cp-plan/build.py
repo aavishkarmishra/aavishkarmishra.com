@@ -335,7 +335,7 @@ for i in range(60):
 filters = [f for f in prev['filters'] if f['week'] < RESUME_TOPIC] + filters
 weeks = [{'name': w['name'], 'stage': w['stage'], 'note': w['note'], 'ac': w['ac']} for w in WEEKS]
 data = {'stages': STAGES, 'rules': RULES, 'weeks': weeks, 'days': days, 'filters': filters, 'cses': CS, 'preDone': sorted(PRE),
-        'interview': interview.GATES}
+        'interview': interview.GATES, 'restart': RESTART.isoformat()}
 html = open('template.html').read().replace('/*DATA*/null', json.dumps(data, ensure_ascii=False))
 OUT.write_text(html)
 end_cp = max(x['date'] for x in days if x.get('content') and x['content']['week'] == len(WEEKS) - 1)
