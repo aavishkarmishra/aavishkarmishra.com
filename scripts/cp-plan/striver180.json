@@ -1379,7 +1379,7 @@
 "section": "Strings",
 "pattern": "String Matching",
 "title": "KMP Algorithm or LPS array",
-"slug": "implement-strstr",
+"slug": "find-the-index-of-the-first-occurrence-in-a-string",
 "tier": "pro",
 "tuf": "kmp-algorithm-or-lps-array"
 },
