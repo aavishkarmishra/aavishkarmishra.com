@@ -64,6 +64,7 @@ details.day > summary::-webkit-details-marker { display: none; }
 .day.today > summary .date::after { content: "today"; font: 600 .6875rem var(--sans); letter-spacing: .06em; text-transform: uppercase; color: var(--bg); background: var(--accent); padding: .1rem .4rem; border-radius: 3px; margin-left: .5rem; vertical-align: 2px; }
 .day.done .count { color: var(--good); }
 .day.off > summary { opacity: .55; }
+.day.skipday > summary .count::before { content: "missed · "; }
 .day.off > summary .count::before { content: "off · "; color: var(--muted); }
 .day.off .items, .day.off textarea { opacity: .5; }
 .wsum { font-size: .75rem; color: var(--faint); text-align: right; }
@@ -107,6 +108,8 @@ table.flt td { padding: .55rem .5rem .55rem 0; border-bottom: 1px solid var(--ru
 table.flt td.num { white-space: nowrap; }
 .scroll { overflow-x: auto; }
 .small { font: .8125rem var(--sans); color: var(--muted); }
+.igroup { margin-bottom: 1rem; }
+.igroup h4 { margin: 0 0 .3rem; font: 600 .6875rem var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .live { font: .875rem var(--sans); color: var(--muted); margin: .75rem 0 0; }
 .live b { color: var(--fg); font-family: var(--mono); font-weight: 500; }
 #sync { margin-top: .25rem; }
@@ -142,7 +145,7 @@ ul.plain .count { margin-left: .4rem; }
 <div class="wrap">
   <header>
     <h1>Road to Master</h1>
-    <p class="lede">From Pupil to International Master, one stage at a time. Day-by-day through stage 2 (Candidate Master). Stages are gated by rating, so when your rating and the calendar disagree, the plan gets regenerated.</p>
+    <p class="lede">Two goals on one calendar: interview-ready for Google Software Engineer III, as soon as the gates are met, and learning competitive programming properly, one stage at a time up to Candidate Master and beyond.</p>
     <p class="live" id="live">Loading rating from Codeforces…</p>
     <p class="live" id="sync">Loading judge sync…</p>
     <div class="stats">
@@ -166,6 +169,9 @@ ul.plain .count { margin-left: .4rem; }
     <h2>Stages</h2>
     <p class="small">Each stage lists what to learn, which CSES sections to finish, which filters to practise from, what to aim for in contests, and an exit checklist. Move on only when the checklist is done. CSES counts come from the CSES tab.</p>
     <div id="stages"></div>
+    <h2>Interview track: Google Software Engineer III (L4)</h2>
+    <p class="small">The plan runs interview coding on Tue–Thu evenings (LeetCode Top Interview 150, timed, in a plain doc), design at 12:30 on weekdays (3 HLD, 2 LLD a week), and behavioral prep or a mock on Saturday afternoons. Coding finishes around Feb 4, design around Feb 13, mocks from Nov 7. Apply when every box below is ticked, not on a date.</p>
+    <div id="igates"></div>
     <h2>How practice changes by stage</h2>
     <dl class="sched" id="stage-rules"></dl>
   </section>
@@ -190,16 +196,18 @@ ul.plain .count { margin-left: .4rem; }
       <dt>09:00–10:30</dt><dd>Learn + CSES. Read the topic, then solve.</dd>
       <dt>10:30–10:45</dt><dd>Break, away from the screen</dd>
       <dt>10:45–12:00</dt><dd>Codeforces problem, then upsolve</dd>
-      <dt>12:00–13:30</dt><dd>Lunch, errands, rest</dd>
+      <dt>12:00–12:30</dt><dd>Lunch</dd>
+      <dt>12:30–13:30</dt><dd>System design: 3 HLD and 2 LLD sessions a week</dd>
       <dt>13:30–14:00</dt><dd>LeetCode daily question, then straight into work</dd>
       <dt>14:00–19:30</dt><dd>Work. Get the day's work done before the 19:30 meeting, using Claude Code to keep it short.</dd>
       <dt>19:30–20:00</dt><dd>Meeting</dd>
-      <dt>20:00–22:00</dt><dd>Evening block: two problems from the week's filter, 45 minutes each with a short break. On round days, the live round instead.</dd>
+      <dt>20:00–22:00</dt><dd>Tue–Thu: interview coding, 3 LeetCode Top Interview 150 problems, timed. Mon and Fri: one page problem and one AtCoder problem. On round days, the live round instead.</dd>
       <dt>22:00</dt><dd>Write the log line, then wind down. A round that runs to 22:15 is fine.</dd>
     </dl>
     <h2>Weekend</h2>
     <dl class="sched">
       <dt>Sat 09:00</dt><dd>Virtual Div 2 (2h), then upsolve</dd>
+      <dt>Sat 14:00</dt><dd>Behavioral prep or a mock interview, alternating</dd>
       <dt>Sat 17:30</dt><dd>AtCoder ABC, live</dd>
       <dt>Sat 20:05</dt><dd>Codeforces round, when there is one</dd>
       <dt>Sun 09:30</dt><dd>Upsolve and weekly review, then the afternoon off</dd>
@@ -209,6 +217,11 @@ ul.plain .count { margin-left: .4rem; }
     <h2>Rules</h2>
     <ol class="rules">
       <li>Before coding, rewrite the statement in one plain line, then work sample 1 by hand. If you can't do both after 15 minutes, read the Note section and the samples again. Understanding the statement is half the problem right now.</li>
+      <li>Reading day: the reading takes the whole 09:00 block. Write a 5-line summary and the template code in your own words before touching problems.</li>
+      <li>Page problems come easiest first. Problems more than 300 above the topic's band are parked and come back later as a "page revisit". Nothing is dropped.</li>
+      <li>Spaced review comes first in the morning: re-solve one earlier problem from a blank file, then one new problem on the same idea. +1 day, +7 days and +30 days after each reading.</li>
+      <li>Not sure a greedy holds? Don't guess. Write the brute force (try every order or subset for n up to 8) and run stress/stress.sh. If it survives 300 random tests, submit.</li>
+      <li>Interview coding: a plain doc, no IDE, no autocomplete. Talk out loud. State the approach and complexity before you write code. Dry-run on the example, then submit. Already solved it before? Do it again timed anyway.</li>
       <li>Time-box each problem to 45 minutes. Then read the editorial, close it, and code it yourself.</li>
       <li>Ask for help in steps, not for the answer. From Claude or the editorial, take one hint at a time: first "which topic is this?", then "what is the key observation?", and only then the solution. Stop reading as soon as you can continue alone.</li>
       <li>Tap "needed help" on any problem where you used a hint, the editorial or Claude. It comes back the next day as a re-solve from a blank file. That re-solve is where the learning happens.</li>
@@ -279,15 +292,25 @@ const PROBLEM = /^(cf\d|ac|cses|lc|flt)/;
 const monthName = m => new Date(m + '-15').toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
 
 // Content shifts forward over off days within its class (weekday / weekend); fixed blocks stay on their date.
+let contests = [];
+function contestBlocks(d) {
+  return contests.filter(c => c.date === d.date).map(c => {
+    const late = c.time < '06:00' || c.time >= '23:00';
+    const label = c.judge === 'ac' ? (c.name.includes('Beginner') ? 'AtCoder' : 'AtCoder ' + (c.name.includes('Regular') ? 'ARC' : 'contest'))
+      : late ? 'Codeforces (optional, late)' : d.cls === 'wd' && c.time >= '19:30' && c.time <= '21:30' ? 'Live round tonight. This replaces the evening block' : 'Codeforces live';
+    return { o: c.judge === 'ac' ? 4.2 : late ? 6.5 : 4.4, time: `${c.time}–${c.end}`, label, items: [{ k: 'ct:' + c.id, t: `${c.name}, live`, u: c.url }] };
+  });
+}
 function schedule() {
   const queue = { wd: [], we: [] };
   DATA.days.forEach(d => { if (d.content) queue[d.cls].push(d.content); });
   const idx = { wd: 0, we: 0 };
   return DATA.days.map(d => {
-    const content = off[d.date] ? null : queue[d.cls][idx[d.cls]++] || null;
-    let blocks = [...d.fixed];
+    const content = off[d.date] || d.skip ? null : queue[d.cls][idx[d.cls]++] || null;
+    const synced = contestBlocks(d);
+    let blocks = [...d.fixed.filter(b => !(b.label === 'AtCoder' && synced.some(s => s.label === 'AtCoder'))), ...synced];
     if (content) {
-      const live = d.fixed.some(b => b.label.startsWith('Live round'));
+      const live = blocks.some(b => b.label.startsWith('Live round'));
       blocks = blocks.concat(content.blocks.filter(b => !(live && b.label === 'Evening block')));
     }
     blocks.sort((a, b) => a.o - b.o);
@@ -335,7 +358,8 @@ function renderPlan() {
       if (d.date === today) det.classList.add('today');
       if (d.date < today) det.classList.add('past');
       if (first ? d.date === today : open.has(d.date)) det.open = true;
-      const title = off[d.date] ? 'Off day' : d.cls === 'we' ? 'Weekend' : d.blocks[0].label;
+      if (d.skip) det.classList.add('skipday');
+      const title = d.skip ? 'Missed' : off[d.date] ? 'Off day' : d.cls === 'we' ? 'Weekend' : (d.blocks.find(b => b.o >= 1) || d.blocks[0]).label;
       det.append(el('summary', {}, el('span', { class: 'dow', text: d.dow }),
         el('span', { class: 'date' }, d.label, el('small', { text: title })), el('span', { class: 'count' })));
       const blocks = el('div', { class: 'blocks' });
@@ -349,7 +373,7 @@ function renderPlan() {
         }
         blocks.append(blk);
       });
-      blocks.append(el('button', { type: 'button', class: 'offbtn', 'data-date': d.date }));
+      if (!d.skip) blocks.append(el('button', { type: 'button', class: 'offbtn', 'data-date': d.date }));
       det.append(blocks);
       mdet.append(det);
     });
@@ -379,6 +403,9 @@ DATA.stages.forEach((s, si) => {
   det.append(body);
   stagesEl.append(det);
 });
+const ig = document.getElementById('igates');
+Object.entries(DATA.interview).forEach(([g, list]) => ig.append(el('div', { class: 'igroup' }, el('h4', { text: g }),
+  el('ul', { class: 'items' }, list.map((x, i) => item({ k: `ig:${g}:${i}`, t: x }, true))))));
 const sr = document.getElementById('stage-rules');
 DATA.rules.forEach(([k, v]) => sr.append(el('dt', { text: k }), el('dd', { text: v })));
 
@@ -435,9 +462,9 @@ function refresh() {
   let all = 0, got = 0;
   document.querySelectorAll('details.day').forEach(det => {
     const ks = [...det.querySelectorAll('li[data-k]')].map(li => li.dataset.k);
-    const n = ks.filter(isDone).length, isOff = !!off[det.dataset.date];
+    const n = ks.filter(isDone).length, isOff = !!off[det.dataset.date] || det.classList.contains('skipday');
     det.classList.toggle('off', isOff);
-    det.querySelector('.offbtn').textContent = isOff ? 'Off day. Undo (pulls the plan back a day)' : 'Mark as off day (pushes the plan back a day)';
+    if (det.querySelector('.offbtn')) det.querySelector('.offbtn').textContent = isOff ? 'Off day. Undo (pulls the plan back a day)' : 'Mark as off day (pushes the plan back a day)';
     if (!isOff) { all += ks.length; got += n; }
     det.querySelector('.count').textContent = `${n}/${ks.length}`;
     det.classList.toggle('done', n === ks.length);
@@ -478,7 +505,7 @@ function refresh() {
   const byDate = Object.fromEntries([...document.querySelectorAll('details.day')].map(d => [d.dataset.date, d]));
   const dates = Object.keys(byDate).filter(d => d <= today).sort().reverse();
   for (const d of dates) {
-    if (off[d]) continue;
+    if (off[d] || byDate[d].classList.contains('skipday')) continue;
     const any = [...byDate[d].querySelectorAll('li[data-k]')].some(li => isDone(li.dataset.k));
     if (any) streak++; else if (d !== today) break;
   }
@@ -531,7 +558,8 @@ const withTimeout = (url, ms = 8000) => { const c = new AbortController(); setTi
     withTimeout(`https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user=aavishkarmishra&from_second=${since}`),
   ]);
   const p = file.status === 'fulfilled' ? file.value : null;
-  if (p) [...p.cf, ...p.ac, ...p.lcDays.map(d => 'lc' + d)].forEach(k => auto[k] = true);
+  if (p) [...p.cf, ...p.ac, ...p.lcDays.map(d => 'lc' + d), ...(p.lcSlugs || []).map(s => 'lcp:' + s)].forEach(k => auto[k] = true);
+  if (p && p.contests) { const y = window.scrollY; contests = p.contests; renderPlan(); window.scrollTo(0, y); }
   const liveCf = cf.status === 'fulfilled' && cf.value.status === 'OK';
   if (liveCf) cf.value.result.forEach(s => { if (s.verdict === 'OK' && s.problem.contestId) auto[`cf${s.problem.contestId}${s.problem.index}`] = true; });
   const liveAc = ac.status === 'fulfilled' && Array.isArray(ac.value);

@@ -126,5 +126,89 @@
 "2026-10-06",
 "2026-10-13"
 ],
-"lcTotal": 665
+"lcSlugs": [
+"check-if-there-is-a-valid-parentheses-string-path",
+"find-first-and-last-position-of-element-in-sorted-array",
+"find-peak-element",
+"first-bad-version",
+"generate-parentheses",
+"longest-valid-parentheses",
+"maximum-alternating-sum-of-squares",
+"maximum-nesting-depth-of-the-parentheses",
+"maximum-subarray",
+"minimum-add-to-make-parentheses-valid",
+"pascals-triangle",
+"score-of-parentheses",
+"search-insert-position",
+"set-matrix-zeroes",
+"valid-parentheses",
+"valid-parenthesis-string",
+"valid-perfect-square"
+],
+"lcTotal": 665,
+"contests": [
+{
+"id": "abc480",
+"judge": "ac",
+"name": "AtCoder Beginner Contest 480",
+"date": "2026-10-17",
+"time": "17:30",
+"end": "19:10",
+"url": "https://atcoder.jp/contests/abc480"
+},
+{
+"id": "cf2261",
+"judge": "cf",
+"name": "WorldQuant Round 1 (Codeforces Round 1128, Div. 1 + Div. 2)",
+"date": "2026-10-17",
+"time": "20:05",
+"end": "23:05",
+"url": "https://codeforces.com/contest/2261"
+},
+{
+"id": "cf2277",
+"judge": "cf",
+"name": "Codeforces Round (Div. 2)",
+"date": "2026-10-24",
+"time": "16:35",
+"end": "18:35",
+"url": "https://codeforces.com/contest/2277"
+},
+{
+"id": "arc233",
+"judge": "ac",
+"name": "AtCoder Regular Contest++ 233",
+"date": "2026-10-25",
+"time": "17:30",
+"end": "20:00",
+"url": "https://atcoder.jp/contests/arc233"
+},
+{
+"id": "cf2272",
+"judge": "cf",
+"name": "Codeforces Round (Div. 2)",
+"date": "2026-10-26",
+"time": "20:05",
+"end": "22:20",
+"url": "https://codeforces.com/contest/2272"
+},
+{
+"id": "abc482",
+"judge": "ac",
+"name": "AtCoder Beginner Contest 482",
+"date": "2026-10-31",
+"time": "17:30",
+"end": "19:10",
+"url": "https://atcoder.jp/contests/abc482"
+},
+{
+"id": "abc483",
+"judge": "ac",
+"name": "AtCoder Beginner Contest 483",
+"date": "2026-11-07",
+"time": "17:30",
+"end": "19:10",
+"url": "https://atcoder.jp/contests/abc483"
+}
+]
 }
