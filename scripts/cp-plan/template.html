@@ -51,6 +51,10 @@ nav.tabs button[aria-selected="true"] { color: var(--fg); border-color: var(--ac
 .week-head h2 { margin: 0; }
 .week-head .num { font-size: .75rem; color: var(--faint); }
 .filters-line { font: .8125rem var(--sans); color: var(--muted); margin: 0 0 .75rem; }
+details.patterns { font: .8125rem var(--sans); color: var(--muted); margin: -.25rem 0 .75rem; }
+details.patterns summary { cursor: pointer; }
+details.patterns ul { margin-top: .4rem; }
+details.patterns b { color: var(--fg); font-weight: 600; }
 
 details.day { border-top: 1px solid var(--rule); }
 details.day:last-of-type { border-bottom: 1px solid var(--rule); }
@@ -241,7 +245,8 @@ const KEY = 'cp-oct-2026', LOGKEY = 'cp-oct-2026-log';
 const load = k => { try { return JSON.parse(localStorage.getItem(k)) || null; } catch { return null; } };
 const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
 let done = load(KEY);
-if (!done) { done = {}; DATA.preDone.forEach(k => done[k] = true); save(KEY, done); }
+if (!done) done = {};
+DATA.preDone.forEach(k => done[k] = true); save(KEY, done);
 const logs = load(LOGKEY) || {};
 const OFFKEY = 'cp-oct-2026-off', HELPKEY = 'cp-oct-2026-help';
 const help = load(HELPKEY) || {};
@@ -329,6 +334,8 @@ function renderPlan() {
           el('span', { class: 'num wsum', 'data-week': d.week })));
         mdet.append(el('p', { class: 'filters-line' }, w.note ? [el('span', { text: w.note + ' ' })] : [], 'Evening filter: ',
           el('a', { href: f.url, target: '_blank', rel: 'noopener', text: `${f.title} ${f.lo}–${f.hi}` }), ` (${f.target} this week). AtCoder difficulty ${w.ac[0]}–${w.ac[1]}.`));
+        if (w.pat.length) mdet.append(el('details', { class: 'patterns' }, el('summary', { text: `Patterns this week (${w.pat.length})` }),
+          el('ul', { class: 'plain' }, w.pat.map(([p, by]) => el('li', {}, el('b', { text: p }), ` · ${by}`)))));
       }
       const det = el('details', { class: 'day', id: 'd' + d.date.replaceAll('-', '') });
       det.dataset.date = d.date; if (d.week !== null) det.dataset.week = d.week;
@@ -483,7 +490,7 @@ function refresh() {
     if (any) streak++; else if (d !== today) break;
   }
   document.getElementById('s-streak').textContent = streak;
-  document.getElementById('s-lc').textContent = new Set([...Object.keys(done), ...Object.keys(auto)].filter(k => k.startsWith('lc') && isDone(k))).size;
+  document.getElementById('s-lc').textContent = new Set([...Object.keys(done), ...Object.keys(auto)].filter(k => /^lc\d/.test(k) && isDone(k))).size;
 }
 
 document.addEventListener('change', e => {
@@ -531,7 +538,7 @@ const withTimeout = (url, ms = 8000) => { const c = new AbortController(); setTi
     withTimeout(`https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user=aavishkarmishra&from_second=${since}`),
   ]);
   const p = file.status === 'fulfilled' ? file.value : null;
-  if (p) [...p.cf, ...p.ac, ...p.lcDays.map(d => 'lc' + d)].forEach(k => auto[k] = true);
+  if (p) [...p.cf, ...p.ac, ...p.lcDays.map(d => 'lc' + d), ...(p.lcAc || []).map(s => 'lcp:' + s)].forEach(k => auto[k] = true);
   const liveCf = cf.status === 'fulfilled' && cf.value.status === 'OK';
   if (liveCf) cf.value.result.forEach(s => { if (s.verdict === 'OK' && s.problem.contestId) auto[`cf${s.problem.contestId}${s.problem.index}`] = true; });
   const liveAc = ac.status === 'fulfilled' && Array.isArray(ac.value);

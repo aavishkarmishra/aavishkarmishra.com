@@ -44,9 +44,11 @@ try:
     days = set(prev.get('lcDays', []))
     days |= {dt.datetime.fromtimestamp(int(s['timestamp']), IST).strftime('%Y-%m-%d') for s in d['recentAcSubmissionList']}
     out['lcDays'] = sorted(days)
+    # Slugs accumulate the same way; the page ticks lcp:<slug> items (Striver sheet, LeetCode practice) from them.
+    out['lcAc'] = sorted(set(prev.get('lcAc', [])) | {s['titleSlug'] for s in d['recentAcSubmissionList']})
     out['lcTotal'] = next(x['count'] for x in d['matchedUser']['submitStatsGlobal']['acSubmissionNum'] if x['difficulty'] == 'All')
 except Exception as e:
-    print('leetcode failed:', e, file=sys.stderr); ok = False; out['lcDays'] = prev.get('lcDays', []); out['lcTotal'] = prev.get('lcTotal')
+    print('leetcode failed:', e, file=sys.stderr); ok = False; out['lcDays'] = prev.get('lcDays', []); out['lcTotal'] = prev.get('lcTotal'); out['lcAc'] = prev.get('lcAc', [])
 
 OUT.write_text(json.dumps(out, indent=0) + '\n')
 print(f"cf {len(out['cf'])}, atcoder {len(out['ac'])}, leetcode days {len(out['lcDays'])}, total {out.get('lcTotal')}")
