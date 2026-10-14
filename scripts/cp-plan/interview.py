@@ -115,6 +115,34 @@ TOP150_TOPIC = {'Binary Search': 1, 'Two Pointers': 1, 'Sliding Window': 1, 'Gra
                 'Matrix': 5, 'Math': 6, 'Bit Manipulation': 7, 'Backtracking': 7, 'Divide & Conquer': 7, 'Binary Tree General': 8,
                 'Binary Tree BFS': 8, 'Binary Search Tree': 8, 'Trie': 12}
 
+# Most specific LeetCode tag first; the first tag a problem has decides its curriculum topic.
+TAG_TOPIC = [('trie', 12), ('string-matching', 12), ('rolling-hash', 12), ('hash-function', 12), ('segment-tree', 4), ('binary-indexed-tree', 4),
+             ('ordered-set', 4), ('union-find', 2), ('topological-sort', 2), ('shortest-path', 2), ('minimum-spanning-tree', 2), ('graph', 2),
+             ('binary-search-tree', 8), ('binary-tree', 8), ('tree', 8), ('linked-list', 4), ('doubly-linked-list', 4), ('monotonic-stack', 15),
+             ('monotonic-queue', 15), ('heap-priority-queue', 2), ('breadth-first-search', 2), ('depth-first-search', 2), ('dynamic-programming', 3),
+             ('memoization', 3), ('backtracking', 7), ('bit-manipulation', 7), ('binary-search', 1), ('sliding-window', 1), ('two-pointers', 1),
+             ('stack', 4), ('queue', 4), ('design', 4), ('number-theory', 6), ('combinatorics', 3), ('math', 6), ('greedy', 5), ('prefix-sum', 5),
+             ('hash-table', 5), ('sorting', 5), ('matrix', 5), ('string', 5), ('array', 5)]
+def topic_for_tags(tags):
+    return next((ti for t, ti in TAG_TOPIC if t in tags), 5)
+
+def my_list_items():
+    # The user's own unsolved LeetCode list problems, in list priority order, deduplicated.
+    try:
+        lists, cat = json.load(open('my_lists.json')), json.load(open('lc_catalog.json'))
+    except FileNotFoundError:
+        return {}
+    out, seen = {}, set()
+    for name in lists['order']:
+        for fid in lists['unsolved'][name]:
+            q = cat[fid]
+            if q['titleSlug'] in seen: continue
+            seen.add(q['titleSlug'])
+            ti = topic_for_tags([t['slug'] for t in q['topicTags']])
+            out.setdefault(ti, []).append({'k': 'lcp:' + q['titleSlug'], 't': f"{fid}. {q['title']}", 'u': f"https://leetcode.com/problems/{q['titleSlug']}/",
+                                           'r': f"{name} · {q['difficulty'].lower()}", 'n': 'LeetCode Premium.' if q['isPaidOnly'] else None, 'mine': True})
+    return out
+
 def coding_by_topic():
     # Striver 180 first (the user's main sheet), then Top Interview 150 problems not already on it, both grouped by curriculum topic.
     out, seen = {}, set()
@@ -127,6 +155,18 @@ def coding_by_topic():
         else:
             it = {'k': 'tuf:' + p['tuf'], 't': f"{p['title']} ({p['pattern']})", 'u': STRIVER, 'r': 'Striver ' + p['tier'], 'n': 'Not on LeetCode. Open it from the Striver sheet.'}
         out.setdefault(ti, []).append(it)
+    mine = my_list_items()
+    mine_slugs = {x['k'] for v in mine.values() for x in v}
+    for ti, items in out.items():
+        items[:] = [x for x in items if x['k'] not in mine_slugs]
+    # 2 from the user's lists for every 1 from the sheet, within a topic
+    for ti in set(out) | set(mine):
+        m, st, merged = list(mine.get(ti, [])), list(out.get(ti, [])), []
+        while m or st:
+            merged += [m.pop(0) for _ in range(min(2, len(m)))]
+            if st: merged.append(st.pop(0))
+        out[ti] = merged
+        seen.update(x['k'][4:] for x in merged)
     for g in json.load(open('lc_top150.json'))['planSubGroups']:
         for q in g['questions']:
             if q['titleSlug'] in seen: continue
@@ -136,7 +176,7 @@ def coding_by_topic():
     return out
 
 GATES = {
-    'coding': ['Striver 180 and the rest of Top Interview 150 done, timed, in a plain doc', '3 weeks in a row: unseen mediums in 25 min or less, hards in 45 min or less, 7 of 10 solved',
+    'coding': ['Your LeetCode lists (To do, Google Prep, Favorite, Amazon) and Striver 180 done, timed, in a plain doc', '3 weeks in a row: unseen mediums in 25 min or less, hards in 45 min or less, 7 of 10 solved',
                'First submission accepted on 8 of the last 10 (the four checks are a habit)', 'Codeforces 1600+ or solving Div 2 C live most rounds'],
     'design': ['HLD foundations, Hello Interview "in a hurry" and the primer sections done', '10 practice designs done in 45 minutes each, compared with the breakdown',
                'Can explain the trade-off behind every box you draw (why this DB, why this cache, what breaks first)', '15 LLD problems coded in C++'],

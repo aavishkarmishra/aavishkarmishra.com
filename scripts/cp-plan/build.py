@@ -195,8 +195,8 @@ for ti in range(RESUME_TOPIC, len(WEEKS)):
         parked.remove(p)
         revisit.append({**p[3], 'n': f'Page revisit from "{p[1]}". Re-skim the page first.'})
     topic_items = CODING.get(ti, [])
-    carry = carry + [x for x in topic_items if x['r'].startswith('Striver')]
-    topic_extra = [x for x in topic_items if not x['r'].startswith('Striver')]
+    carry = carry + [x for x in topic_items if not x['r'].startswith('Top 150')]
+    topic_extra = [x for x in topic_items if x['r'].startswith('Top 150')]
     page_q = []
     def take(n):
         global page_q
@@ -244,7 +244,7 @@ for ti in range(RESUME_TOPIC, len(WEEKS)):
                     while src and len(qs) < 3:
                         q = src.pop(0)
                         if q['k'] not in seen_keys: seen_keys.add(q['k']); qs.append(q)
-                content.append(B(4, '20:00–22:00', 'Interview coding', [{**q, 'n': q.get('n') or IC_NOTE} for q in qs]))
+                content.append(B(4, '20:00–22:00', 'Interview coding', [{**{k: v for k, v in q.items() if k != 'mine'}, 'n': q.get('n') or IC_NOTE} for q in qs]))
             else:
                 ev = take(1) or [task(f'flt{fk}_{iso}', f'Filter · {ft} {flo}–{fhi}, one problem', furl(ftags, flo, fhi), 'Sorted by most solved. Skip green ones.')]
                 content.append(B(4, '20:00–22:00', 'Evening block', ev + [ac_pick(*w['ac'])]))
@@ -283,7 +283,7 @@ while design or coding_left() or saturdays:
             while src and len(qs) < 3:
                 q = src.pop(0)
                 if q['k'] not in seen_keys: seen_keys.add(q['k']); qs.append(q)
-        content.append(B(4, '20:00–22:00', 'Interview coding', [{**q, 'n': q.get('n') or IC_NOTE} for q in qs]))
+        content.append(B(4, '20:00–22:00', 'Interview coding', [{**{k: v for k, v in q.items() if k != 'mine'}, 'n': q.get('n') or IC_NOTE} for q in qs]))
     if wd == 5 and saturdays:
         s = saturdays.pop(0); content.append(B(3, '14:00–15:30', 'Interview', [task(f'sat:{iso}', s['t'], s['u'], s['n'] or None)]))
     days.append({'date': iso, 'dow': d.strftime('%a'), 'label': d.strftime('%b %-d'), 'cls': 'wd' if wd < 5 else 'we',
