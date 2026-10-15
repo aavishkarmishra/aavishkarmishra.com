@@ -1,5 +1,5 @@
 {
-"updated": "2026-10-15 10:30 IST",
+"updated": "2026-10-15 17:25 IST",
 "cf": [
 "cf1046C",
 "cf1099C",
@@ -99,9 +99,9 @@
 "cf967B"
 ],
 "cfRating": {
-"rating": 1352,
-"peak": 1368,
-"contests": 19
+"rating": 1653,
+"peak": 1653,
+"contests": 20
 },
 "ac": [
 "acabc199_a",
@@ -144,9 +144,10 @@
 "score-of-parentheses",
 "search-insert-position",
 "set-matrix-zeroes",
+"subarrays-distinct-element-sum-of-squares-i",
 "valid-parentheses",
 "valid-parenthesis-string",
 "valid-perfect-square"
 ],
-"lcTotal": 666
+"lcTotal": 667
 }
