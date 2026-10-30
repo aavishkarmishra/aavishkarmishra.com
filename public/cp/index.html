@@ -251,7 +251,7 @@ ul.plain .count { margin-left: .4rem; }
       <li>CSES stuck past 45 minutes: skip it. You're missing a technique. Come back after the next topic.</li>
       <li>Write one line per missed idea in the day's log box.</li>
       <li>LeetCode daily is a 30-minute cap. It keeps interview patterns warm; it does not move your rating. If a Hard runs past 30 minutes, read the editorial and move on.</li>
-      <li>Missed a day? Don't catch up. Do today's plan and move on. If the day was a holiday or you were ill, open it and press "Mark as off day": that day's study plan moves to the next day of the same kind (weekday or weekend) and everything after it shifts by one, the day drops out of the totals, and the streak skips it. Undo pulls the plan back. Be honest with it; it's for days you couldn't, not days you didn't.</li>
+      <li>Missed a day? Don't catch up. Do today's plan and move on. If the day was a holiday or you were ill, open it and press "Mark as off day": a weekday's study plan moves to the next weekday and everything after it shifts by one. A weekend day just skips its plan; weekends always follow the week your weekdays are on. The day drops out of the totals, and the streak skips it. Undo pulls the plan back. Be honest with it; it's for days you couldn't, not days you didn't.</li>
       <li>LeetCode contests come in at stage 1: Weekly on Sunday 08:00 IST, Biweekly on Saturday 20:00 IST. Do Weekly when there is no Codeforces round the night before; skip Biweekly if it clashes with a round.</li>
     </ol>
     <h2>Links</h2>
@@ -311,13 +311,20 @@ const plan = document.getElementById('view-plan');
 const PROBLEM = /^(cf\d|ac|cses|lc|flt|tuf:)/;
 const monthName = m => new Date(m + '-15').toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
 
-// Content shifts forward over off days within its class (weekday / weekend); fixed blocks stay on their date.
+// Weekday content shifts forward over off days. A weekend day shows the Sat/Sun plan of the week the weekdays
+// have reached, so Saturday and Sunday never swap; an off weekend day only skips its plan. Fixed blocks stay on their date.
 function schedule() {
-  const queue = { wd: [], we: [] };
-  DATA.days.forEach(d => { if (d.content) queue[d.cls].push(d.content); });
-  const idx = { wd: 0, we: 0 };
+  const queue = [], weekend = {}, used = new Set();
+  DATA.days.forEach(d => { if (!d.content) return; if (d.cls === 'wd') queue.push(d.content); else weekend[`${d.content.week}:${d.dow}`] = d.content; });
+  let idx = 0, week = null;
   return DATA.days.map(d => {
-    const content = off[d.date] ? null : queue[d.cls][idx[d.cls]++] || null;
+    let content = null;
+    if (off[d.date]) content = null;
+    else if (d.cls === 'wd') { content = queue[idx++] || null; if (content) week = content.week; }
+    else {
+      const key = `${week ?? (d.content && d.content.week)}:${d.dow}`;
+      if (weekend[key] && !used.has(key)) { content = weekend[key]; used.add(key); }
+    }
     let blocks = [...d.fixed];
     if (content) {
       const live = d.fixed.some(b => b.label.startsWith('Live round'));
@@ -367,7 +374,7 @@ function renderPlan() {
           el('ul', { class: 'plain' }, w.pat.map(([p, by]) => el('li', {}, el('b', { text: p }), ` · ${by}`)))));
       }
       const det = el('details', { class: 'day', id: 'd' + d.date.replaceAll('-', '') });
-      det.dataset.date = d.date; if (d.week !== null) det.dataset.week = d.week;
+      det.dataset.date = d.date; det.dataset.cls = d.cls; if (d.week !== null) det.dataset.week = d.week;
       if (d.date === today) det.classList.add('today');
       if (d.date < today) det.classList.add('past');
       if (first ? d.date === today : open.has(d.date)) det.open = true;
@@ -474,7 +481,8 @@ function refresh() {
     const ks = [...det.querySelectorAll('li[data-k]')].map(li => li.dataset.k);
     const n = ks.filter(isDone).length, isOff = !!off[det.dataset.date];
     det.classList.toggle('off', isOff);
-    det.querySelector('.offbtn').textContent = isOff ? 'Off day. Undo (pulls the plan back a day)' : 'Mark as off day (pushes the plan back a day)';
+    const we = det.dataset.cls === 'we';
+    det.querySelector('.offbtn').textContent = isOff ? (we ? 'Off day. Undo' : 'Off day. Undo (pulls the plan back a day)') : (we ? "Mark as off day (skips this day's plan)" : 'Mark as off day (pushes the plan back a day)');
     if (!isOff) { all += ks.length; got += n; }
     det.querySelector('.count').textContent = `${n}/${ks.length}`;
     det.classList.toggle('done', n === ks.length);

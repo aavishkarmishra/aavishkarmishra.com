@@ -124,7 +124,7 @@ def cp_week(wi, w):
     chunk = {wd: cs[j * per:(j + 1) * per][:3] for j, wd in enumerate(free)}
     for wd in range(7):
         d = START + dt.timedelta(wi * 7 + wd); iso = d.isoformat()
-        # content: shifts forward over off days. fixed: stays on its date.
+        # content: weekday plans shift over off days, weekend plans follow their week. fixed: stays on its date.
         if wd < 5:
             today_cs = chunk.get(wd, [])
             today_rd = rd[wd::5] if rd else []
