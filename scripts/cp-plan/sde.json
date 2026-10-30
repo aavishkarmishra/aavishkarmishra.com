@@ -1,0 +1,1003 @@
+[
+{
+"s": "Arrays",
+"t": "Set Matrix Zeroes",
+"blog": "/blogs/data-structure-and-algorithm/set-matrix-zeroes",
+"lc": "set-matrix-zeroes",
+"d": "core"
+},
+{
+"s": "Arrays",
+"t": "Pascal's Triangle I",
+"blog": "/blogs/data-structure-and-algorithm/pascals-triangle-first-n-rows",
+"lc": "pascals-triangle",
+"d": "core"
+},
+{
+"s": "Arrays",
+"t": "Next Permutation",
+"blog": "/blogs/data-structure-and-algorithm/next-permutation",
+"lc": "next-permutation",
+"d": "core"
+},
+{
+"s": "Arrays",
+"t": "Kadane's Algorithm",
+"lc": "maximum-subarray",
+"d": "core"
+},
+{
+"s": "Arrays",
+"t": "Sort an array of 0's 1's and 2's",
+"blog": "/blogs/data-structure-and-algorithm/sort-array-0s-1s-2s",
+"lc": "sort-colors",
+"d": "core"
+},
+{
+"s": "Arrays Part-II",
+"t": "Rotate matrix by 90 degrees",
+"blog": "/blogs/data-structure-and-algorithm/rotate-matrix-90-degrees-clockwise",
+"lc": "rotate-image",
+"d": "core"
+},
+{
+"s": "Arrays Part-II",
+"t": "Merge Overlapping Subintervals",
+"blog": "/blogs/data-structure-and-algorithm/merge-overlapping-intervals",
+"lc": "merge-intervals",
+"d": "core"
+},
+{
+"s": "Arrays Part-II",
+"t": "Merge two sorted arrays without extra space",
+"lc": "merge-sorted-array",
+"d": "core"
+},
+{
+"s": "Arrays Part-II",
+"t": "Find the Duplicate Number",
+"lc": "find-the-duplicate-number",
+"d": "core"
+},
+{
+"s": "Arrays Part-II",
+"t": "Find the repeating and missing number",
+"blog": "/blogs/data-structure-and-algorithm/find-the-missing-and-repeating-numbers-in-an-array",
+"d": "core"
+},
+{
+"s": "Arrays Part-III",
+"t": "Search in a 2D Matrix",
+"blog": "/blogs/data-structure-and-algorithm/search-in-sorted-2d-matrix",
+"lc": "search-a-2d-matrix",
+"d": "core"
+},
+{
+"s": "Arrays Part-III",
+"t": "Majority Element-I",
+"blog": "/blogs/data-structure-and-algorithm/majority-element-n-by-2",
+"lc": "majority-element",
+"d": "core"
+},
+{
+"s": "Arrays Part-III",
+"t": "Majority Element-II",
+"blog": "/blogs/data-structure-and-algorithm/majority-element-ii-n-by-3",
+"lc": "majority-element-ii",
+"d": "core"
+},
+{
+"s": "Arrays Part-III",
+"t": "Grid unique paths",
+"blog": "/blogs/data-structure-and-algorithm/grid-unique-paths",
+"lc": "unique-paths",
+"d": "core"
+},
+{
+"s": "Arrays Part-III",
+"t": "Reverse Pairs",
+"blog": "/blogs/data-structure-and-algorithm/count-reverse-pairs",
+"lc": "reverse-pairs",
+"d": "pro"
+},
+{
+"s": "Arrays Part-IV",
+"t": "Two Sum",
+"blog": "/blogs/data-structure-and-algorithm/two-sum",
+"lc": "two-sum",
+"d": "basic"
+},
+{
+"s": "Arrays Part-IV",
+"t": "4 Sum",
+"blog": "/blogs/data-structure-and-algorithm/4sum",
+"lc": "4sum",
+"d": "pro"
+},
+{
+"s": "Arrays Part-IV",
+"t": "Longest Consecutive Sequence in an Array",
+"blog": "/blogs/data-structure-and-algorithm/longest-consecutive-sequence-in-an-array",
+"lc": "longest-consecutive-sequence",
+"d": "core"
+},
+{
+"s": "Arrays Part-IV",
+"t": "Count subarrays with given xor K",
+"blog": "/blogs/data-structure-and-algorithm/count-subarrays-with-a-given-xor-k",
+"d": "pro"
+},
+{
+"s": "Arrays Part-IV",
+"t": "Longest Substring Without Repeating Characters",
+"blog": "/blogs/data-structure-and-algorithm/longest-substring-without-repeating-characters",
+"lc": "longest-substring-without-repeating-characters",
+"d": "core"
+},
+{
+"s": "Linked List",
+"t": "Reverse a LL",
+"blog": "/blogs/data-structure-and-algorithm/reverse-a-singly-linked-list",
+"lc": "reverse-linked-list",
+"d": "core"
+},
+{
+"s": "Linked List",
+"t": "Find Middle of Linked List",
+"blog": "/blogs/data-structure-and-algorithm/find-middle-of-linked-list",
+"lc": "middle-of-the-linked-list",
+"d": "basic"
+},
+{
+"s": "Linked List",
+"t": "Merge two Sorted Lists",
+"blog": "/blogs/data-structure-and-algorithm/merge-two-sorted-linked-lists",
+"lc": "merge-two-sorted-lists",
+"d": "basic"
+},
+{
+"s": "Linked List",
+"t": "Remove Nth node from the back of the LL",
+"blog": "/blogs/data-structure-and-algorithm/remove-the-nth-node-from-the-end-of-a-linked-list",
+"lc": "remove-nth-node-from-end-of-list",
+"d": "core"
+},
+{
+"s": "Linked List",
+"t": "Delete Node in a Linked List O(1)",
+"lc": "delete-node-in-a-linked-list",
+"d": "core"
+},
+{
+"s": "Linked List Part-II",
+"t": "Find the intersection point of Y LL",
+"blog": "/blogs/data-structure-and-algorithm/intersection-of-two-linked-lists",
+"lc": "intersection-of-two-linked-lists",
+"d": "core"
+},
+{
+"s": "Linked List Part-II",
+"t": "Detect a loop in LL",
+"blog": "/blogs/data-structure-and-algorithm/detect-cycle-linked-list",
+"lc": "linked-list-cycle",
+"d": "core"
+},
+{
+"s": "Linked List Part-II",
+"t": "Reverse LL in group of given size K",
+"blog": "/blogs/data-structure-and-algorithm/reverse-linked-list-k-groups",
+"lc": "reverse-nodes-in-k-group",
+"d": "pro"
+},
+{
+"s": "Linked List Part-II",
+"t": "Check if LL is palindrome or not",
+"blog": "/blogs/data-structure-and-algorithm/check-if-a-linked-list-is-a-palindrome",
+"lc": "palindrome-linked-list",
+"d": "core"
+},
+{
+"s": "Linked List Part-II",
+"t": "Find the starting point in LL",
+"blog": "/blogs/data-structure-and-algorithm/find-start-of-cycle-linked-list",
+"lc": "linked-list-cycle-ii",
+"d": "core"
+},
+{
+"s": "Linked List Part-II",
+"t": "Flattening of LL",
+"blog": "/blogs/data-structure-and-algorithm/flatten-linked-list",
+"lc": "merge-k-sorted-lists",
+"d": "pro"
+},
+{
+"s": "Linked List and Arrays",
+"t": "Rotate a LL",
+"blog": "/blogs/data-structure-and-algorithm/rotate-linked-list-right-k-places",
+"lc": "rotate-list",
+"d": "core"
+},
+{
+"s": "Linked List and Arrays",
+"t": "Clone a LL with random and next pointer",
+"blog": "/blogs/data-structure-and-algorithm/clone-linked-list-random-pointer",
+"lc": "copy-list-with-random-pointer",
+"d": "pro"
+},
+{
+"s": "Linked List and Arrays",
+"t": "3 Sum",
+"blog": "/blogs/data-structure-and-algorithm/3sum",
+"lc": "3sum",
+"d": "core"
+},
+{
+"s": "Linked List and Arrays",
+"t": "Trapping Rainwater",
+"blog": "/blogs/data-structure-and-algorithm/trapping-rain-water",
+"lc": "trapping-rain-water",
+"d": "pro"
+},
+{
+"s": "Linked List and Arrays",
+"t": "Remove duplicates from sorted array",
+"blog": "/blogs/data-structure-and-algorithm/remove-duplicates-from-a-sorted-array-in-place",
+"lc": "remove-duplicates-from-sorted-array",
+"d": "basic"
+},
+{
+"s": "Linked List and Arrays",
+"t": "Maximum Consecutive Ones",
+"blog": "/blogs/data-structure-and-algorithm/maximum-consecutive-ones-in-a-binary-array",
+"lc": "max-consecutive-ones",
+"d": "basic"
+},
+{
+"s": "Greedy Algorithm",
+"t": "N meetings in one room",
+"blog": "/blogs/data-structure-and-algorithm/n-meetings-in-one-room",
+"d": "core"
+},
+{
+"s": "Greedy Algorithm",
+"t": "Minimum number of platforms required for a railway",
+"blog": "/blogs/data-structure-and-algorithm/minimum-platforms-required-for-a-railway-station",
+"lc": "divide-intervals-into-minimum-number-of-groups",
+"d": "core"
+},
+{
+"s": "Greedy Algorithm",
+"t": "Job sequencing Problem",
+"blog": "/blogs/data-structure-and-algorithm/job-sequencing-problem",
+"d": "core"
+},
+{
+"s": "Greedy Algorithm",
+"t": "Fractional Knapsack",
+"d": "core"
+},
+{
+"s": "Greedy Algorithm",
+"t": "Minimum coins",
+"lc": "coin-change",
+"d": "core"
+},
+{
+"s": "Greedy Algorithm",
+"t": "Assign Cookies",
+"blog": "/blogs/data-structure-and-algorithm/assign-cookies",
+"lc": "assign-cookies",
+"d": "core"
+},
+{
+"s": "Recursion",
+"t": "Subsets II",
+"lc": "subsets-ii",
+"d": "core"
+},
+{
+"s": "Recursion",
+"t": "Combination Sum",
+"lc": "combination-sum",
+"d": "core"
+},
+{
+"s": "Recursion",
+"t": "Combination Sum II",
+"lc": "combination-sum-ii",
+"d": "core"
+},
+{
+"s": "Recursion",
+"t": "Palindrome partitioning",
+"lc": "palindrome-partitioning",
+"d": "pro"
+},
+{
+"s": "Recursion",
+"t": "Permutation Sequence",
+"lc": "permutation-sequence",
+"d": "pro"
+},
+{
+"s": "Recursion and Backtracking",
+"t": "Permutations of a String",
+"lc": "permutations-ii",
+"d": "core"
+},
+{
+"s": "Recursion and Backtracking",
+"t": "N Queen",
+"lc": "n-queens",
+"d": "pro"
+},
+{
+"s": "Recursion and Backtracking",
+"t": "Sudoku Solver",
+"lc": "sudoku-solver",
+"d": "pro"
+},
+{
+"s": "Recursion and Backtracking",
+"t": "M Coloring Problem",
+"d": "pro"
+},
+{
+"s": "Recursion and Backtracking",
+"t": "Rat in a Maze",
+"d": "pro"
+},
+{
+"s": "Binary Search",
+"t": "Matrix Median",
+"blog": "/blogs/data-structure-and-algorithm/median-of-a-row-wise-sorted-matrix",
+"lc": "median-of-a-row-wise-sorted-matrix",
+"d": "pro"
+},
+{
+"s": "Binary Search",
+"t": "Single element in sorted array",
+"blog": "/blogs/data-structure-and-algorithm/single-element-in-a-sorted-array",
+"lc": "single-element-in-a-sorted-array",
+"d": "core"
+},
+{
+"s": "Binary Search",
+"t": "Median of 2 sorted arrays",
+"blog": "/blogs/data-structure-and-algorithm/median-of-2-sorted-arrays",
+"lc": "median-of-two-sorted-arrays",
+"d": "pro"
+},
+{
+"s": "Binary Search",
+"t": "Kth element of 2 sorted arrays",
+"blog": "/blogs/data-structure-and-algorithm/kth-element-of-two-sorted-arrays",
+"d": "pro"
+},
+{
+"s": "Binary Search",
+"t": "Allocate Minimum Number of Pages",
+"blog": "/blogs/data-structure-and-algorithm/book-allocation-problem",
+"d": "pro"
+},
+{
+"s": "Binary Search",
+"t": "Aggressive Cows",
+"blog": "/blogs/data-structure-and-algorithm/aggressive-cows",
+"d": "pro"
+},
+{
+"s": "Heaps",
+"t": "Implement Max Heap",
+"d": "core"
+},
+{
+"s": "Heaps",
+"t": "K-th Largest element in an array",
+"blog": "/blogs/data-structure-and-algorithm/k-th-largest-element-in-an-array",
+"lc": "kth-largest-element-in-an-array",
+"d": "pro"
+},
+{
+"s": "Heaps",
+"t": "Maximum Sum Combination",
+"d": "core"
+},
+{
+"s": "Heaps",
+"t": "Find Median from Data Stream",
+"blog": "/blogs/data-structure-and-algorithm/find-median-data-stream",
+"lc": "find-median-from-data-stream",
+"d": "pro"
+},
+{
+"s": "Heaps",
+"t": "Merge K Sorted Arrays",
+"lc": "merge-k-sorted-lists",
+"d": "pro"
+},
+{
+"s": "Heaps",
+"t": "Top K Frequent Elements",
+"blog": "/blogs/data-structure-and-algorithm/top-k-frequent-elements",
+"lc": "top-k-frequent-elements",
+"d": "core"
+},
+{
+"s": "Stack and Queue",
+"t": "Implement Stack using Arrays",
+"blog": "/blogs/data-structure-and-algorithm/implement-a-stack-using-an-array",
+"d": "core"
+},
+{
+"s": "Stack and Queue",
+"t": "Implement Queue using Arrays",
+"blog": "/blogs/data-structure-and-algorithm/implement-a-queue-using-an-array",
+"d": "core"
+},
+{
+"s": "Stack and Queue",
+"t": "Implement Queue using Stack",
+"blog": "/blogs/data-structure-and-algorithm/implement-a-queue-using-stacks",
+"lc": "implement-queue-using-stacks",
+"d": "core"
+},
+{
+"s": "Stack and Queue",
+"t": "Balanced Paranthesis",
+"blog": "/blogs/data-structure-and-algorithm/check-balanced-parentheses-using-a-stack",
+"lc": "valid-parentheses",
+"d": "core"
+},
+{
+"s": "Stack and Queue",
+"t": "Next Greater Element",
+"blog": "/blogs/data-structure-and-algorithm/next-greater-element",
+"lc": "next-greater-element-i",
+"d": "core"
+},
+{
+"s": "Stack and Queue",
+"t": "Sort a Stack",
+"d": "core"
+},
+{
+"s": "Stack and Queue Part-II",
+"t": "Next Smaller Element",
+"d": "core"
+},
+{
+"s": "Stack and Queue Part-II",
+"t": "LRU Cache",
+"lc": "lru-cache",
+"d": "pro"
+},
+{
+"s": "Stack and Queue Part-II",
+"t": "LFU Cache",
+"lc": "lfu-cache",
+"d": "pro"
+},
+{
+"s": "Stack and Queue Part-II",
+"t": "Largest rectangle in a histogram",
+"blog": "/blogs/data-structure-and-algorithm/largest-rectangle-in-histogram",
+"lc": "largest-rectangle-in-histogram",
+"d": "pro"
+},
+{
+"s": "Stack and Queue Part-II",
+"t": "Sliding Window Maximum",
+"lc": "sliding-window-maximum",
+"d": "pro"
+},
+{
+"s": "Stack and Queue Part-II",
+"t": "Implement Min Stack",
+"lc": "min-stack",
+"d": "core"
+},
+{
+"s": "Stack and Queue Part-II",
+"t": "Rotten Oranges",
+"blog": "/blogs/data-structure-and-algorithm/rotting-oranges",
+"lc": "rotting-oranges",
+"d": "core"
+},
+{
+"s": "Stack and Queue Part-II",
+"t": "Stock span problem",
+"blog": "/blogs/data-structure-and-algorithm/stock-span-problem",
+"lc": "online-stock-span",
+"d": "core"
+},
+{
+"s": "Stack and Queue Part-II",
+"t": "Maximum of Minimums for Every Window Size",
+"lc": "maximum-of-minimum-values-in-all-subarrays",
+"d": "core"
+},
+{
+"s": "Stack and Queue Part-II",
+"t": "Celebrity Problem",
+"lc": "find-the-celebrity",
+"d": "core"
+},
+{
+"s": "String",
+"t": "Reverse every word in a string",
+"blog": "/blogs/data-structure-and-algorithm/reverse-every-word-in-a-string",
+"lc": "reverse-words-in-a-string",
+"d": "core"
+},
+{
+"s": "String",
+"t": "Longest Palindrome in a String",
+"lc": "longest-palindromic-substring",
+"d": "core"
+},
+{
+"s": "String",
+"t": "Roman to Integer",
+"lc": "roman-to-integer",
+"d": "basic"
+},
+{
+"s": "String",
+"t": "Implement strStr()",
+"lc": "string-to-integer-atoi",
+"d": "core"
+},
+{
+"s": "String",
+"t": "Longest Common Prefix",
+"lc": "longest-common-prefix",
+"d": "core"
+},
+{
+"s": "String",
+"t": "Rabin Karp Algorithm",
+"lc": "repeated-string-match",
+"d": "pro"
+},
+{
+"s": "String Part-II",
+"t": "Z function",
+"blog": "/blogs/data-structure-and-algorithm/z-function",
+"d": "pro"
+},
+{
+"s": "String Part-II",
+"t": "KMP Algorithm or LPS array",
+"lc": "implement-strstr",
+"d": "pro"
+},
+{
+"s": "String Part-II",
+"t": "Minimum insertions to make string palindrome",
+"lc": "minimum-insertion-steps-to-make-a-string-palindrome",
+"d": "pro"
+},
+{
+"s": "String Part-II",
+"t": "Valid Anagram",
+"blog": "/blogs/data-structure-and-algorithm/check-if-two-strings-are-anagrams",
+"lc": "valid-anagram",
+"d": "basic"
+},
+{
+"s": "String Part-II",
+"t": "Count and say",
+"blog": "/blogs/data-structure-and-algorithm/count-and-say",
+"lc": "count-and-say",
+"d": "core"
+},
+{
+"s": "String Part-II",
+"t": "Compare version numbers",
+"lc": "compare-version-numbers",
+"d": "core"
+},
+{
+"s": "Binary Tree",
+"t": "Inorder Traversal",
+"lc": "binary-tree-inorder-traversal",
+"d": "basic"
+},
+{
+"s": "Binary Tree",
+"t": "Postorder Traversal",
+"lc": "binary-tree-postorder-traversal",
+"d": "basic"
+},
+{
+"s": "Binary Tree",
+"t": "Morris Inorder Traversal",
+"blog": "/blogs/data-structure-and-algorithm/morris-inorder-traversal",
+"lc": "binary-tree-inorder-traversal",
+"d": "pro"
+},
+{
+"s": "Binary Tree",
+"t": "Morris Preorder Traversal",
+"blog": "/blogs/data-structure-and-algorithm/morris-preorder-traversal",
+"lc": "binary-tree-preorder-traversal",
+"d": "pro"
+},
+{
+"s": "Binary Tree",
+"t": "Right/Left View of BT",
+"blog": "/blogs/data-structure-and-algorithm/left-and-right-views-of-a-binary-tree",
+"lc": "binary-tree-right-side-view",
+"d": "core"
+},
+{
+"s": "Binary Tree",
+"t": "Bottom view of BT",
+"blog": "/blogs/data-structure-and-algorithm/bottom-view-of-binary-tree",
+"d": "core"
+},
+{
+"s": "Binary Tree",
+"t": "Top View of BT",
+"blog": "/blogs/data-structure-and-algorithm/top-view-of-binary-tree",
+"d": "core"
+},
+{
+"s": "Binary Tree",
+"t": "Pre, Post, Inorder in one traversal",
+"d": "core"
+},
+{
+"s": "Binary Tree",
+"t": "Vertical Order Traversal",
+"blog": "/blogs/data-structure-and-algorithm/vertical-order-traversal-of-a-binary-tree",
+"lc": "vertical-order-traversal-of-a-binary-tree",
+"d": "pro"
+},
+{
+"s": "Binary Tree",
+"t": "Print root to leaf path in BT",
+"blog": "/blogs/data-structure-and-algorithm/print-root-to-leaf-path-in-binary-tree",
+"d": "core"
+},
+{
+"s": "Binary Tree",
+"t": "Maximum Width of BT",
+"lc": "maximum-width-of-binary-tree",
+"d": "pro"
+},
+{
+"s": "Binary Tree part-II",
+"t": "Level Order Traversal",
+"blog": "/blogs/data-structure-and-algorithm/binary-tree-level-order-traversal",
+"lc": "binary-tree-level-order-traversal",
+"d": "core"
+},
+{
+"s": "Binary Tree part-II",
+"t": "Maximum Depth in BT",
+"lc": "maximum-depth-of-binary-tree",
+"d": "core"
+},
+{
+"s": "Binary Tree part-II",
+"t": "Diameter of Binary Tree",
+"blog": "/blogs/data-structure-and-algorithm/diameter-of-a-binary-tree",
+"lc": "diameter-of-binary-tree",
+"d": "core"
+},
+{
+"s": "Binary Tree part-II",
+"t": "Check for balanced binary tree",
+"blog": "/blogs/data-structure-and-algorithm/check-if-a-binary-tree-is-height-balanced",
+"lc": "balanced-binary-tree",
+"d": "core"
+},
+{
+"s": "Binary Tree part-II",
+"t": "LCA in BT",
+"blog": "/blogs/data-structure-and-algorithm/lowest-common-ancestor-in-a-binary-tree",
+"lc": "lowest-common-ancestor-of-a-binary-tree",
+"d": "pro"
+},
+{
+"s": "Binary Tree part-II",
+"t": "Check if two trees are identical or not",
+"blog": "/blogs/data-structure-and-algorithm/check-identical-binary-trees",
+"lc": "same-tree",
+"d": "core"
+},
+{
+"s": "Binary Tree part-II",
+"t": "Zig Zag or Spiral Traversal",
+"lc": "binary-tree-zigzag-level-order-traversal",
+"d": "core"
+},
+{
+"s": "Binary Tree part-II",
+"t": "Boundary Traversal",
+"blog": "/blogs/data-structure-and-algorithm/boundary-traversal-of-a-binary-tree",
+"lc": "boundary-of-binary-tree",
+"d": "core"
+},
+{
+"s": "Binary Tree part-III",
+"t": "Maximum path sum",
+"blog": "/blogs/data-structure-and-algorithm/binary-tree-maximum-path-sum",
+"lc": "binary-tree-maximum-path-sum",
+"d": "pro"
+},
+{
+"s": "Binary Tree part-III",
+"t": "Construct a BT from Preorder and Inorder",
+"blog": "/blogs/data-structure-and-algorithm/construct-a-binary-tree-from-preorder-and-inorder",
+"lc": "construct-binary-tree-from-preorder-and-inorder-traversal",
+"d": "core"
+},
+{
+"s": "Binary Tree part-III",
+"t": "Construct a BT from Postorder and Inorder",
+"lc": "construct-binary-tree-from-inorder-and-postorder-traversal",
+"d": "core"
+},
+{
+"s": "Binary Tree part-III",
+"t": "Flatten Binary Tree to Linked List",
+"blog": "/blogs/data-structure-and-algorithm/flatten-binary-tree-to-linked-list",
+"lc": "flatten-binary-tree-to-linked-list",
+"d": "pro"
+},
+{
+"s": "Binary Tree part-III",
+"t": "Check for symmetrical BTs",
+"blog": "/blogs/data-structure-and-algorithm/symmetric-binary-tree",
+"lc": "symmetric-tree",
+"d": "core"
+},
+{
+"s": "Binary Tree part-III",
+"t": "Children Sum Property in Binary Tree",
+"d": "core"
+},
+{
+"s": "Binary Search Tree",
+"t": "Populating Next Right Pointers in Each Node",
+"lc": "populating-next-right-pointers-in-each-node",
+"d": "core"
+},
+{
+"s": "Binary Search Tree",
+"t": "Search in BST",
+"blog": "/blogs/data-structure-and-algorithm/search-in-a-binary-search-tree",
+"lc": "search-in-a-binary-search-tree",
+"d": "basic"
+},
+{
+"s": "Binary Search Tree",
+"t": "Construct BST from given keys",
+"lc": "convert-sorted-array-to-binary-search-tree"
+},
+{
+"s": "Binary Search Tree",
+"t": "Construct a BST from a preorder traversal",
+"blog": "/blogs/data-structure-and-algorithm/construct-a-bst-from-preorder-traversal",
+"lc": "construct-binary-search-tree-from-preorder-traversal",
+"d": "core"
+},
+{
+"s": "Binary Search Tree",
+"t": "Check if a tree is a BST or not",
+"blog": "/blogs/data-structure-and-algorithm/validate-binary-search-tree",
+"lc": "validate-binary-search-tree",
+"d": "core"
+},
+{
+"s": "Binary Search Tree",
+"t": "LCA in BST",
+"blog": "/blogs/data-structure-and-algorithm/lowest-common-ancestor-of-a-binary-search-tree",
+"lc": "lowest-common-ancestor-of-a-binary-search-tree",
+"d": "core"
+},
+{
+"s": "Binary Search Tree",
+"t": "Inorder successor and predecessor in BST",
+"blog": "/blogs/data-structure-and-algorithm/inorder-successor-and-predecessor-in-a-bst",
+"lc": "inorder-successor-in-bst",
+"d": "core"
+},
+{
+"s": "Binary Search Tree Part-II",
+"t": "Kth Smallest and Largest element in BST",
+"blog": "/blogs/data-structure-and-algorithm/kth-smallest-and-largest-elements-in-a-bst",
+"lc": "kth-smallest-element-in-a-bst",
+"d": "core"
+},
+{
+"s": "Binary Search Tree Part-II",
+"t": "Two sum in BST",
+"blog": "/blogs/data-structure-and-algorithm/two-sum-in-bst",
+"lc": "two-sum-iv-input-is-a-bst",
+"d": "core"
+},
+{
+"s": "Binary Search Tree Part-II",
+"t": "BST iterator",
+"blog": "/blogs/data-structure-and-algorithm/binary-search-tree-iterator",
+"lc": "binary-search-tree-iterator",
+"d": "core"
+},
+{
+"s": "Binary Search Tree Part-II",
+"t": "Serialize and De-serialize BT",
+"blog": "/blogs/data-structure-and-algorithm/serialize-and-deserialize-a-binary-tree",
+"lc": "serialize-and-deserialize-binary-tree",
+"d": "pro"
+},
+{
+"s": "Binary Trees[Miscellaneous]",
+"t": "Binary Tree to Doubly Linked List",
+"lc": "flatten-binary-tree-to-linked-list",
+"d": "core"
+},
+{
+"s": "Binary Trees[Miscellaneous]",
+"t": "Find Median in a Stream",
+"lc": "find-median-from-data-stream",
+"d": "pro"
+},
+{
+"s": "Binary Trees[Miscellaneous]",
+"t": "Kth largest element in a stream of running integers",
+"blog": "/blogs/data-structure-and-algorithm/kth-largest-element-stream",
+"lc": "kth-largest-element-in-a-stream",
+"d": "pro"
+},
+{
+"s": "Binary Trees[Miscellaneous]",
+"t": "Distinct Numbers in Each Subarray",
+"lc": "distinct-numbers-in-each-subarray",
+"d": "core"
+},
+{
+"s": "Graph",
+"t": "Clone Graph",
+"lc": "clone-graph",
+"d": "core"
+},
+{
+"s": "Graph",
+"t": "Traversal Techniques",
+"d": "core"
+},
+{
+"s": "Graph",
+"t": "Bipartite graph",
+"lc": "is-graph-bipartite",
+"d": "core"
+},
+{
+"s": "Graph Part-II",
+"t": "Dijkstra's algorithm",
+"blog": "/blogs/data-structure-and-algorithm/dijkstras-algorithm",
+"d": "core"
+},
+{
+"s": "Graph Part-II",
+"t": "Bellman ford algorithm",
+"blog": "/blogs/data-structure-and-algorithm/bellman-ford-algorithm",
+"d": "pro"
+},
+{
+"s": "Dynamic Programming",
+"t": "Longest Increasing Subsequence",
+"lc": "longest-increasing-subsequence",
+"d": "core"
+},
+{
+"s": "Dynamic Programming",
+"t": "Longest common subsequence",
+"lc": "longest-common-subsequence",
+"d": "core"
+},
+{
+"s": "Dynamic Programming",
+"t": "0 and 1 Knapsack",
+"d": "core"
+},
+{
+"s": "Dynamic Programming",
+"t": "Edit distance",
+"lc": "edit-distance",
+"d": "pro"
+},
+{
+"s": "Dynamic Programming",
+"t": "Maximum Sum Increasing Subsequence",
+"d": "core"
+},
+{
+"s": "Dynamic Programming",
+"t": "Matrix chain multiplication",
+"d": "pro"
+},
+{
+"s": "Dynamic Programming Part-II",
+"t": "Coin change II",
+"blog": "/blogs/data-structure-and-algorithm/coin-change-ii-combinations",
+"lc": "coin-change-ii",
+"d": "pro"
+},
+{
+"s": "Dynamic Programming Part-II",
+"t": "Subset sum equals to target",
+"blog": "/blogs/data-structure-and-algorithm/subset-sum-equal-to-target",
+"d": "core"
+},
+{
+"s": "Dynamic Programming Part-II",
+"t": "Rod cutting problem",
+"blog": "/blogs/data-structure-and-algorithm/rod-cutting-problem",
+"d": "pro"
+},
+{
+"s": "Dynamic Programming Part-II",
+"t": "Super Egg Drop",
+"lc": "super-egg-drop",
+"d": "pro"
+},
+{
+"s": "Dynamic Programming Part-II",
+"t": "Word Break",
+"lc": "word-break",
+"d": "core"
+},
+{
+"s": "Dynamic Programming Part-II",
+"t": "Maximum Profit in Job Scheduling",
+"lc": "maximum-profit-in-job-scheduling",
+"d": "pro"
+},
+{
+"s": "Trie",
+"t": "Trie Implementation and Operations",
+"blog": "/blogs/data-structure-and-algorithm/trie-implementation",
+"lc": "implement-trie-prefix-tree",
+"d": "core"
+},
+{
+"s": "Trie",
+"t": "Trie Implementation and Advanced Operations",
+"blog": "/blogs/data-structure-and-algorithm/trie-ii-count-words-erase",
+"lc": "implement-trie-ii-prefix-tree",
+"d": "core"
+},
+{
+"s": "Trie",
+"t": "Longest Word with All Prefixes",
+"blog": "/blogs/data-structure-and-algorithm/longest-word-with-all-prefixes",
+"lc": "longest-word-with-all-prefixes",
+"d": "core"
+},
+{
+"s": "Trie",
+"t": "Number of distinct substrings in a string",
+"blog": "/blogs/data-structure-and-algorithm/number-of-distinct-substrings-in-a-string",
+"lc": "number-of-distinct-substrings-in-a-string",
+"d": "pro"
+},
+{
+"s": "Trie",
+"t": "Maximum XOR of two numbers in an array",
+"blog": "/blogs/data-structure-and-algorithm/maximum-xor-of-two-numbers-in-an-array",
+"lc": "maximum-xor-of-two-numbers-in-an-array",
+"d": "core"
+},
+{
+"s": "Trie",
+"t": "Maximum Xor with an element from an array",
+"blog": "/blogs/data-structure-and-algorithm/maximum-xor-queries-trie",
+"lc": "maximum-xor-with-an-element-from-array",
+"d": "pro"
+}
+]

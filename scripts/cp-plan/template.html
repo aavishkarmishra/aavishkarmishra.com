@@ -31,7 +31,7 @@ h2 { font: 600 .75rem/1 var(--sans); letter-spacing: .08em; text-transform: uppe
 .lede { color: var(--muted); margin: 0; }
 .mono, .num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
 
-.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 1.5rem; }
+.stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; margin-top: 1.5rem; }
 .stat b { display: block; font: 500 1.4rem/1.2 var(--mono); }
 .stat span { font: .75rem var(--sans); color: var(--muted); }
 .bar { height: 4px; background: var(--rule); border-radius: 2px; margin-top: .4rem; overflow: hidden; }
@@ -146,11 +146,12 @@ ul.plain .count { margin-left: .4rem; }
 <div class="wrap">
   <header>
     <h1>Road to Master</h1>
-    <p class="lede">From Pupil to International Master, one stage at a time. Day-by-day through stage 2 (Candidate Master). Stages are gated by rating, so when your rating and the calendar disagree, the plan gets regenerated.</p>
+    <p class="lede">Interview first, then CP. From November: Striver's SDE sheet in the mornings, system design at midday and CP on the same topic in the evening, then three weeks of timed sets and mocks. After that, the road from Pupil to International Master picks up again, one stage at a time, gated by rating.</p>
     <p class="live" id="live">Loading rating from Codeforces…</p>
     <p class="live" id="sync">Loading judge sync…</p>
     <div class="stats">
       <div class="stat"><b id="s-all" class="num">0%</b><span>Plan done</span><div class="bar"><i id="b-all"></i></div></div>
+      <div class="stat"><b id="s-sheet" class="num">0 / 0</b><span>Interview sheet</span><div class="bar"><i id="b-sheet"></i></div></div>
       <div class="stat"><b id="s-cses" class="num">0 / 400</b><span>CSES solved</span><div class="bar"><i id="b-cses"></i></div></div>
       <div class="stat"><b id="s-streak" class="num">0</b><span>Day streak</span></div>
       <div class="stat"><b id="s-lc" class="num">0</b><span>LeetCode dailies</span></div>
@@ -167,6 +168,16 @@ ul.plain .count { margin-left: .4rem; }
 
   <section id="view-plan"></section>
   <section id="view-road" hidden>
+    <h2>Interview track</h2>
+    <p class="small">Target: Google SWE III (L4). The loop is mostly coding, plus Googleyness, and sometimes one system design round. LLD rarely gets its own round, so it gets Fridays only. DBMS, OS and networks come in where design uses them, not as full courses.</p>
+    <dl class="sched">
+      <dt>Sheet weeks</dt><dd>Striver's SDE sheet in its order, with the 180 sheet's extra graph, DP, sliding window and binary search problems after the matching section. 25 minutes a problem, approach out loud first. Evenings: a CSES and a Codeforces problem on the same topic.</dd>
+      <dt>Design</dt><dd>12:30–13:30 on weekdays. Fundamentals first (estimates, networking, caching, databases, sharding, consistency, queues), then case studies from Alex Xu's two books. Fridays: OOP, patterns, C++ concurrency, LLD classics.</dd>
+      <dt>Interview mode</dt><dd>Three weeks of unseen timed sets, a coding mock every Saturday, a design mock every Wednesday, behavioural stories on Fridays.</dd>
+      <dt>Off days</dt><dd>Festivals, the wedding, travel: mark the day off and the plan moves back. Nothing gets lighter.</dd>
+    </dl>
+    <h3>Gates before asking for a referral</h3>
+    <ul class="plain" id="gates"></ul>
     <h2>Stages</h2>
     <p class="small">Each stage lists what to learn, which CSES sections to finish, which filters to practise from, what to aim for in contests, and an exit checklist. Move on only when the checklist is done. CSES counts come from the CSES tab.</p>
     <div id="stages"></div>
@@ -188,7 +199,24 @@ ul.plain .count { margin-left: .4rem; }
     <div class="scroll"><table class="flt"><thead><tr><th>Week</th><th>Filter</th><th>Rating</th><th>Done</th></tr></thead><tbody id="flt-body"></tbody></table></div>
   </section>
   <section id="view-rules" hidden>
-    <h2>Weekday</h2>
+    <h2>Weekday, interview weeks</h2>
+    <dl class="sched">
+      <dt>09:00–12:00</dt><dd>DSA sheet: today's list, 25 minutes each with a break at 10:30. Say the approach and complexity out loud before you code. Solved it before? Re-solve in 10 minutes.</dd>
+      <dt>12:00–12:30</dt><dd>Lunch</dd>
+      <dt>12:30–13:30</dt><dd>Design: one topic or case. For a case, 30 minutes on paper before you read.</dd>
+      <dt>13:30–14:00</dt><dd>LeetCode daily question, then work</dd>
+      <dt>14:00–19:30</dt><dd>Work, then the 19:30 meeting</dd>
+      <dt>20:00–22:00</dt><dd>CP on the morning's topic: one CSES, one Codeforces problem. On round days, the live round instead.</dd>
+      <dt>22:00</dt><dd>Log line, wind down</dd>
+    </dl>
+    <h2>Weekend, interview weeks</h2>
+    <dl class="sched">
+      <dt>Sat 09:00</dt><dd>Virtual Div 2, then re-solve three sheet problems from 1–2 weeks back. In interview mode: a coding mock instead of the virtual.</dd>
+      <dt>Sat 17:30</dt><dd>AtCoder ABC, live</dd>
+      <dt>Sun 08:00</dt><dd>LeetCode Weekly, live</dd>
+      <dt>Sun 09:30</dt><dd>Catch-up: finish the week's unticked items, or start Monday's list. Afternoon off.</dd>
+    </dl>
+    <h2>Weekday, CP weeks</h2>
     <dl class="sched">
       <dt>08:30</dt><dd>Up and ready</dd>
       <dt>09:00–10:30</dt><dd>Learn + CSES. Read the topic, then solve.</dd>
@@ -201,7 +229,7 @@ ul.plain .count { margin-left: .4rem; }
       <dt>20:00–22:00</dt><dd>Evening block: two problems from the week's filter, 45 minutes each with a short break. On round days, the live round instead.</dd>
       <dt>22:00</dt><dd>Write the log line, then wind down. A round that runs to 22:15 is fine.</dd>
     </dl>
-    <h2>Weekend</h2>
+    <h2>Weekend, CP weeks</h2>
     <dl class="sched">
       <dt>Sat 09:00</dt><dd>Virtual Div 2 (2h), then upsolve</dd>
       <dt>Sat 17:30</dt><dd>AtCoder ABC, live</dd>
@@ -273,14 +301,14 @@ function item(i, showWhen) {
     showWhen && scheduled[i.k] ? el('span', { class: 'when', text: scheduled[i.k] }) : null,
     i.n ? el('span', { class: 'note', text: i.n }) : null);
   const li = el('li', { class: box.checked ? 'checked' : '' }, el('label', { for: id }, box, t));
-  if (!showWhen && /^(cf\d|ac|cses)/.test(i.k)) li.append(el('button', { type: 'button', class: 'helpbtn', 'data-k': i.k, 'aria-pressed': String(!!help[i.k]), text: 'needed help' }));
+  if (!showWhen && /^(cf\d|ac|cses|lcp:|tuf:)/.test(i.k)) li.append(el('button', { type: 'button', class: 'helpbtn', 'data-k': i.k, 'aria-pressed': String(!!help[i.k]), text: 'needed help' }));
   if (auto[i.k]) { box.disabled = true; li.classList.add('synced'); li.title = 'Synced from the judge'; }
   li.dataset.k = i.k;
   return li;
 }
 
 const plan = document.getElementById('view-plan');
-const PROBLEM = /^(cf\d|ac|cses|lc|flt)/;
+const PROBLEM = /^(cf\d|ac|cses|lc|flt|tuf:)/;
 const monthName = m => new Date(m + '-15').toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
 
 // Content shifts forward over off days within its class (weekday / weekend); fixed blocks stay on their date.
@@ -330,10 +358,11 @@ function renderPlan() {
       if (d.week !== null && d.week !== lastWeek) {
         lastWeek = d.week;
         const w = DATA.weeks[d.week], f = DATA.filters[d.week];
-        mdet.append(el('div', { class: 'week-head' }, el('h2', {}, `Week ${d.week + 1} · ${w.name}`, el('span', { class: 'stage-chip', text: `stage ${w.stage}` })),
+        mdet.append(el('div', { class: 'week-head' }, el('h2', {}, `Week ${d.week + 1} · ${w.name}`, el('span', { class: 'stage-chip', text: typeof w.stage === 'number' ? `stage ${w.stage}` : w.stage })),
           el('span', { class: 'num wsum', 'data-week': d.week })));
-        mdet.append(el('p', { class: 'filters-line' }, w.note ? [el('span', { text: w.note + ' ' })] : [], 'Evening filter: ',
-          el('a', { href: f.url, target: '_blank', rel: 'noopener', text: `${f.title} ${f.lo}–${f.hi}` }), ` (${f.target} this week). AtCoder difficulty ${w.ac[0]}–${w.ac[1]}.`));
+        // Interview weeks have no evening filter.
+        mdet.append(el('p', { class: 'filters-line' }, w.note ? [el('span', { text: w.note + ' ' })] : [], f ? ['Evening filter: ',
+          el('a', { href: f.url, target: '_blank', rel: 'noopener', text: `${f.title} ${f.lo}–${f.hi}` }), ` (${f.target} this week). AtCoder difficulty ${w.ac[0]}–${w.ac[1]}.`] : []));
         if (w.pat.length) mdet.append(el('details', { class: 'patterns' }, el('summary', { text: `Patterns this week (${w.pat.length})` }),
           el('ul', { class: 'plain' }, w.pat.map(([p, by]) => el('li', {}, el('b', { text: p }), ` · ${by}`)))));
       }
@@ -425,7 +454,8 @@ DATA.cses.forEach((s, si) => {
 });
 
 const fb = document.getElementById('flt-body');
-DATA.filters.forEach(f => {
+document.getElementById('gates').append(...DATA.gates.map(g => el('li', { text: g })));
+DATA.filters.filter(Boolean).forEach(f => {
   const tr = el('tr', {}, el('td', { class: 'num', text: f.week + 1 }), el('td', {}, el('a', { href: f.url, target: '_blank', rel: 'noopener', text: f.title }), el('span', { class: 'small', text: ' · ' + DATA.weeks[f.week].name })),
     el('td', { class: 'num', text: `${f.lo}–${f.hi}` }), el('td', { class: 'num', 'data-f': f.key }));
   fb.append(tr);
@@ -477,7 +507,10 @@ function refresh() {
   const total = DATA.cses.reduce((a, s) => a + s.tasks.length, 0);
   document.getElementById('s-cses').textContent = `${cs} / ${total}`;
   document.getElementById('b-cses').style.width = (cs * 100 / total) + '%';
-  DATA.filters.forEach(f => {
+  const sh = DATA.sheet.filter(isDone).length;
+  document.getElementById('s-sheet').textContent = `${sh} / ${DATA.sheet.length}`;
+  document.getElementById('b-sheet').style.width = (sh * 100 / DATA.sheet.length) + '%';
+  DATA.filters.filter(Boolean).forEach(f => {
     const n = Object.keys(done).filter(k => k.startsWith('flt' + f.key + '_')).length;
     document.querySelector(`[data-f="${f.key}"]`).textContent = `${n} / ${f.target}`;
   });
@@ -550,7 +583,7 @@ const withTimeout = (url, ms = 8000) => { const c = new AbortController(); setTi
     liveAc ? `AtCoder live (${n('ac')} solved)` : 'AtCoder from the last sync',
     p ? `LeetCode from the ${p.updated} sync (${p.lcTotal} solved; LeetCode blocks direct requests)` : 'LeetCode unavailable',
   ];
-  sync.textContent = (p || liveCf || liveAc) ? parts.join(' · ') + '. CSES is ticked by hand.' : 'Judge sync unavailable right now. Checks you make by hand still save.';
+  sync.textContent = (p || liveCf || liveAc) ? parts.join(' · ') + '. CSES and sheet problems that are not on LeetCode are ticked by hand.' : 'Judge sync unavailable right now. Checks you make by hand still save.';
 })();
 const td = document.querySelector('details.day.today');
 if (td) td.scrollIntoView({ block: 'start' }); else document.querySelector('details.day').open = true;
