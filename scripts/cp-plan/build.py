@@ -4,6 +4,7 @@ from urllib.parse import quote
 from curriculum import WEEKS, CS
 from roadmap import STAGES, RULES
 import interview as IV
+from cses_tech import T as CSES_TECH
 from collections import Counter
 
 START = dt.date(2026, 9, 28)
@@ -296,6 +297,19 @@ for i in range(60):
     fixed.append(B(6, '22:00', 'Wind down', [LOG(iso)]))
     days.append({'date': iso, 'dow': d.strftime('%a'), 'label': d.strftime('%b %-d'), 'cls': 'wd' if wd < 5 else 'we', 'fixed': fixed, 'content': None})
 
+# Technique on every problem, frozen days included: x is what the revisit matches on, xd the detail.
+SHEET_TECH = json.load(open('sheet_tech.json'))
+CF_TAGS = {f"cf{p['contestId']}{p['index']}": [t for t in p['tags'] if not t.startswith('*')] for p in P['problems']}
+def tech(i):
+    k = i['k']
+    if k.startswith('cses') and int(k[4:]) in CSES_TECH:
+        x, xd = CSES_TECH[int(k[4:])]; i['x'] = x
+        if xd: i['xd'] = xd
+    elif k in SHEET_TECH: i['x'] = SHEET_TECH[k]
+    elif re.match(r'cf\d', k) and CF_TAGS.get(k): i['xd'] = ', '.join(CF_TAGS[k])
+for d in days:
+    for blk in d['fixed'] + (d['content']['blocks'] if d['content'] else []):
+        for i in blk['items']: tech(i)
 data = {'stages': STAGES, 'rules': RULES, 'weeks': weeks, 'days': days, 'filters': filters, 'cses': CS,
         'preDone': sorted(PRE), 'sheet': [x['k'] for x in SHEET], 'gates': IV.GATES}
 html = open('template.html').read().replace('/*DATA*/null', json.dumps(data, ensure_ascii=False))

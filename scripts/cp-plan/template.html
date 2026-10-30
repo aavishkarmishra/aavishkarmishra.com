@@ -74,6 +74,9 @@ details.day > summary::-webkit-details-marker { display: none; }
 .helpbtn { flex: none; font: .6875rem var(--sans); color: var(--faint); background: none; border: 1px solid transparent; border-radius: 3px; padding: .05rem .35rem; cursor: pointer; }
 ul.items li:hover .helpbtn, .helpbtn:focus-visible { border-color: var(--rule); color: var(--muted); }
 .helpbtn[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.helps { flex: none; display: flex; gap: .25rem; align-items: flex-start; }
+ul.items .tech { display: block; font: .75rem var(--sans); color: var(--muted); }
+ul.items .tech a { color: var(--muted); }
 @media (hover: none) { .helpbtn { border-color: var(--rule); } }
 .offbtn { justify-self: start; font: .75rem var(--sans); color: var(--muted); background: none; border: 1px solid var(--rule); border-radius: 4px; padding: .3rem .6rem; cursor: pointer; }
 .offbtn:hover { color: var(--fg); border-color: var(--muted); }
@@ -243,7 +246,8 @@ ul.plain .count { margin-left: .4rem; }
       <li>Before coding, rewrite the statement in one plain line, then work sample 1 by hand. If you can't do both after 15 minutes, read the Note section and the samples again. Understanding the statement is half the problem right now.</li>
       <li>Time-box each problem to 45 minutes. Then read the editorial, close it, and code it yourself.</li>
       <li>Ask for help in steps, not for the answer. From Claude or the editorial, take one hint at a time: first "which topic is this?", then "what is the key observation?", and only then the solution. Stop reading as soon as you can continue alone.</li>
-      <li>Tap "needed help" on any problem where you used a hint, the editorial or Claude. It comes back the next day as a re-solve from a blank file. That re-solve is where the learning happens.</li>
+      <li>Every problem shows its technique. Don't know it yet? Tap "learn it on YouTube", learn it, then solve the problem yourself.</li>
+      <li>Tap "took a hint" when you used a hint, the editorial or Claude, and "learned it" when you had to learn the technique first. Both bring the problem back the next day as a re-solve from a blank file, and again two weeks later. "Learned it" also adds an unsolved problem with the same technique to that second revisit, so the pattern sticks.</li>
       <li>Before you type: write the idea as 2–3 comment lines. Estimate the number of states or operations. If it's above about 10⁸, shrink the search first (for example, one queen per row, not one per square).</li>
       <li>Before you submit, run four checks. Bounds: multiply n by the max value, and use long long above 2·10⁹. Impossible cases: when is the answer NO or −1? Code vs idea: walk sample 1 through the code by hand and compare it with your comment lines. Edges: try n = 1, all values equal, and the max values.</li>
       <li>Second WA on the same problem? Stop guessing. Write the brute force and run <code>stress/stress.sh</code> from your CP folder. Fix the failing case it prints, then resubmit.</li>
@@ -292,16 +296,27 @@ const el = (tag, attrs = {}, ...kids) => {
 const scheduled = {};
 // filled by renderPlan(); CSES tab shows where each problem currently sits
 
+let itemN = 0;
+const YT = q => 'https://www.youtube.com/results?search_query=' + encodeURIComponent(q);
+// help[k] was a date string before the hint/learned split; read both shapes.
+const helpOf = k => typeof help[k] === 'string' ? { on: help[k], why: 'hint' } : help[k];
 function item(i, showWhen) {
-  const id = 'c-' + i.k.replace(/[^a-z0-9]/gi, '_');
+  const id = 'c-' + i.k.replace(/[^a-z0-9]/gi, '_') + '-' + itemN++;
   const box = el('input', { type: 'checkbox', id, 'data-k': i.k });
   box.checked = isDone(i.k);
   const text = i.u ? el('a', { href: i.u, target: '_blank', rel: 'noopener', text: i.t }) : document.createTextNode(i.t);
   const t = el('span', { class: 't' }, text, i.r ? el('span', { class: 'rating', text: i.r }) : null,
     showWhen && scheduled[i.k] ? el('span', { class: 'when', text: scheduled[i.k] }) : null,
-    i.n ? el('span', { class: 'note', text: i.n }) : null);
+    i.n ? el('span', { class: 'note', text: i.n }) : null,
+    i.x || i.xd ? el('span', { class: 'tech' }, i.x ? 'Technique: ' + i.x + (i.xd ? ' · ' + i.xd : '') : 'Tags: ' + i.xd,
+      i.x ? [' · ', el('a', { href: YT((/^(lcp:|tuf:)/.test(i.k) ? 'striver ' : '') + i.x + (i.k.startsWith('cses') ? ' algorithm' : '')), target: '_blank', rel: 'noopener', text: 'learn it on YouTube' })] : []) : null);
   const li = el('li', { class: box.checked ? 'checked' : '' }, el('label', { for: id }, box, t));
-  if (!showWhen && /^(cf\d|ac|cses|lcp:|tuf:)/.test(i.k)) li.append(el('button', { type: 'button', class: 'helpbtn', 'data-k': i.k, 'aria-pressed': String(!!help[i.k]), text: 'needed help' }));
+  if (!showWhen && /^(cf\d|ac|cses|lcp:|tuf:)/.test(i.k)) {
+    const h = helpOf(i.k);
+    li.append(el('span', { class: 'helps' },
+      el('button', { type: 'button', class: 'helpbtn', 'data-k': i.k, 'data-why': 'hint', 'aria-pressed': String(!!h && h.why === 'hint'), title: 'Used a hint from the editorial, AI or a video', text: 'took a hint' }),
+      el('button', { type: 'button', class: 'helpbtn', 'data-k': i.k, 'data-why': 'learn', 'aria-pressed': String(!!h && h.why === 'learn'), title: 'Had to learn the technique first (YouTube or AI)', text: 'learned it' })));
+  }
   if (auto[i.k]) { box.disabled = true; li.classList.add('synced'); li.title = 'Synced from the judge'; }
   li.dataset.k = i.k;
   return li;
@@ -343,13 +358,27 @@ function renderPlan() {
   const sched = schedule();
   const byKey = {};
   sched.forEach(d => d.blocks.forEach(b => b.items.forEach(i => { byKey[i.k] = i; })));
-  const resolve = {};
-  Object.entries(help).forEach(([k, on]) => {
-    const target = sched.find(d => d.date > on && !off[d.date]);
-    const src = byKey[k];
-    if (target && src) (resolve[target.date] = resolve[target.date] || []).push({ k: 're:' + k, t: 'Re-solve from a blank file · ' + src.t, u: src.u, n: 'No editorial, no Claude. Under 15 minutes means it is learned.' });
+  const resolve = {}, revisit = {};
+  const push = (m, d, x) => (m[d] = m[d] || []).push(x);
+  const plus = (iso, n) => { const t = new Date(iso + 'T00:00:00Z'); t.setUTCDate(t.getUTCDate() + n); return t.toISOString().slice(0, 10); };
+  const whenOf = {};
+  sched.forEach(d => d.blocks.forEach(b => b.items.forEach(i => { whenOf[i.k] = whenOf[i.k] || d; })));
+  // Re-solve the next day; two weeks later, re-solve again, plus one unsolved problem with the same technique if you had to learn it.
+  Object.keys(help).forEach(k => {
+    const { on, why } = helpOf(k), src = byKey[k];
+    if (!src) return;
+    const next = sched.find(d => d.date > on && !off[d.date]);
+    if (next) push(resolve, next.date, { k: 're:' + k, t: 'Re-solve from a blank file · ' + src.t, u: src.u, x: src.x, xd: src.xd, n: 'No editorial, no Claude. Under 15 minutes means it is learned.' });
+    const later = sched.find(d => d.date >= plus(on, 14) && !off[d.date]);
+    if (!later) return;
+    push(revisit, later.date, { k: 're2:' + k, t: 'Re-solve from a blank file · ' + src.t, u: src.u, x: src.x, xd: src.xd, n: `You needed help on ${src.t.split(' · ').pop()} two weeks ago. Solve it cold.` });
+    const sim = why === 'learn' && src.x && Object.values(byKey).find(i => i.x === src.x && i.k !== k && /^(cses|lcp:|tuf:)/.test(i.k) && !isDone(i.k) && !help[i.k]);
+    if (sim) push(revisit, later.date, { ...sim, n: `Same technique as ${src.t.split(' · ').pop()}.` + (whenOf[sim.k] && whenOf[sim.k].date > later.date ? ` Also on ${whenOf[sim.k].label}; one tick covers both.` : '') });
   });
-  sched.forEach(d => { if (resolve[d.date]) d.blocks.unshift({ o: 0, time: '09:00, first', label: 'Re-solve what needed help yesterday', items: resolve[d.date] }); });
+  sched.forEach(d => {
+    if (revisit[d.date]) d.blocks.unshift({ o: 0, time: '09:00, first', label: 'Pattern revisit', items: revisit[d.date] });
+    if (resolve[d.date]) d.blocks.unshift({ o: 0, time: '09:00, first', label: 'Re-solve what needed help yesterday', items: resolve[d.date] });
+  });
   Object.keys(scheduled).forEach(k => delete scheduled[k]);
   sched.forEach(d => d.blocks.forEach(b => b.items.forEach(i => { if (i.k.startsWith('cses')) scheduled[i.k] = d.label; })));
   const MONTHS = {};
@@ -545,8 +574,8 @@ document.addEventListener('change', e => {
 document.addEventListener('click', e => {
   const h = e.target.closest('.helpbtn');
   if (!h) return;
-  const k = h.dataset.k;
-  if (help[k]) delete help[k]; else help[k] = h.closest('details.day').dataset.date;
+  const k = h.dataset.k, why = h.dataset.why, cur = helpOf(k);
+  if (cur && cur.why === why) delete help[k]; else help[k] = { on: cur ? cur.on : h.closest('details.day').dataset.date, why };
   save(HELPKEY, help);
   const at = h.closest('details.day').id;
   renderPlan(); refresh();
