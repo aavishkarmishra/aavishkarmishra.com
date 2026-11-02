@@ -1,5 +1,5 @@
 {
-"updated": "2026-11-02 12:07 IST",
+"updated": "2026-11-03 03:22 IST",
 "cf": [
 "cf1046C",
 "cf1099C",
@@ -150,6 +150,7 @@
 "minimum-add-to-make-parentheses-valid",
 "next-permutation",
 "pascals-triangle",
+"rotate-image",
 "score-of-parentheses",
 "search-insert-position",
 "set-matrix-zeroes",
