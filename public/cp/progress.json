@@ -1,5 +1,5 @@
 {
-"updated": "2026-11-03 12:37 IST",
+"updated": "2026-11-04 01:12 IST",
 "cf": [
 "cf1046C",
 "cf1099C",
@@ -134,15 +134,19 @@
 "2026-10-06",
 "2026-10-13",
 "2026-10-15",
-"2026-11-02"
+"2026-11-02",
+"2026-11-03"
 ],
 "lcAc": [
+"4sum",
 "check-if-there-is-a-valid-parentheses-string-path",
 "find-first-and-last-position-of-element-in-sorted-array",
 "find-peak-element",
 "first-bad-version",
 "generate-parentheses",
 "longest-valid-parentheses",
+"majority-element",
+"majority-element-ii",
 "maximize-sum-of-squares-of-digits",
 "maximum-alternating-sum-of-squares",
 "maximum-nesting-depth-of-the-parentheses",
@@ -150,12 +154,16 @@
 "minimum-add-to-make-parentheses-valid",
 "next-permutation",
 "pascals-triangle",
+"reverse-pairs",
 "rotate-image",
 "score-of-parentheses",
+"search-a-2d-matrix",
 "search-insert-position",
 "set-matrix-zeroes",
 "sort-colors",
 "subarrays-distinct-element-sum-of-squares-i",
+"two-sum",
+"unique-paths",
 "valid-parentheses",
 "valid-parenthesis-string",
 "valid-perfect-square"
