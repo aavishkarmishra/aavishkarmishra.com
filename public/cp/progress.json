@@ -1,5 +1,5 @@
 {
-"updated": "2026-11-09 12:31 IST",
+"updated": "2026-11-10 04:07 IST",
 "cf": [
 "cf1046C",
 "cf1099C",
@@ -137,7 +137,8 @@
 "2026-10-13",
 "2026-10-15",
 "2026-11-02",
-"2026-11-03"
+"2026-11-03",
+"2026-11-09"
 ],
 "lcAc": [
 "4sum",
@@ -146,12 +147,15 @@
 "find-peak-element",
 "first-bad-version",
 "generate-parentheses",
+"longest-consecutive-sequence",
+"longest-substring-without-repeating-characters",
 "longest-valid-parentheses",
 "majority-element",
 "majority-element-ii",
 "maximize-sum-of-squares-of-digits",
 "maximum-alternating-sum-of-squares",
 "maximum-nesting-depth-of-the-parentheses",
+"maximum-product-subarray",
 "maximum-subarray",
 "minimum-add-to-make-parentheses-valid",
 "next-permutation",
@@ -163,6 +167,7 @@
 "search-insert-position",
 "set-matrix-zeroes",
 "sort-colors",
+"subarray-sum-equals-k",
 "subarrays-distinct-element-sum-of-squares-i",
 "two-sum",
 "unique-paths",
